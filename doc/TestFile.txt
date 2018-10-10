@@ -1,4 +1,8 @@
 Team Members for Project
 
 Adit Hasan
+<<<<<<< HEAD
 Yuanmao Zhu
+=======
+Yuqiao has committed!
+>>>>>>> 50b65fb320e45644f8411d3692434598101cebc2
