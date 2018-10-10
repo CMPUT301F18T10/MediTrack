@@ -1,7 +1,21 @@
 Team Members for Project
 
 Adit Hasan
+<<<<<<< HEAD
+Yuanmao Zhu
+=======
 Yuqiao has committed!
+<<<<<<< HEAD
+>>>>>>> 50b65fb320e45644f8411d3692434598101cebc2
+=======
 Marshal Cheng commit.
+<<<<<<< HEAD
 Harshdeep Dhindsa
 Ri Xu commit
+=======
+<<<<<<< HEAD
+>>>>>>> 2b2464424722375604581d5a6bd8233ccc3a1e6e
+=======
+Harshdeep Dhindsa
+>>>>>>> origin
+>>>>>>> abb7d84379a3edb2d317788f67aa928e1f4b4a56
