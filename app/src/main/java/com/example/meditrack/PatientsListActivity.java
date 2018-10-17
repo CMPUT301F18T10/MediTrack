@@ -23,8 +23,8 @@ public class PatientsListActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent intent = new Intent(PatientsListActivity.this, ProblemsListActivity.class);
+                startActivity(intent);
             }
         });
         ListView listView = findViewById(R.id.patientListListView);

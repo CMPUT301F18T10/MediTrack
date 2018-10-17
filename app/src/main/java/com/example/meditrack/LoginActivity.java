@@ -347,7 +347,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
         }
     }
-    public void signinClick() {
+    public void signClick(View view) {
         Intent intent = new Intent(LoginActivity.this, PatientsListActivity.class);
         startActivity(intent);
     }
