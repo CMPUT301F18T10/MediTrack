@@ -28,20 +28,20 @@
             android:label="@string/title_activity_patients_list"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ProblemsListCaretaker"
+            android:name=".ProblemsListActivity"
             android:label="@string/title_activity_problems_list_caretaker"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".viewProblemCaretaker"
+            android:name=".viewProblemActivity"
             android:label="@string/title_activity_view_problem_caretaker"
-            android:parentActivityName=".ProblemsListCaretaker"
+            android:parentActivityName=".ProblemsListActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.meditrack.ProblemsListCaretaker" />
+                android:value="com.example.meditrack.ProblemsListActivity" />
         </activity>
         <activity
-            android:name=".viewRecordCaretakerActivity"
+            android:name=".viewRecordActivity"
             android:label="@string/title_activity_view_record_caretaker"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>

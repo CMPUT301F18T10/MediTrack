@@ -5,37 +5,40 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".viewProblemCaretaker"
-    tools:showIn="@layout/activity_view_problem_caretaker">
+    tools:context=".ProblemsListActivity"
+    tools:showIn="@layout/activity_problems_list">
+
+    <ListView
+        android:id="@+id/problemListListView"
+        android:layout_width="368dp"
+        android:layout_height="360dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/problemListTitle" />
 
     <TextView
-        android:id="@+id/problemViewCaretakerTitle"
+        android:id="@+id/problemListTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Cancer"
+        android:text="Patient A"
+        android:textAlignment="textStart"
         android:textSize="42sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ListView
-        android:id="@+id/viewProblemListView"
-        android:layout_width="368dp"
-        android:layout_height="362dp"
+    <Button
+        android:id="@+id/problemListDeleteButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
+        android:text="Delete Patient"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/problemViewCaretakerComment"
-        android:layout_width="320dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="8dp"
-        android:text="The stress from 301 gave me a brain tumor"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/problemViewCaretakerTitle" />
-
 </android.support.constraint.ConstraintLayout>
