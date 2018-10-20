@@ -55,6 +55,10 @@
         <activity
             android:name=".createRecordBody"
             android:label="@string/title_activity_create_record_body"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".searchActivity"
+            android:label="@string/title_activity_search"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

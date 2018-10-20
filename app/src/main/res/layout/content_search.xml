@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".searchActivity"
+    tools:showIn="@layout/activity_search">
+
+    <TextView
+        android:id="@+id/searchText"
+        android:layout_width="256dp"
+        android:layout_height="64dp"
+        android:layout_marginTop="16dp"
+        android:text="Search"
+        android:textAlignment="center"
+        android:textSize="52dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <RadioButton
+        android:id="@+id/searchRecordRadio"
+        android:layout_width="128dp"
+        android:layout_height="32dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
+        android:text="Records"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/searchProblemRadio" />
+
+    <RadioButton
+        android:id="@+id/searchBodyRadio"
+        android:layout_width="128dp"
+        android:layout_height="32dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="16dp"
+        android:text="Body Location"
+        app:layout_constraintStart_toEndOf="@+id/searchProblemRadio"
+        app:layout_constraintTop_toBottomOf="@+id/searchInput" />
+
+    <RadioButton
+        android:id="@+id/searchGPSRadio"
+        android:layout_width="128dp"
+        android:layout_height="32dp"
+        android:layout_marginTop="8dp"
+        android:text="Geo Location"
+        app:layout_constraintTop_toBottomOf="@+id/searchBodyRadio"
+        tools:layout_editor_absoluteX="172dp" />
+
+    <RadioButton
+        android:id="@+id/searchProblemRadio"
+        android:layout_width="128dp"
+        android:layout_height="32dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:text="Problems"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/searchInput" />
+
+    <EditText
+        android:id="@+id/searchInput"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Cancer"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/searchText" />
+
+    <Button
+        android:id="@+id/searchGoButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="Go"
+        app:layout_constraintStart_toEndOf="@+id/searchInput"
+        app:layout_constraintTop_toBottomOf="@+id/searchText" />
+
+    <ListView
+        android:id="@+id/searchProblemsListView"
+        android:layout_width="160dp"
+        android:layout_height="192dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="8dp"
+        android:text="Problems Found:"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/searchProblemsListView"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="36dp"
+        android:layout_marginBottom="8dp"
+        android:text="Problems Found:"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/searchRecordListView"
+        app:layout_constraintStart_toEndOf="@+id/textView3" />
+
+    <ListView
+        android:id="@+id/searchRecordListView"
+        android:layout_width="160dp"
+        android:layout_height="192dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+</android.support.constraint.ConstraintLayout>
