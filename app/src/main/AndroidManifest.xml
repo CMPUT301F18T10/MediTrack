@@ -43,6 +43,10 @@
         <activity
             android:name=".viewRecordActivity"
             android:label="@string/title_activity_view_record_caretaker"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ProfileInformationActivity"
+            android:label="@string/title_activity_profile_information"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

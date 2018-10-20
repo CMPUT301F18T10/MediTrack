@@ -106,4 +106,5 @@
         "when a user tries to pick up one of cards.\n\n"
     </string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_profile_information">Profile Information</string>
 </resources>

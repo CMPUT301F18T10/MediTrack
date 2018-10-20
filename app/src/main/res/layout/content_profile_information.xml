@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".ProfileInformationActivity"
+    tools:showIn="@layout/activity_profile_information">
+
+    <TextView
+        android:id="@+id/profileIDLabel"
+        android:layout_width="64dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:text="User ID:"
+        android:textAlignment="viewStart"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/profileName"
+        android:layout_width="64dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
+        android:text="Name:"
+        android:textAlignment="viewStart"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profileIDLabel" />
+
+    <TextView
+        android:id="@+id/profileEmailLabel"
+        android:layout_width="64dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
+        android:text="Email:"
+        android:textAlignment="viewStart"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profileName" />
+
+    <TextView
+        android:id="@+id/profilePhoneLabel"
+        android:layout_width="64dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
+        android:text="Phone:"
+        android:textAlignment="viewStart"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profileEmailLabel" />
+
+    <EditText
+        android:id="@+id/profileIDInput"
+        android:layout_width="224dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="32dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="John123"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/profileNameInput"
+        android:layout_width="224dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="32dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="John Johnson"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profileIDInput" />
+
+    <EditText
+        android:id="@+id/profileEmailInput"
+        android:layout_width="224dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="32dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="john123@john.john"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profileNameInput" />
+
+    <EditText
+        android:id="@+id/profilePhoneInput"
+        android:layout_width="224dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="32dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="1-001-301-2018"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profileEmailInput" />
+
+    <ListView
+        android:id="@+id/profileImageListListView"
+        android:layout_width="160dp"
+        android:layout_height="135dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="64dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/profileImageListLabel"
+        android:layout_width="128dp"
+        android:layout_height="32dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="Body Images:"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/profileImageListListView"
+        app:layout_constraintStart_toEndOf="@+id/profileAddBodyButton" />
+
+    <TextView
+        android:id="@+id/profileImageListLabel2"
+        android:layout_width="128dp"
+        android:layout_height="32dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="Caretakers:"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/profileCaretakerListListView"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/profileAddBodyButton"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="10dp"
+        android:text="+"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toTopOf="@+id/profileImageListListView"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/profileAddBodyButton2"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="10dp"
+        android:text="+"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toTopOf="@+id/profileCaretakerListListView"
+        app:layout_constraintEnd_toStartOf="@+id/profileImageListLabel2" />
+
+    <ListView
+        android:id="@+id/profileCaretakerListListView"
+        android:layout_width="160dp"
+        android:layout_height="135dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="64dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/profileSaveButton"
+        android:layout_width="wrap_content"
+        android:layout_height="39dp"
+        android:layout_marginBottom="16dp"
+        android:text="Save"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+</android.support.constraint.ConstraintLayout>

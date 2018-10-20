@@ -70,7 +70,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="Register"
+                android:text="Sign In"
                 android:textStyle="bold" />
 
         </LinearLayout>
@@ -81,5 +81,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="signClick"
-        android:text="Sign In" />
+        android:text="Register" />
+
+    <RadioButton
+        android:id="@+id/isCaretakerRadioButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Caretaker" />
 </LinearLayout>
