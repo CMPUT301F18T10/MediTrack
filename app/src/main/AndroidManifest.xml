@@ -47,6 +47,14 @@
         <activity
             android:name=".ProfileInformationActivity"
             android:label="@string/title_activity_profile_information"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".createRecord1"
+            android:label="@string/title_activity_create_record1"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".createRecordBody"
+            android:label="@string/title_activity_create_record_body"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
