@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Record A"
+        android:text="Nausea"
         android:textSize="42sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -22,65 +22,71 @@
     <EditText
         android:id="@+id/viewRecordComment"
         android:layout_width="324dp"
-        android:layout_height="wrap_content"
+        android:layout_height="45dp"
         android:layout_marginTop="8dp"
         android:ems="10"
         android:inputType="textMultiLine"
-        android:text="Caretaker Comment"
+        android:text="I felt dizzy and vomited"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/viewRecordTitle" />
 
     <ImageView
-        android:id="@+id/viewRecordBody"
-        android:layout_width="189dp"
-        android:layout_height="192dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@mipmap/bodycutout" />
-
-    <ImageView
         android:id="@+id/viewRecordPhoto"
-        android:layout_width="218dp"
-        android:layout_height="150dp"
+        android:layout_width="431dp"
+        android:layout_height="231dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/viewRecordBodyLocactionButton"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/viewRecordComment"
         tools:srcCompat="@tools:sample/backgrounds/scenic" />
-
-    <Button
-        android:id="@+id/viewRecordDeleteRecordButton"
-        android:layout_width="144dp"
-        android:layout_height="48dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:text="Delete Record"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
 
     <Button
         android:id="@+id/viewRecordGPSButton"
         android:layout_width="144dp"
         android:layout_height="48dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginStart="128dp"
+        android:layout_marginEnd="128dp"
         android:layout_marginBottom="8dp"
         android:text="View GPS"
-        app:layout_constraintBottom_toTopOf="@+id/viewRecordDeleteRecordButton"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/viewRecordAddPhotoButton"
+        android:id="@+id/viewRecordBodyLocactionButton"
         android:layout_width="144dp"
         android:layout_height="48dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginStart="128dp"
+        android:layout_marginEnd="128dp"
         android:layout_marginBottom="8dp"
-        android:text="Add Photo"
+        android:text="Body Location"
         app:layout_constraintBottom_toTopOf="@+id/viewRecordGPSButton"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/viewRecordTimeStamp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Dec 31, 2017 - 16:20"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/viewRecordComment" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/floatingActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:clickable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@android:drawable/ic_menu_delete" />
 
 </android.support.constraint.ConstraintLayout>
