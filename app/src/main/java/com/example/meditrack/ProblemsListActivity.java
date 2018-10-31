@@ -27,14 +27,14 @@ public class ProblemsListActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        ListView listView = findViewById(R.id.problemListListView);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(ProblemsListActivity.this, viewProblemActivity.class);
-                startActivity(intent);
-            }
-        });
+//        ListView listView = findViewById(R.id.problemListListView);
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                Intent intent = new Intent(ProblemsListActivity.this, viewProblemActivity.class);
+//                startActivity(intent);
+//            }
+//        });
     }
 
 }
