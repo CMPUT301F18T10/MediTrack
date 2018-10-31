@@ -15,7 +15,7 @@ public class ProfileInformationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile_information);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+/**
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -24,6 +24,8 @@ public class ProfileInformationActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+ */
     }
 
 }

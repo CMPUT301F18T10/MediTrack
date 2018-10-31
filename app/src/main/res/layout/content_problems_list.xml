@@ -53,9 +53,21 @@
         app:srcCompat="@android:drawable/ic_menu_myplaces" />
 
     <ListView
+        android:id="@+id/problemsListListView"
         android:layout_width="368dp"
         android:layout_height="364dp"
         tools:layout_editor_absoluteX="8dp"
         tools:layout_editor_absoluteY="81dp" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/problemsListAddFAB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:clickable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@android:drawable/ic_input_add" />
 
 </android.support.constraint.ConstraintLayout>

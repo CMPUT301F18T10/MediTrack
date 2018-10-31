@@ -15,8 +15,8 @@ public class createRecord1 extends AppCompatActivity {
         setContentView(R.layout.activity_create_record1);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+/**
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.viewProblemAddFAB);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -24,6 +24,6 @@ public class createRecord1 extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+*/
     }
-
 }

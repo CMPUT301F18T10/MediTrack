@@ -19,7 +19,7 @@ public class ProblemsListActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.problemsListAddFAB);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -27,14 +27,14 @@ public class ProblemsListActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-//        ListView listView = findViewById(R.id.problemListListView);
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Intent intent = new Intent(ProblemsListActivity.this, viewProblemActivity.class);
-//                startActivity(intent);
-//            }
-//        });
+        ListView listView = findViewById(R.id.problemsListListView);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(ProblemsListActivity.this, viewProblemActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
 }
