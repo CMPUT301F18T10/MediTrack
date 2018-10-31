@@ -59,6 +59,12 @@ public class ApplicationManager
         // set the information from the server
     }
 
+    public void UpdateUserInformation()
+    {
+        // TODO: Finish this method
+        // It will get the updated information from ElasticSearch
+    }
+
     public boolean IsFeatureAllowed(String feature)
     {
         // TODO: The design for this is not finalized
