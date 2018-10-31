@@ -10,6 +10,7 @@ public class ProblemManagerService
        collect the necessary info from user and call this service to
        update the ElasticSearch instance holding the information
      */
+    ProblemManagerService(){}
 
     public static void AddProblem(Problem problem)
     {
