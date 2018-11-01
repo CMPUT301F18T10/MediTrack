@@ -80,16 +80,16 @@ public class ApplicationManager
         return new ArrayList<Problem>();
     }
 
-    public ArrayList<Record> GetRecordListForCurrentUser()
+    public ArrayList<AbstractRecord> GetRecordListForCurrentUser()
     {
         // TODO: Finish this method
-        return new ArrayList<Record>();
+        return new ArrayList<AbstractRecord>();
     }
 
-    public ArrayList<Record> GetRecordListForProblemId(Integer problemId)
+    public ArrayList<AbstractRecord> GetRecordListForProblemId(Integer problemId)
     {
         // TODO: Finish this method
-        return new ArrayList<Record>();
+        return new ArrayList<AbstractRecord>();
     }
 
     public boolean IsDirty()
