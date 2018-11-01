@@ -2,14 +2,16 @@ package com.example.meditrack;
 
 public abstract class AbstractUser {
 
-    protected String mUserId;
+    String userId;
 
     // Maybe we will implement password later
-    // protected String password;
+    // String password;
 
-    protected String getmUserId(){
-        return this.mUserId;
+    public String getUserId() {
+        return userId;
     }
 
-
+    public AbstractUser(String userId) {
+        this.userId = userId;
+    }
 }

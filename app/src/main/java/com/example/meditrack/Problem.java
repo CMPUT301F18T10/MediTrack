@@ -5,13 +5,22 @@ import java.util.Date;
 
 public class Problem {
 
-    private String mTitle;
-    private String mDescription;
-    private Date mDate;
-    private ArrayList<Record> mRecords;
+    private String title;
+    private String description;
+    private Date date;
+    private ArrayList<AbstractRecord> records;
 
-    public Problem(){
-
+    public Problem(String title, String description, Date date) {
+        this.title = title;
+        this.description = description;
+        this.date = date;
+        this.records = new ArrayList<AbstractRecord>();
     }
 
+    public Problem(String title, String description, Date date, ArrayList<AbstractRecord> records) {
+        this.title = title;
+        this.description = description;
+        this.date = date;
+        this.records = records;
+    }
 }
