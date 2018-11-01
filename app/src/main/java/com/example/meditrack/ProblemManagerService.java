@@ -27,12 +27,12 @@ public class ProblemManagerService
         // TODO: Finish the method
     }
 
-    public static void AddRecord(Integer problemId, Record record)
+    public static void AddRecord(Integer problemId, AbstractRecord record)
     {
         // TODO: Finish the method
     }
 
-    public static void DeleteRecord(Integer problemId, Record record)
+    public static void DeleteRecord(Integer problemId, AbstractRecord record)
     {
         // TODO: Finish the method
     }
