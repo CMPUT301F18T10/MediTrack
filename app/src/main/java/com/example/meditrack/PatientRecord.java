@@ -10,15 +10,15 @@ public class PatientRecord extends AbstractRecord {
 
     private String title;
     private String description;
-    private ArrayList<Bitmap> photos;
+    private ArrayList<String> photoIds;
     private BodyLocation bodyLocation;
     private Location location;
 
-    public PatientRecord(Date timestamp, String title, String description, ArrayList<Bitmap> photos, BodyLocation bodyLocation, Location location) {
+    public PatientRecord(Date timestamp, String title, String description, ArrayList<String> photoIds, BodyLocation bodyLocation, Location location) {
         super(timestamp);
         this.title = title;
         this.description = description;
-        this.photos = photos;
+        this.photoIds = photoIds;
         this.bodyLocation = bodyLocation;
         this.location = location;
     }
@@ -31,8 +31,8 @@ public class PatientRecord extends AbstractRecord {
         return description;
     }
 
-    public ArrayList<Bitmap> getPhotos() {
-        return photos;
+    public ArrayList<String> getPhotoIds() {
+        return photoIds;
     }
 
     public BodyLocation getBodyLocation() {

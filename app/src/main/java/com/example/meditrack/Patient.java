@@ -8,10 +8,10 @@ public class Patient extends AbstractUser {
 
     private ArrayList<Bitmap> bodyLocationImages;
     private ArrayList<CareProvider> careProviders;
-    private String contactInfo;
+    private ContactInfo contactInfo;
     private ArrayList<Problem> problems;
 
-    public Patient(String userId, ArrayList<Bitmap> bodyLocationImages, ArrayList<CareProvider> careProviders, String contactInfo, ArrayList<Problem> problems) {
+    public Patient(String userId, ArrayList<Bitmap> bodyLocationImages, ArrayList<CareProvider> careProviders, ContactInfo contactInfo, ArrayList<Problem> problems) {
         super(userId);
         this.bodyLocationImages = bodyLocationImages;
         this.careProviders = careProviders;
@@ -27,7 +27,7 @@ public class Patient extends AbstractUser {
         return careProviders;
     }
 
-    public String getContactInfo() {
+    public ContactInfo getContactInfo() {
         return contactInfo;
     }
 
@@ -35,7 +35,7 @@ public class Patient extends AbstractUser {
         return problems;
     }
 
-    public void setContactInfo(String contactInfo) {
+    public void setContactInfo(ContactInfo contactInfo) {
         this.contactInfo = contactInfo;
     }
 }
