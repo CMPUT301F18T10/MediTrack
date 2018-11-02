@@ -10,15 +10,18 @@ public class UserManager {
 		// TODO: Finish this method
 	}
 	
-	public void addPatient(CareProvider careProvider, Patient patient) {
+	public void addPatient(CareProvider careProvider, Patient patient) 
+	{
 		// TODO: Finish this method
 	}
 	
-	public void addComments(CareProvider careProvider, Patient patient) {
+	public void addComments(CareProvider careProvider, Patient patient) 
+	{
 		// TODO: Finish this method
 	}
 	
-	public void checkBodyImageNumber(Patient patient) {
+	public void checkBodyImageNumber(Patient patient) 
+	{
 		//TODO: Finish this method
 		//ckeck number of body image is at least two
 	}
