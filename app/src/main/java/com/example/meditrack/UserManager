@@ -1,0 +1,40 @@
+package com.example.meditrack;
+
+import java.util.ArrayList;
+
+public class UserManager {
+	
+	public void EditContactInfo(Patient patient, String email,String phoneNumber)
+    {
+        // set the new contact information in profile (UserMode patient)
+		// TODO: Finish this method
+    }
+	public void RetrieveContactInfo(Patient patient) {
+		// TODO: Finish this method
+	}
+	public boolean checkUserId(Patient patient) {
+		// TODO: Finish this method
+		//return the id legth is at least 8
+	}
+	public boolean checkUserId(CareProvider careProvider) {
+		// TODO: Finish this method
+		//return the id legth is at least 8
+	}
+	public ArrayList<Patient> getListOfPatient(CareProvider careprovider){
+		// TODO: Finish this method
+		return new ArrayList<Patient>();
+	}
+	public void addPatient(CareProvider careProvider, Patient patient) {
+		// TODO: Finish this method
+	}
+	public void browseProblems(CareProvider careProvider, Patient patient) {
+		// TODO: Finish this method
+	}
+	public void addComments(CareProvider careProvider, Patient patient) {
+		// TODO: Finish this method
+	}
+	public boolean checkBodyImageNumber(Patient patient) {
+		//TODO: Finish this method
+		//return number of body image is at least two
+	}
+}
