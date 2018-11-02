@@ -7,8 +7,10 @@ public class BodyLocation {
 
     private Bitmap bodyLocationImage;
     private Point point;
+    private String id;
 
-    public BodyLocation(Bitmap bodyLocationImage, Point point) {
+    public BodyLocation(Bitmap bodyLocationImage, Point point,String id) {
+        this.id = id;
         this.bodyLocationImage = bodyLocationImage;
         this.point = point;
     }
