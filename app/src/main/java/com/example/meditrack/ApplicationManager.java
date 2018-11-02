@@ -45,7 +45,7 @@ public class ApplicationManager
         return false;
     }
 
-    public boolean RegisterUser(String userName, String password)
+    public boolean RegisterUser(String userName, UserMode userMode)
     {
         // TODO: Attempts to register and returns True upon success
         // Create the right user object and saves it to the database
