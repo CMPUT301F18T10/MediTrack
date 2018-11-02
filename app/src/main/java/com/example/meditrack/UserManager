@@ -3,6 +3,10 @@ package com.example.meditrack;
 import java.util.ArrayList;
 
 public class UserManager {
+	/* This class is responsible for operating on contact informations and patient
+       This would include Edit contactInfo, AddPatient to patient list, 
+       and Add comment
+     */
 	
 	public void EditContactInfo(Patient patient, String email,String phoneNumber)
 	{
