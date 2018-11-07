@@ -35,24 +35,26 @@ public class ApplicationManager
     public boolean LogIn(UserMode userMode, String userName)
     {
         // TODO: Attempts to log in and returns True upon success
-        // Gets the user object from the ElasticSearch instance
-        // Sets the user afterwards
-        // Maybe return exceptions instead of boolean
+        // Make sure to go through ElasticSearchManager for any
+        // interaction with the server
+
+        // Make sure to call DataRepositorySingleton.Initialize
+        // to populate with appropriate data
         return false;
     }
 
     public boolean RegisterUser(UserMode userMode, String userName)
     {
         // TODO: Attempts to register and returns True upon success
-        // Create the right user object and saves it to the database
-        // Then set mUserMode and mUser
-        // Maybe return exceptions instead of boolean
+        // Make sure to go through ElasticSearchManager for any
+        // interaction with the server
+
         return false;
     }
 
     private void SetUser(UserMode userMode, AbstractUser user)
     {
-        // set the information from the server
+        // TODO:
     }
 
     public void UpdateDataRepository()
