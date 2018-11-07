@@ -45,6 +45,6 @@ public class CareProviderTest {
         ArrayList<Patient> patients = new ArrayList<Patient>();
         patients.add(patient1);
         CareProvider careProvider = new CareProvider(ProviderUserId,patients);
-        Assert.assertTrue("Something wrong with care Provider",email.equals(careProvider.getPatients().get(0).getContactInfo().getEmail()));
+        Assert.assertTrue("Something wrong with care Provider",email.equals(careProvider.getPatientIds().get(0).getContactInfo().getEmail()));
     }
 }

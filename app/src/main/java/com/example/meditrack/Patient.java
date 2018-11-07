@@ -6,33 +6,33 @@ import java.util.ArrayList;
 
 public class Patient extends AbstractUser {
 
-    private ArrayList<String> bodyLocationImages;
-    private ArrayList<CareProvider> careProviders;
+    private ArrayList<String> bodyLocationImageIds;
+    private ArrayList<String> careProviderIds;
     private ContactInfo contactInfo;
-    private ArrayList<Problem> problems;
+    private ArrayList<Integer> problemIds;
 
-    public Patient(String userId, ArrayList<String> bodyLocationImages, ArrayList<CareProvider> careProviders, ContactInfo contactInfo, ArrayList<Problem> problems) {
+    public Patient(String userId, ArrayList<String> bodyLocationImages, ArrayList<String> careProviderIds, ContactInfo contactInfo, ArrayList<Integer> problemIds) {
         super(userId);
-        this.bodyLocationImages = bodyLocationImages;
-        this.careProviders = careProviders;
+        this.bodyLocationImageIds = bodyLocationImages;
+        this.careProviderIds = careProviderIds;
         this.contactInfo = contactInfo;
-        this.problems = problems;
+        this.problemIds = problemIds;
     }
 
     public ArrayList<String> getBodyLocationImages() {
-        return bodyLocationImages;
+        return bodyLocationImageIds;
     }
 
-    public ArrayList<CareProvider> getCareProviders() {
-        return careProviders;
+    public ArrayList<String> getCareProviders() {
+        return careProviderIds;
     }
 
     public ContactInfo getContactInfo() {
         return contactInfo;
     }
 
-    public ArrayList<Problem> getProblems() {
-        return problems;
+    public ArrayList<Integer> getProblems() {
+        return problemIds;
     }
 
     public void setContactInfo(ContactInfo contactInfo) {
