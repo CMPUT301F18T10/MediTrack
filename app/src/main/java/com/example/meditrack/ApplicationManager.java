@@ -10,7 +10,7 @@ public class ApplicationManager
 
         It would hold all the information about the
         user, including problems, records, etc
-        This will one of only global objects in the app
+        This will one of the only global objects in the app
 
         This class would be the first to be instantiated,
         when the app starts. Depending on the userMode,

@@ -4,6 +4,8 @@ import com.example.meditrack.BodyLocation;
 import com.example.meditrack.Problem;
 import com.example.meditrack.PatientRecord;
 import com.example.meditrack.CareGiverRecord;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -12,8 +14,10 @@ public class SearchManager {
     /* This class allows user search problem or records by given specify attributes.
         Not just for searching as a function in the application, but every time a
         service needs to manipulate the model/data classes, the SearchManager class
-        would be called to fetch the right object from the ElasticSearch instance or
-        from ApplicationManager if a local copy is required.
+        would be called to fetch the right object from ApplicationManager if a local copy is required.
+
+        All the data about the current user would be kept in the ApplicationManager but if a caregiver
+        wants to view problems/records for a patient that would have to be obtained from the server
     */
         //Searching Problems
         public static void searchProblemByGeoLocation(ArrayList<Problem> problems, Location location) {
@@ -52,13 +56,31 @@ public class SearchManager {
         }
 
         // Methods that fetch data from ElasticSearch instance
-        public static Problem getProblemForTitle(String problemTitle) throws Exception
+        public static Problem getProblemForPatientId(String patientUserId, Integer problemId) throws ItemNotFound
         {
             // TODO: Finish the method
-            return new Problem("", "", new Date());
+            String exceptionMessage = "Problem Id: " + problemId.toString() + " does not exist for Patient Id: " + patientUserId;
+            throw new ItemNotFound(exceptionMessage);
+        }
+
+        public static ArrayList<Problem> getProblemListForPatientId(String patientUserId)
+        {
+            // TODO: Finish the method
+            return new ArrayList<>();
+        }
+
+        public static ArrayList<AbstractRecord> getRecordListForProblemId(String patientUserId, Integer problemId)
+        {
+            return new ArrayList<>();
         }
 
         public static ArrayList<CareGiverRecord> getCareGiveRecordsForCareGiverId(String careGiverId)
+        {
+            // TODO: Finish the method
+            return new ArrayList<>();
+        }
+
+        public static ArrayList<PatientRecord> getPatientRecordsForPatientId(String patientUserId)
         {
             // TODO: Finish the method
             return new ArrayList<>();

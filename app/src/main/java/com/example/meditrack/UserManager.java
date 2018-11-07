@@ -8,17 +8,18 @@ public class UserManager {
        and Add comment
      */
 	
-	public void EditContactInfo(Patient patient, String email,String phoneNumber)
+	public void EditContactInfo(Patient patient, String email, String phoneNumber)
 	{
         	// set the new contact information in profile (UserMode patient)
 		// TODO: Finish this method
 	}
 	
-	public void addPatient(CareProvider careProvider, Patient patient) 
+	public void addPatient(String patientUserId)
 	{
 		// TODO: Finish this method
 	}
-	
+
+	// @Ri Xu, is this function necessary? If so, I don't think it belongs here
 	public void addComments(CareProvider careProvider, Patient patient) 
 	{
 		// TODO: Finish this method
