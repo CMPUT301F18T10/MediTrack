@@ -1,17 +1,21 @@
 package com.example.meditrack;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
 
 public class PatientsListActivity extends AppCompatActivity {
-
+    private String patientName = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,12 +27,28 @@ public class PatientsListActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /** this should create alertdialog with text input https://stackoverflow.com/questions/10903754/input-text-dialog-android
-                 * the input should be matched with patient name and then added to the list if patient id exists, otherwise toast invalid patient
-                 * then refresh the list to include new patient if successful
-                 */
-                //Intent intent = new Intent(PatientsListActivity.this, ProblemsListActivity.class);
-                //startActivity(intent);
+                AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext()); /** may need to use diff context */
+                builder.setTitle("Title");
+                final EditText input = new EditText(getApplicationContext());
+                input.setInputType(InputType.TYPE_CLASS_TEXT);
+                builder.setView(input);
+
+                builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        patientName=input.getText().toString();
+                        /** check patient name with database,
+                         *   >if it exists, add to list and refresh listview
+                         *   >if does not exists, toast invalid patient username
+                         */
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
             }
         });
         ListView listView = findViewById(R.id.patientsListListView);

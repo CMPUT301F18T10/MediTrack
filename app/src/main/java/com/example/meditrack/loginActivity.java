@@ -14,5 +14,14 @@ public class loginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
     }
+    public void loginClick(View v){
+        /** checks the username in the emailLogin edit text
+         *      >if it exists, logs in and loads that information
+         *      >if not exist, create the account with default contact information
+         * also checks if caretaker button is checked
+         *      >take user to patient list if caretaker
+         *      >take user to problem list if paitent
+         */
+    }
 
 }
