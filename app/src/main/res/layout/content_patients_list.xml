@@ -24,9 +24,11 @@
         android:layout_width="368dp"
         android:layout_height="422dp"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/patientListCaretakerName" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/patientsListAddFAB"

@@ -19,10 +19,13 @@ public class ProblemsListActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.problemsListAddFAB);
-        fab.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton addFAB = (FloatingActionButton) findViewById(R.id.problemsListAddFAB);
+        addFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                /** this should take user to viewproblem page with default information created, it can then be edited.
+                 * ONLY AVAILABLE TO PATIENT
+                 */
                 Intent intent = new Intent(ProblemsListActivity.this, viewProblemActivity.class);
                 startActivity(intent);
             }
@@ -35,6 +38,16 @@ public class ProblemsListActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        FloatingActionButton searchFAB = (FloatingActionButton) findViewById(R.id.problemsListSearchFAB);
+        searchFAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent searchIntent = new Intent(ProblemsListActivity.this, searchActivity.class);
+                startActivity(searchIntent);
+            }
+        });
+        /** need to add the profile FAB */
+
     }
 
 }

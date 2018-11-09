@@ -23,14 +23,20 @@ public class PatientsListActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(PatientsListActivity.this, ProblemsListActivity.class);
-                startActivity(intent);
+                /** this should create alertdialog with text input https://stackoverflow.com/questions/10903754/input-text-dialog-android
+                 * the input should be matched with patient name and then added to the list if patient id exists, otherwise toast invalid patient
+                 * then refresh the list to include new patient if successful
+                 */
+                //Intent intent = new Intent(PatientsListActivity.this, ProblemsListActivity.class);
+                //startActivity(intent);
             }
         });
         ListView listView = findViewById(R.id.patientsListListView);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                /** this should open problemslistactivity in caretaker mode with that patient's info
+                 */
                 Intent intent = new Intent(PatientsListActivity.this, ProblemsListActivity.class);
                 startActivity(intent);
             }
