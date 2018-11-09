@@ -9,12 +9,12 @@
     tools:showIn="@layout/activity_profile_information">
 
     <TextView
-        android:id="@+id/profileName"
+        android:id="@+id/profileUserIDLabel"
         android:layout_width="64dp"
         android:layout_height="48dp"
         android:layout_marginStart="32dp"
         android:layout_marginTop="36dp"
-        android:text="Name:"
+        android:text="User ID:"
         android:textAlignment="viewStart"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -30,7 +30,7 @@
         android:textAlignment="viewStart"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profileName" />
+        app:layout_constraintTop_toBottomOf="@+id/profileUserIDLabel" />
 
     <TextView
         android:id="@+id/profilePhoneLabel"
@@ -45,14 +45,14 @@
         app:layout_constraintTop_toBottomOf="@+id/profileEmailLabel" />
 
     <EditText
-        android:id="@+id/profileNameInput"
+        android:id="@+id/profileUserIDInput"
         android:layout_width="224dp"
         android:layout_height="48dp"
         android:layout_marginTop="28dp"
         android:layout_marginEnd="32dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="John Johnson"
+        android:text="John123"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -66,7 +66,7 @@
         android:inputType="textPersonName"
         android:text="john123@john.john"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profileNameInput" />
+        app:layout_constraintTop_toBottomOf="@+id/profileUserIDInput" />
 
     <EditText
         android:id="@+id/profilePhoneInput"
