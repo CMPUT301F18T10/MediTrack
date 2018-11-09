@@ -8,7 +8,7 @@ public class ProblemManagerService
 
        All Activities that needs to manipulate problems/records would
        collect the necessary info from user and call this service to
-       update the ElasticSearch instance holding the information
+       update the DataRepositorySingleton instance holding the information
      */
     ProblemManagerService(){}
 
@@ -32,7 +32,7 @@ public class ProblemManagerService
         // TODO: Finish the method
     }
 
-    public static void DeleteRecord(Integer problemId, AbstractRecord record)
+    public static void DeleteRecord(Integer recordId)
     {
         // TODO: Finish the method
     }

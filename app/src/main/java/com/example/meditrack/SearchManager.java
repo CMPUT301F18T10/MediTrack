@@ -16,8 +16,8 @@ public class SearchManager {
         service needs to manipulate the model/data classes, the SearchManager class
         would be called to fetch the right object from ApplicationManager if a local copy is required.
 
-        All the data about the current user would be kept in the ApplicationManager but if a caregiver
-        wants to view problems/records for a patient that would have to be obtained from the server
+        All the data is located in the DataRepositorySingleton and this class would be used to
+        get the relevant ones we need
     */
         //Searching Problems
         public static void searchProblemByGeoLocation(ArrayList<Problem> problems, Location location) {

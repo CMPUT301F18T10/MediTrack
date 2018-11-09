@@ -4,19 +4,23 @@ import java.util.ArrayList;
 
 public class CareProvider extends AbstractUser {
 
-    private ArrayList<Patient> patients;
+    private ArrayList<String> patientIds;
 
-    public CareProvider(String userId, ArrayList<Patient> patients) {
+    public CareProvider(String userId, ArrayList<String> patients) {
         super(userId);
-        this.patients = patients;
+        this.patientIds = patients;
     }
 
     public CareProvider(String userId) {
         super(userId);
-        this.patients = new ArrayList<Patient>();
+        this.patientIds = new ArrayList<String>();
     }
 
-    public ArrayList<Patient> getPatients() {
-        return patients;
+    public void AddPatientId(String patientId){
+        patientIds.add(patientId);
+    }
+
+    public ArrayList<String> getPatientIds() {
+        return patientIds;
     }
 }

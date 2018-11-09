@@ -4,7 +4,9 @@ import java.util.Date;
 
 public abstract class AbstractRecord {
 
-    Date timestamp;
+    protected Date timestamp;
+
+    protected Integer recordId;
 
     public Date getTimestamp() {
         return timestamp;
