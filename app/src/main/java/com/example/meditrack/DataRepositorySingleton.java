@@ -26,6 +26,7 @@ public class DataRepositorySingleton
 
     }
 
+
     // lazy construction of the instance
     public static DataRepositorySingleton GetInstance()
     {
@@ -33,7 +34,22 @@ public class DataRepositorySingleton
         return instance;
     }
 
-    public void Initialize(ApplicationManager.UserMode userMode)
+    private void PopulateUser(ApplicationManager.UserMode userMode, String userName)
+    {
+
+    }
+
+    private void PopulateProblemList()
+    {
+
+    }
+
+    private void PopulateRecordList()
+    {
+
+    }
+
+    public void Initialize(ApplicationManager.UserMode userMode, String userName)
     {
         // TODO: This function would populate all data in the class
 
