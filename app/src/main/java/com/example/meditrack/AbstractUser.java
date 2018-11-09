@@ -7,7 +7,7 @@ public abstract class AbstractUser {
     // Maybe we will implement password later
     // String password;
 
-    public String getUserId() {
+    protected String getUserId() {
         return userId;
     }
 

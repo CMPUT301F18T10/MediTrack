@@ -14,8 +14,8 @@ public class PatientRecord extends AbstractRecord {
     private BodyLocation bodyLocation;
     private Location location;
 
-    public PatientRecord(Date timestamp, String title, String description, ArrayList<String> photoIds, BodyLocation bodyLocation, Location location) {
-        super(timestamp);
+    public PatientRecord(String problemId, String title, String description, ArrayList<String> photoIds, BodyLocation bodyLocation, Location location) {
+        super(problemId);
         this.title = title;
         this.description = description;
         this.photoIds = photoIds;

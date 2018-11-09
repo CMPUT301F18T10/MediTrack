@@ -9,8 +9,8 @@ public class CareGiverRecord extends AbstractRecord {
     private String careGiverComment;
     private String careGiverID;
 
-    public CareGiverRecord(Date timestamp, String careGiverComment, String careGiverID) {
-        super(timestamp);
+    public CareGiverRecord(String problemId, String careGiverComment, String careGiverID) {
+        super(problemId);
         this.careGiverComment = careGiverComment;
         this.careGiverID = careGiverID;
     }

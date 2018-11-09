@@ -8,39 +8,29 @@ public class Problem {
     private String title;
     private String description;
     private Date date;
-    private ArrayList<AbstractRecord> records;
-    private Integer problemId;
+    private String patientId;
+    private String problemId;
 
     public String getTitle() { return title; }
     public String getDescription() { return description; }
     public Date getDate() { return date; }
-    public Integer getId() { return problemId; }
+    public String getId() { return problemId; }
+    public String getPatientId() { return patientId; }
 
     public void setTitle(String title) { this.title = title; }
     public void setDescription(String description) { this.description = description; }
 
-    public Problem(String title, String description, Date date) {
+    public Problem(String title, String description, String patientId) {
         this.title = title;
         this.description = description;
-        this.date = date;
-        this.records = new ArrayList<AbstractRecord>();
-        this.problemId = -1;
+        this.date = new Date();
+        this.problemId = GenerateUniqueId();
+        this.patientId = patientId;
     }
 
-    public Problem(String title, String description, Date date, Integer id)
+    private String GenerateUniqueId()
     {
-        this.title = title;
-        this.description = description;
-        this.date = date;
-        this.records = new ArrayList<AbstractRecord>();
-        this.problemId = id;
-    }
-
-    public Problem(String title, String description, Date date, ArrayList<AbstractRecord> records) {
-        this.title = title;
-        this.description = description;
-        this.date = date;
-        this.records = records;
-        this.problemId = -1;
+        Date date = new Date();
+        return date.toString();
     }
 }

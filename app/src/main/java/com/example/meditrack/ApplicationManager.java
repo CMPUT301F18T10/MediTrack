@@ -56,7 +56,7 @@ public class ApplicationManager
     {
         // TODO:
     }
-h
+
     public void UpdateDataRepository()
     {
         // TODO: Finish this method
@@ -68,15 +68,5 @@ h
         // TODO: The design for this is not finalized
         // We could potentially just have a map of permissions
         return false;
-    }
-
-    public boolean IsDirty()
-    {
-        return mDirty;
-    }
-
-    public void GetDirty(boolean isDirty)
-    {
-        mDirty = isDirty;
     }
 }
