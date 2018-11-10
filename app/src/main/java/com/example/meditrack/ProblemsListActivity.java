@@ -18,6 +18,8 @@ public class ProblemsListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_problems_list);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        Intent intent = getIntent();
+        String currentUser = intent.getStringExtra("patientID");
 
         FloatingActionButton addFAB = (FloatingActionButton) findViewById(R.id.problemsListAddFAB);
         addFAB.setOnClickListener(new View.OnClickListener() {
@@ -53,6 +55,7 @@ public class ProblemsListActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent profileIntent = new Intent(ProblemsListActivity.this, ProfileInformationActivity.class);
+                profileIntent.putExtra("Patient ID", "patientID"); //replace with actual patient id when that's created
                 startActivity(profileIntent);
             }
         });

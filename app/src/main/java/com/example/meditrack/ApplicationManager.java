@@ -32,7 +32,7 @@ public class ApplicationManager
         mDirty = false;
     }
 
-    public boolean LogIn(UserMode userMode, String userName)
+    public static boolean LogIn(UserMode userMode, String userName)
     {
         // TODO: Attempts to log in and returns True upon success
         // Make sure to go through ElasticSearchManager for any
