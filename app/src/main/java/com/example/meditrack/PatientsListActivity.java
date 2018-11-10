@@ -28,7 +28,7 @@ public class PatientsListActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext()); /** may need to use diff context */
-                builder.setTitle("Title");
+                builder.setTitle("Add Patient");
                 final EditText input = new EditText(getApplicationContext());
                 input.setInputType(InputType.TYPE_CLASS_TEXT);
                 builder.setView(input);

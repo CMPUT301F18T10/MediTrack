@@ -56,7 +56,7 @@ public class ApplicationManager
     {
         // TODO:
     }
-h
+
     public void UpdateDataRepository()
     {
         // TODO: Finish this method
