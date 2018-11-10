@@ -49,7 +49,7 @@ public class ProblemsListActivity extends AppCompatActivity {
             }
         });
         FloatingActionButton profileFAB = (FloatingActionButton) findViewById(R.id.problemsListProfileFAB);
-        searchFAB.setOnClickListener(new View.OnClickListener() {
+        profileFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent profileIntent = new Intent(ProblemsListActivity.this, ProfileInformationActivity.class);
