@@ -28,8 +28,6 @@ public class loginActivity extends AppCompatActivity {
             //caretakerIntent.putExtra("caretakerID", userEmail);
             ApplicationManager.LogIn(CareGiver, userEmail);
             startActivity(caretakerIntent);
-
-
         }
         else{
             Intent patientIntent = new Intent(loginActivity.this, ProblemsListActivity.class);

@@ -24,16 +24,16 @@ public class searchActivity extends AppCompatActivity {
     }
     public void clickGo(View view) {
         if(bodyRadio.isChecked()){
-            //searchmanager bodysearch
+            //searchmanager bodysearch record
         }
         else if(GPSRadio.isChecked()){
-            //searchmanager GPSsearch
+            //searchmanager GPSsearch record
         }
         else if(recordRadio.isChecked()){
-            //searchmanager recordsearch
+            //searchmanager recordsearch by keyword
         }
         else if(problemRadio.isChecked()){
-            //searchmanager problemsearch
+            //searchmanager problemsearch by keyword
         }
         else{
             //searchmanager general
