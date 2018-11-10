@@ -18,15 +18,18 @@ public class ProblemsListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_problems_list);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        Intent intent = getIntent();
+        String currentUser = intent.getStringExtra("patientID");
 
         FloatingActionButton addFAB = (FloatingActionButton) findViewById(R.id.problemsListAddFAB);
         addFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /** this should take user to viewproblem page with default information created, it can then be edited.
-                 * ONLY AVAILABLE TO PATIENT
+                /** !make this available to patient only
+                 * takes user to problem activity with
                  */
                 Intent intent = new Intent(ProblemsListActivity.this, viewProblemActivity.class);
+                intent.putExtra("Item Number", -1); /** not sure best way to do this. For now, i think it would be ok to have -1 mean default values*/
                 startActivity(intent);
             }
         });
@@ -35,6 +38,7 @@ public class ProblemsListActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(ProblemsListActivity.this, viewProblemActivity.class);
+                intent.putExtra("Item Number", position); /** passes the position on the list to next activity*/
                 startActivity(intent);
             }
         });
@@ -46,7 +50,15 @@ public class ProblemsListActivity extends AppCompatActivity {
                 startActivity(searchIntent);
             }
         });
-        /** need to add the profile FAB */
+        FloatingActionButton profileFAB = (FloatingActionButton) findViewById(R.id.problemsListProfileFAB);
+        profileFAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent profileIntent = new Intent(ProblemsListActivity.this, ProfileInformationActivity.class);
+                profileIntent.putExtra("Patient ID", "patientID"); //replace with actual patient id when that's created
+                startActivity(profileIntent);
+            }
+        });
 
     }
 
