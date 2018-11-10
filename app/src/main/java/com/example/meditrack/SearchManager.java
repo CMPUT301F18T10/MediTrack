@@ -11,6 +11,8 @@ import java.util.Date;
 
 public class SearchManager {
 
+    // TODO: Get rid of this class no longer needed
+
     /* This class allows user search problem or records by given specify attributes.
         Not just for searching as a function in the application, but every time a
         service needs to manipulate the model/data classes, the SearchManager class
