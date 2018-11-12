@@ -3,7 +3,6 @@ package com.example.meditrack;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.Assert;
 
 import java.util.Date;
 
@@ -12,15 +11,15 @@ public class ProblemManagerServiceTest
     Problem problem;
     Problem problemToBeDeleted;
     Problem problemToBeEdited;
-    CareGiverRecord record;
-    CareGiverRecord record2;
+    CareProviderRecord record;
+    CareProviderRecord record2;
     @Before
     public void SetUp()
     {
         problem = new Problem("Test Title", "Test Description", new Date(), 1);
         problemToBeDeleted = new Problem("Test Title 2", "Test Description 2", new Date(), 100);
         problemToBeEdited = new Problem("Test Title", "Test Description", new Date());
-        record = new CareGiverRecord(new Date(), "Test Comment", "Test ID");
+        record = new CareProviderRecord(new Date(), "Test Comment", "Test ID");
     }
 
     @After

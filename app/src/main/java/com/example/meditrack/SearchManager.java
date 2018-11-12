@@ -1,13 +1,7 @@
 package com.example.meditrack;
 import android.location.Location;
-import com.example.meditrack.BodyLocation;
-import com.example.meditrack.Problem;
-import com.example.meditrack.PatientRecord;
-import com.example.meditrack.CareGiverRecord;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class SearchManager {
 
@@ -74,7 +68,7 @@ public class SearchManager {
             return new ArrayList<>();
         }
 
-        public static ArrayList<CareGiverRecord> getCareGiveRecordsForCareGiverId(String careGiverId)
+        public static ArrayList<CareProviderRecord> getCareGiveRecordsForCareGiverId(String careGiverId)
         {
             // TODO: Finish the method
             return new ArrayList<>();
