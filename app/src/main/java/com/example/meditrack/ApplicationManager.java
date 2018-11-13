@@ -2,7 +2,7 @@ package com.example.meditrack;
 
 import java.util.ArrayList;
 
-public class ApplicationManager
+public class ApplicationManager extends ElasticSearchManager
 {
     /* This class will hold state information about the app
         It would hold the userMode: {Patient, CareGiver},
@@ -40,7 +40,43 @@ public class ApplicationManager
 
         // Make sure to call DataRepositorySingleton.Initialize
         // to populate with appropriate data
-        return false;
+        String userNameInServer;
+        Patient patient;
+        CareProvider careProvider;
+        DataRepositorySingleton dataRepositorySingleton = null;
+        boolean login = false;
+
+
+        if (userMode == UserMode.Patient){
+            try{ patient = GetPatient(userName);
+                //may do someting
+                login = true;
+                dataRepositorySingleton.Initialize(userMode,userName);
+                //do someting else.
+            }catch (ItemNotFound e){ }
+
+            //Need the ElasticSearch to find userName in patient database.
+        }
+        if (userMode == UserMode.CareGiver){
+            //Need the ElasticSearch to find userName in patient database.
+            try{
+                careProvider = GetCareProvider(userName);
+                //may do someting
+                login = true;
+                dataRepositorySingleton.Initialize(userMode,userName);
+                //do someting else.
+            }catch (ItemNotFound e){ }
+
+
+        }
+
+
+
+        // Make sure to call DataRepositorySingleton.Initialize
+        // to populate with appropriate data
+        return login;
+
+
     }
 
     public boolean RegisterUser(UserMode userMode, String userName)
@@ -48,8 +84,28 @@ public class ApplicationManager
         // TODO: Attempts to register and returns True upon success
         // Make sure to go through ElasticSearchManager for any
         // interaction with the server
+        Patient patient = null;
+        CareProvider careProvider = null;
+        boolean regtiser = false;
 
-        return false;
+        if (userMode == UserMode.Patient){
+            //Initialize patient
+
+            regtiser = true;
+
+
+
+        }
+        if (userMode == UserMode.CareGiver) {
+            //Initialize careGiver
+            regtiser = true;
+
+
+        }
+
+        return regtiser;
+
+
     }
 
     private void SetUser(UserMode userMode, AbstractUser user)
