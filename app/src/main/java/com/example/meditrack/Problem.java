@@ -3,7 +3,7 @@ package com.example.meditrack;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class Problem {
+public class Problem implements ElasticsearchStorable{
 
     private String title;
     private String description;
@@ -32,5 +32,10 @@ public class Problem {
     {
         Date date = new Date();
         return date.toString();
+    }
+
+    @Override
+    public String getElasticsearchType() {
+        return "problems";
     }
 }
