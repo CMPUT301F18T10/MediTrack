@@ -20,10 +20,13 @@ public class ElasticsearchManagerTest {
     public ActivityTestRule<LoginActivity> activityTestRule = new ActivityTestRule<>(LoginActivity.class);
 
     private Solo solo;
+    private ElasticsearchManager esm;
 
     @Before
     public void setUp() throws Exception {
         solo = new Solo(InstrumentationRegistry.getInstrumentation(), activityTestRule.getActivity());
+        esm = new ElasticsearchManager();
+        esm.setTestingMode();
     }
 
     @After
@@ -34,8 +37,7 @@ public class ElasticsearchManagerTest {
     @Test
     public void testAdd() throws Exception {
         Problem problem = new Problem("testProblem", "testDescription", "testPatientId");
-        ElasticsearchManager.GenericAddTask<Problem> task = new ElasticsearchManager.GenericAddTask();
-        task.execute(problem);
+        esm.addObject(problem);
         assert(true);
     }
 

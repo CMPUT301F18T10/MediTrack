@@ -19,17 +19,24 @@ import io.searchbox.core.Index;
 
 public class ElasticsearchManager {
 
-    private static final String elasticsearchUrl = "http://cmput301.softwareprocess.es:8080";
-    private static final String elasticsearchIndex = "cmput301f18t10";
-    private static final String elasticsearchTestIndex = "cmput301f18t10test";
-    private static final String tag = "esm";
+    private final String ELASTICSEARCH_URL = "http://cmput301.softwareprocess.es:8080";
+    private final String ELASTICSEARCH_INDEX = "cmput301f18t10";
+    private final String ELASTICSEARCH_TEST_INDEX = "cmput301f18t10test";
+    private final String tag = "esm";
 
-    private static JestDroidClient client;
+    private JestDroidClient client;
 
-    private static void initElasticsearch(){
+    private String elasticsearchIndex;
+
+    public ElasticsearchManager() {
+        initElasticsearch();
+        this.elasticsearchIndex = ELASTICSEARCH_INDEX;
+    }
+
+    private void initElasticsearch() {
         if (client == null){
 
-            DroidClientConfig.Builder builder = new DroidClientConfig.Builder(elasticsearchUrl);
+            DroidClientConfig.Builder builder = new DroidClientConfig.Builder(ELASTICSEARCH_URL);
             DroidClientConfig config = builder.build();
 
             JestClientFactory factory = new JestClientFactory();
@@ -38,13 +45,10 @@ public class ElasticsearchManager {
         }
     }
 
-    public static class GenericAddTask<T extends ElasticsearchStorable> extends AsyncTask<T, Void, Void> {
-
+    private class GenericAddTask<T extends ElasticsearchStorable> extends AsyncTask<T, Void, Void> {
         @Override
-        protected Void doInBackground(T... ts){
-
+        protected Void doInBackground(T... ts) {
             initElasticsearch();
-
             for (T t : ts){
                 Index index = new Index.Builder(t).index(elasticsearchIndex).type(t.getElasticsearchType()).build();
                 try {
@@ -59,10 +63,28 @@ public class ElasticsearchManager {
                     e.printStackTrace();
                 }
             }
-
             return null;
         }
+    }
 
+    public void setTestingMode() {
+        this.elasticsearchIndex = ELASTICSEARCH_TEST_INDEX;
+    }
+
+    public void unsetTestingMode() {
+        this.elasticsearchIndex = ELASTICSEARCH_INDEX;
+    }
+
+    public <T extends ElasticsearchStorable> void addObject(T t) {
+        GenericAddTask<T> task = new GenericAddTask<>();
+        task.execute(t);
+    }
+
+    public <T extends ElasticsearchStorable> void addObjects(Collection<T> ts) {
+        for (T t : ts) {
+            GenericAddTask<T> task = new GenericAddTask<>();
+            task.execute(t);
+        }
     }
 
 }
