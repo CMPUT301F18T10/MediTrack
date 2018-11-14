@@ -117,33 +117,62 @@ public class DataRepositorySingleton
     }
 
     // Query Methods
-    public ArrayList<Problem> GetProblemForPatientId(String patientId)
+    public ArrayList<Problem> GetProblemsForPatientId(String patientId)
     {
-        return new ArrayList<>();
+        ArrayList<Problem> matchingProblems = new ArrayList<>();
+        for (Problem problem : mProblemList)
+        {
+            if (problem.getPatientId().equals(patientId)) matchingProblems.add(problem);
+        }
+        return matchingProblems;
     }
 
     public ArrayList<CareGiverRecord> GetCareGiverRecordsForProblemId(String problemId)
     {
-        return new ArrayList<>();
+        ArrayList<CareGiverRecord> matchingRecords = new ArrayList<>();
+        for (CareGiverRecord record : mCareGiverRecordList)
+        {
+            if (record.getProblemId().equals(problemId)) matchingRecords.add(record);
+        }
+
+        return matchingRecords;
     }
 
     public ArrayList<PatientRecord> GetPatientRecordsForProblem(String problemId)
     {
-        return new ArrayList<>();
+        ArrayList<PatientRecord> matchingRecords = new ArrayList<>();
+        for (PatientRecord record : mPatientRecordList)
+        {
+            if (record.getProblemId().equals(problemId)) matchingRecords.add(record);
+        }
+
+        return matchingRecords;
     }
 
     public boolean DoesProblemExist(String problemId)
     {
+        for (Problem currentProblem : mProblemList)
+        {
+            if (currentProblem.getId().equals(problemId)) return true;
+        }
         return false;
     }
 
     public boolean DoesCareGiverRecordExist(String problemId, String recordId)
     {
+        for (CareGiverRecord currentRecord : mCareGiverRecordList)
+        {
+            if (currentRecord.getProblemId().equals(problemId) && currentRecord.getId().equals(recordId)) return true;
+        }
         return false;
     }
 
     public boolean DoesPatientRecordExist(String problemId, String recordId)
     {
+        for (PatientRecord currentRecord : mPatientRecordList)
+        {
+            if (currentRecord.getProblemId().equals(problemId) && currentRecord.getId().equals(recordId)) return true;
+        }
         return false;
     }
 
