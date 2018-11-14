@@ -23,4 +23,5 @@ public class CareProvider extends AbstractUser {
     public ArrayList<String> getPatientIds() {
         return patientIds;
     }
+    public void setPatientIds(ArrayList<String> Ids){this.patientIds = Ids;}
 }

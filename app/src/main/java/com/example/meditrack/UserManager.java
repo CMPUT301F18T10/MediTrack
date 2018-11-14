@@ -10,27 +10,25 @@ public class UserManager {
      */
 	private ContactInfo new_contactInfo;
 	private ArrayList<String> BodyImages;
-	private Patient patient;
 
-	public void EditContactInfo(Patient patient, String email, String phoneNumber)
+	public void EditContactInfo(String email, String phoneNumber)
 	{
 		new_contactInfo.setEmail(email);
 		new_contactInfo.setPhoneNumber(phoneNumber);
-		patient.setContactInfo(new_contactInfo);
+        DataRepositorySingleton.getUser("").setContactInfo(new_contactInfo);
 	}
 	
-	public void addPatient(CareProvider careProvider, String patientUserId)
+	public void addPatient(String patientUserId)
 	{
-		careProvider.AddPatientId(patientUserId);
+	    DataRepositorySingleton.getUser().AddPatientId(patientUserId);
 	}
 
 
 	public void addBodyLocationImage(Patient patient, ImageView image)
 	{
 	    //missing part: upload image to database
-		BodyImages = patient.getBodyLocationImages();
 		String imageId = String.valueOf(image.getTag());
-		BodyImages.add(imageId);
+        DataRepositorySingleton.getUser("").getBodyLocationImages().add(imageId);
 	}
 	
 	public Boolean checkBodyImageNumber(Patient patient)
@@ -46,11 +44,12 @@ public class UserManager {
 	public void deleteBodyLocationImage(Patient patient, String ImageId)
 	{
 		//missing part: delete image from database
-        BodyImages = patient.getBodyLocationImages();
+        BodyImages = DataRepositorySingleton.getUser("").getBodyLocationImages();
         for(int i = 0; i<BodyImages.size();i++){
             if(BodyImages.get(i).equals(ImageId)){
                 BodyImages.remove(i);
             }
         }
+        DataRepositorySingleton.getUser("").setBodyLocationImageIds(BodyImages);
 	}
 }
