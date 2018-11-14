@@ -1,4 +1,5 @@
 package com.example.meditrack;
+import android.widget.ImageView;
 
 import java.util.ArrayList;
 
@@ -7,27 +8,49 @@ public class UserManager {
        This would include Edit contactInfo, AddPatient to patient list, 
        and Add comment
      */
-	
+	private ContactInfo new_contactInfo;
+	private ArrayList<String> BodyImages;
+	private Patient patient;
+
 	public void EditContactInfo(Patient patient, String email, String phoneNumber)
 	{
-        	// set the new contact information in profile (UserMode patient)
-		// TODO: Finish this method
+		new_contactInfo.setEmail(email);
+		new_contactInfo.setPhoneNumber(phoneNumber);
+		patient.setContactInfo(new_contactInfo);
 	}
 	
-	public void addPatient(String patientUserId)
+	public void addPatient(CareProvider careProvider, String patientUserId)
 	{
-		// TODO: Finish this method
+		careProvider.AddPatientId(patientUserId);
 	}
 
-	// @Ri Xu, is this function necessary? If so, I don't think it belongs here
-	public void addComments(CareProvider careProvider, Patient patient) 
+
+	public void addBodyLocationImage(Patient patient, ImageView image)
 	{
-		// TODO: Finish this method
+	    //missing part: upload image to database
+		BodyImages = patient.getBodyLocationImages();
+		String imageId = String.valueOf(image.getTag());
+		BodyImages.add(imageId);
 	}
 	
-	public void checkBodyImageNumber(Patient patient) 
+	public Boolean checkBodyImageNumber(Patient patient)
 	{
-		//TODO: Finish this method
-		//ckeck number of body image is at least two
+		BodyImages = patient.getBodyLocationImages();
+		if(BodyImages.size() >= 2){
+			return Boolean.TRUE;
+		}
+		else{
+			return Boolean.FALSE;
+		}
+	}
+	public void deleteBodyLocationImage(Patient patient, String ImageId)
+	{
+		//missing part: delete image from database
+        BodyImages = patient.getBodyLocationImages();
+        for(int i = 0; i<BodyImages.size();i++){
+            if(BodyImages.get(i).equals(ImageId)){
+                BodyImages.remove(i);
+            }
+        }
 	}
 }
