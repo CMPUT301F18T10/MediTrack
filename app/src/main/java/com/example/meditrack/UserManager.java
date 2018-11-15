@@ -1,33 +1,54 @@
 package com.example.meditrack;
+import android.widget.ImageView;
 
 import java.util.ArrayList;
 
 public class UserManager {
 	/* This class is responsible for operating on contact informations and patient
-       This would include Edit contactInfo, AddPatient to patient list, 
+       This would include Edit contactInfo, AddPatient to patient list,
        and Add comment
      */
-	
-	public void EditContactInfo(Patient patient, String email, String phoneNumber)
+	private ContactInfo new_contactInfo;
+	private ArrayList<String> BodyImages;
+	private ArrayList<String> patientIds;
+
+	public void EditContactInfo(String email, String phoneNumber)
 	{
-        	// set the new contact information in profile (UserMode patient)
-		// TODO: Finish this method
-	}
-	
-	public void addPatient(String patientUserId)
-	{
-		// TODO: Finish this method
+		new_contactInfo.setEmail(email);
+		new_contactInfo.setPhoneNumber(phoneNumber);
+		MockDataRepositoryUserManager.GetPatient().setContactInfo(new_contactInfo);
 	}
 
-	// @Ri Xu, is this function necessary? If so, I don't think it belongs here
-	public void addComments(CareProvider careProvider, Patient patient) 
+	public void addPatient(String patientUserId)
 	{
-		// TODO: Finish this method
+		patientIds = MockDataRepositoryUserManager.GetCareProvider().getPatientIds();
+		patientIds.add(patientUserId);
+		MockDataRepositoryUserManager.GetCareProvider().setPatientIds(patientIds);
+
 	}
-	
-	public void checkBodyImageNumber(Patient patient) 
+
+
+	public void addBodyLocationImage(ImageView image)
 	{
-		//TODO: Finish this method
-		//ckeck number of body image is at least two
+		//missing part: upload image to database
+		String imageId = String.valueOf(image.getTag());
+		MockDataRepositoryUserManager.GetPatient().getBodyLocationImages().add(imageId);
+	}
+
+	public int checkBodyImageNumber()
+	{
+		BodyImages = MockDataRepositoryUserManager.GetPatient().getBodyLocationImages();
+		return BodyImages.size();
+	}
+	public void deleteBodyLocationImage(String ImageId)
+	{
+		//missing part: delete image from database
+		BodyImages = MockDataRepositoryUserManager.GetPatient().getBodyLocationImages();
+		for(int i = 0; i<BodyImages.size();i++){
+			if(BodyImages.get(i).equals(ImageId)){
+				BodyImages.remove(i);
+			}
+		}
+		MockDataRepositoryUserManager.GetPatient().setBodyLocationImageIds(BodyImages);
 	}
 }
