@@ -22,4 +22,5 @@ public class Patient extends AbstractUser {
     public void setContactInfo(ContactInfo contactInfo) {
         this.contactInfo = contactInfo;
     }
+    public String getElasticsearchType() { return "patients"; }
 }

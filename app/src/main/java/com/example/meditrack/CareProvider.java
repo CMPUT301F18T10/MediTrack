@@ -23,4 +23,6 @@ public class CareProvider extends AbstractUser {
     public ArrayList<String> getPatientIds() {
         return patientIds;
     }
+
+    public String getElasticsearchType() { return "careproviders"; }
 }

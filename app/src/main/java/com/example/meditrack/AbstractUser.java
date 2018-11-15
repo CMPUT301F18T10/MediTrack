@@ -1,6 +1,6 @@
 package com.example.meditrack;
 
-public abstract class AbstractUser {
+public abstract class AbstractUser implements ElasticsearchStorable{
 
     String userId;
 

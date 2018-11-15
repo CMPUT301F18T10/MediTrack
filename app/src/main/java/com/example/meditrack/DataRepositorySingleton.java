@@ -1,7 +1,11 @@
 package com.example.meditrack;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.Deque;
+import java.util.Iterator;
+import java.util.ListIterator;
 
 public class DataRepositorySingleton
 {
@@ -29,6 +33,7 @@ public class DataRepositorySingleton
      */
 
     private static DataRepositorySingleton instance = null;
+    private ElasticsearchManager mESM;
 
     private boolean mDirty;
 
@@ -38,15 +43,15 @@ public class DataRepositorySingleton
     private ArrayList<Problem> mProblemList;
     private Deque<Problem> mNewProblems;
     private Deque<Problem> mEditedProblems;
-    private Deque<Problem> mDeletedProblems;
+    private Deque<String> mDeletedProblemIds;
 
     private ArrayList<PatientRecord> mPatientRecordList;
     private Deque<PatientRecord> mNewPatientRecords;
-    private Deque<PatientRecord> mDeletedPatientRecords;
+    private Deque<String> mDeletedPatientRecordIds;
 
-    private ArrayList<CareGiverRecord> mCareGiverRecordList;
-    private Deque<CareGiverRecord> mNewCareGiverRecords;
-    private Deque<CareGiverRecord> mDeletedCareGiverRecords;
+    private ArrayList<CareProviderRecord> mCareProviderRecordsList;
+    private Deque<CareProviderRecord> mNewCareProviderRecords;
+    private Deque<String> mDeletedCareProviderRecordIds;
 
     private AbstractUser mUser = null;
 
@@ -64,11 +69,29 @@ public class DataRepositorySingleton
     }
 
     private boolean IsDirty() { return mDirty; }
+
     private void SetDirty(boolean dirtyFlag) { mDirty = dirtyFlag; }
 
     private void PopulateUser(ApplicationManager.UserMode userMode, String userName)
     {
+        // Need to create a temporary user object so that we can call
+        // getElasticsearchtype method
+        // Making the method static would've been a potential solution
+        // but ElasticSearchManager has generic code and static methods
+        // can't be called on generic types
+        AbstractUser user = null;
+        ContactInfo tempContact = new ContactInfo("", "");
+        if (userMode == ApplicationManager.UserMode.Patient) user = new Patient("temp", new ArrayList<String>(), tempContact);
+        else if (userMode == ApplicationManager.UserMode.CareGiver) user = new CareProvider("tempid", new ArrayList<String>());
 
+        try
+        {
+            mUser = mESM.getObjectFromId(userName, user.getElasticsearchType());
+        }
+        catch(ElasticsearchManager.ObjectNotFoundException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     private void PopulateProblemList()
@@ -81,18 +104,19 @@ public class DataRepositorySingleton
 
     }
 
-    public void Initialize(ApplicationManager.UserMode userMode, String userName)
+    public void Initialize(ApplicationManager.UserMode userMode, String userName, ElasticsearchManager esm)
     {
-        // TODO: This function would populate all data in the class
         mDirty = false;
         mUserMode = userMode;
         mUserName = userName;
+        mESM = esm;
         DownloadData(userMode, userName);
     }
 
     private void UploadData()
     {
         // TODO: Finish the method
+        // Go through all the deques and post them to ElasticSearch
         // Send the new Problems
         // Send the new Records
         // Send the edited Problems
@@ -114,6 +138,82 @@ public class DataRepositorySingleton
         }
 
         DownloadData(mUserMode, mUserName);
+    }
+
+    // Mutating Methods
+    public void AddProblem(Problem problem)
+    {
+        mProblemList.add(problem);
+        mNewProblems.add(problem);
+        SetDirty(true);
+    }
+
+    public void EditProblem(Problem problem)
+    {
+        mEditedProblems.add(problem);
+        ListIterator<Problem> iter = mProblemList.listIterator();
+        while (iter.hasNext())
+        {
+            Problem currentProblem = iter.next();
+            if (currentProblem.getId().equals(problem.getId()))
+            {
+                iter.set(problem);
+            }
+        }
+        SetDirty(true);
+    }
+
+    public void DeleteProblem(String problemId)
+    {
+        mDeletedProblemIds.add(problemId);
+        for (Problem currentProblem : mProblemList)
+        {
+            if (currentProblem.getId().equals(problemId))
+            {
+                mProblemList.remove(currentProblem);
+            }
+        }
+        SetDirty(true);
+    }
+
+    public void AddCareProviderRecord(CareProviderRecord record)
+    {
+        mCareProviderRecordsList.add(record);
+        mNewCareProviderRecords.add(record);
+        SetDirty(true);
+    }
+
+    public void DeleteCareProviderRecord(String recordId)
+    {
+        mDeletedCareProviderRecordIds.add(recordId);
+        for (CareProviderRecord currentRecord : mCareProviderRecordsList)
+        {
+            if (currentRecord.getId().equals(recordId))
+            {
+                mCareProviderRecordsList.remove(currentRecord);
+            }
+        }
+        SetDirty(true);
+    }
+
+    public void AddPatientRecord(PatientRecord record)
+    {
+        mPatientRecordList.add(record);
+        mNewPatientRecords.add(record);
+        SetDirty(true);
+    }
+
+    public void DeletePatientRecord(String recordId)
+    {
+        mDeletedPatientRecordIds.add(recordId);
+        for (PatientRecord currentRecord : mPatientRecordList)
+        {
+            if (currentRecord.getId().equals(recordId))
+            {
+                mPatientRecordList.remove(currentRecord);
+            }
+        }
+        SetDirty(true);
     }
 
     // Query Methods
@@ -141,10 +241,10 @@ public class DataRepositorySingleton
         return matchingProblems;
     }
 
-    public ArrayList<CareGiverRecord> GetCareGiverRecordsForProblemId(String problemId)
+    public ArrayList<CareProviderRecord> GetCareGiverRecordsForProblemId(String problemId)
     {
-        ArrayList<CareGiverRecord> matchingRecords = new ArrayList<>();
-        for (CareGiverRecord record : mCareGiverRecordList)
+        ArrayList<CareProviderRecord> matchingRecords = new ArrayList<>();
+        for (CareProviderRecord record : mCareProviderRecordsList)
         {
             if (record.getProblemId().equals(problemId)) matchingRecords.add(record);
         }
@@ -180,7 +280,7 @@ public class DataRepositorySingleton
 
     public boolean DoesCareGiverRecordExist(String problemId, String recordId)
     {
-        for (CareGiverRecord currentRecord : mCareGiverRecordList)
+        for (CareProviderRecord currentRecord : mCareProviderRecordsList)
         {
             if (currentRecord.getProblemId().equals(problemId) && currentRecord.getId().equals(recordId)) return true;
         }
