@@ -1,5 +1,6 @@
 package com.example.meditrack;
 
+import android.media.VolumeShaper;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -157,13 +158,23 @@ public class ElasticsearchManager {
         return null;
     }
 
+    /**
+     * Find PatientRecords that correspond to the given problemId
+     * @param problemId problemId to search for
+     * @return An ArrayList of PatientRecords that correspond to the given problemId
+     * @throws OperationFailedException
+     */
+    public ArrayList<PatientRecord> getPatientRecordByProblemId(String problemId) throws OperationFailedException {
+        return null;
+    }
 
     /**
-     * Get an ArrayList of records by providing the problem id
-     * @param problemId the Id of the problem
-     * @return the records of the problem
+     * Find CareProviderRecords that correspond to the given problemId
+     * @param problemId problemId to search for
+     * @return An ArrayList of CareProviderRecords that correspond to the given problemId
+     * @throws OperationFailedException
      */
-    public ArrayList<AbstractRecord> getRecordsByProblemId(String problemId) throws OperationFailedException {
+    public ArrayList<CareProviderRecord> getCareProviderRecordByProblemId(String problemId) throws OperationFailedException {
         return null;
     }
 
