@@ -32,10 +32,10 @@ public class ApplicationManager
         mDirty = false;
     }
 
-    public boolean LogIn(UserMode userMode, String userName)
+    public static boolean LogIn(UserMode userMode, String userName)
     {
         // TODO: Attempts to log in and returns True upon success
-        // Make sure to go through ElasticSearchManager for any
+        // Make sure to go through ElasticsearchManager for any
         // interaction with the server
 
         // Make sure to call DataRepositorySingleton.Initialize
@@ -46,7 +46,7 @@ public class ApplicationManager
     public boolean RegisterUser(UserMode userMode, String userName)
     {
         // TODO: Attempts to register and returns True upon success
-        // Make sure to go through ElasticSearchManager for any
+        // Make sure to go through ElasticsearchManager for any
         // interaction with the server
 
         return false;

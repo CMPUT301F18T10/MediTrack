@@ -1,27 +1,44 @@
 package com.example.meditrack;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.RadioButton;
 
-public class loginActivity extends AppCompatActivity {
+import static com.example.meditrack.ApplicationManager.UserMode.CareGiver;
+
+public class LoginActivity extends AppCompatActivity {
+
+    EditText userEmailEdit;
+    String userEmail;
+    RadioButton caretakerRadio;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        EditText userEmailEdit = (EditText) findViewById(R.id.loginEmail);
+        String userEmail = userEmailEdit.getText().toString();
+        RadioButton caretakerRadio = (RadioButton) findViewById(R.id.caretakerRadioButton);
+
     }
     public void loginClick(View v){
-        /** checks the username in the emailLogin edit text
-         *      >if it exists, logs in and loads that information
-         *      >if not exist, create the account with default contact information
-         * also checks if caretaker button is checked
-         *      >take user to patient list if caretaker
-         *      >take user to problem list if paitent
-         */
+        if(caretakerRadio.isChecked()){
+            Intent caretakerIntent = new Intent(LoginActivity.this, PatientsListActivity.class);
+            //caretakerIntent.putExtra("caretakerID", userEmail);
+            ApplicationManager.LogIn(CareGiver, userEmail);
+            startActivity(caretakerIntent);
+        }
+        else{
+            Intent patientIntent = new Intent(LoginActivity.this, ProblemsListActivity.class);
+            //patientIntent.putExtra("patientID", userEmail);
+            ApplicationManager.LogIn(ApplicationManager.UserMode.Patient, userEmail);
+            startActivity(patientIntent);
+        }
+
     }
 
 }
