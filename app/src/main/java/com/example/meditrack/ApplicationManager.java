@@ -21,7 +21,7 @@ public class ApplicationManager
         they should be displayed
      */
 
-    enum UserMode { Patient, CareGiver;}
+    enum UserMode { Patient, CareGiver, Invalid;}
 
     private boolean mDirty;
     private UserMode mUserMode;

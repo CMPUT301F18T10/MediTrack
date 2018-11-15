@@ -48,9 +48,9 @@ public class DataRepositorySingleton
     private Deque<CareGiverRecord> mNewCareGiverRecords;
     private Deque<CareGiverRecord> mDeletedCareGiverRecords;
 
-    private AbstractUser mUser;
+    private AbstractUser mUser = null;
 
-    private ApplicationManager.UserMode mUserMode;
+    private ApplicationManager.UserMode mUserMode = ApplicationManager.UserMode.Invalid;
     private String mUserName;
 
     protected DataRepositorySingleton() { }
@@ -117,6 +117,20 @@ public class DataRepositorySingleton
     }
 
     // Query Methods
+    public AbstractUser GetUser() throws DataRepositorySingletonNotInitialized
+    {
+        if (mUser == null) throw new DataRepositorySingletonNotInitialized();
+
+        return mUser;
+    }
+
+    public ApplicationManager.UserMode GetUserMode() throws DataRepositorySingletonNotInitialized
+    {
+        if (mUserMode == ApplicationManager.UserMode.Invalid) throw new DataRepositorySingletonNotInitialized();
+
+        return mUserMode;
+    }
+
     public ArrayList<Problem> GetProblemsForPatientId(String patientId)
     {
         ArrayList<Problem> matchingProblems = new ArrayList<>();
@@ -149,6 +163,12 @@ public class DataRepositorySingleton
         return matchingRecords;
     }
 
+    public boolean DoesUserExist(String userName, ApplicationManager.UserMode userMode)
+    {
+        // TODO: check ElasticSearch object for the user
+        return false;
+    }
+
     public boolean DoesProblemExist(String problemId)
     {
         for (Problem currentProblem : mProblemList)
@@ -176,5 +196,8 @@ public class DataRepositorySingleton
         return false;
     }
 
-
+    public class DataRepositorySingletonNotInitialized extends Exception
+    {
+        public DataRepositorySingletonNotInitialized() { super("DataRepositorySingleton has not been initialized yet!"); }
+    }
 }
