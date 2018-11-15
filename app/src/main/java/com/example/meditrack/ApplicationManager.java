@@ -21,6 +21,7 @@ public class ApplicationManager extends ElasticSearchManager
      */
     enum UserMode {Patient, CareGiver;}
     private UserMode mUserMode;
+    DataRepositorySingleton dataRepositorySingleton;
 
     public ApplicationManager(UserMode userMode)
     {
@@ -146,12 +147,12 @@ public class ApplicationManager extends ElasticSearchManager
         // TODO:
     }
 
-    /**
-     * @param userMode To decide which mode to execute.
-     * @param userName user inputs userName.
-     */
-    public void UpdateDataRepository(UserMode userMode, String userName)
+    public void UpdateDataRepository()
     {
+        dataRepositorySingleton.RefreshDataRepositorySingleton();
+
+
+
         // TODO: Finish this method
         // It will get the updated information from ElasticSearch
 
