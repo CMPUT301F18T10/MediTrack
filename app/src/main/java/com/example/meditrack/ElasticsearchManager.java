@@ -179,4 +179,14 @@ public class ElasticsearchManager {
 
     }
 
+    /**
+     * Given an id and type, determin wheather this object exists or not
+     * @param id the id of the object
+     * @param type the type to search for
+     * @return true if the object with the given id exists in the given type
+     */
+    public boolean existObject(String id, String type){
+        return false;
+    }
+
 }
