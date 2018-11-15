@@ -49,6 +49,10 @@ public class ElasticsearchManager {
 
     }
 
+    public class ObjectAlreadyExistsException extends Exception {
+
+    }
+
     private class GenericAddTask<T extends ElasticsearchStorable> extends AsyncTask<T, Void, Void> {
         @Override
         protected Void doInBackground(T... ts) {
@@ -84,7 +88,7 @@ public class ElasticsearchManager {
      * @param t object to add
      * @param <T> type of the object
      */
-    public <T extends ElasticsearchStorable> void addObject(T t) {
+    public <T extends ElasticsearchStorable> void addObject (T t) throws ObjectAlreadyExistsException {
         GenericAddTask<T> task = new GenericAddTask<>();
         task.execute(t);
     }
@@ -94,7 +98,7 @@ public class ElasticsearchManager {
      * @param ts objects to add
      * @param <T> type of the objects
      */
-    public <T extends ElasticsearchStorable> void addObjects(Collection<T> ts) {
+    public <T extends ElasticsearchStorable> void addObjects(Collection<T> ts) throws ObjectAlreadyExistsException {
         for (T t : ts) {
             addObject(t);
         }
