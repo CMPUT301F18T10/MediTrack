@@ -6,7 +6,7 @@ import android.location.Location;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class PatientRecord extends AbstractRecord {
+public class PatientRecord extends AbstractRecord implements ElasticsearchStorable{
 
     private String title;
     private String description;
@@ -41,5 +41,10 @@ public class PatientRecord extends AbstractRecord {
 
     public Location getLocation() {
         return location;
+    }
+
+    @Override
+    public String getElasticsearchType() {
+        return "patient_records";
     }
 }
