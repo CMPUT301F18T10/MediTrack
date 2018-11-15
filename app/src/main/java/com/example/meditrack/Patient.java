@@ -22,6 +22,7 @@ public class Patient extends AbstractUser implements ElasticsearchStorable{
     public void setContactInfo(ContactInfo contactInfo) {
         this.contactInfo = contactInfo;
     }
+    public void setBodyLocationImageIds(ArrayList<String> ImageIds){this.bodyLocationImageIds = ImageIds;}
 
     @Override
     public String getElasticsearchType() {
