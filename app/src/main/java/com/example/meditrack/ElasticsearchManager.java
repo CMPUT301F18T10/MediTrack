@@ -49,6 +49,14 @@ public class ElasticsearchManager {
 
     }
 
+    public class ObjectAlreadyExistsException extends Exception {
+
+    }
+
+    public class OperationFailedException extends Exception {
+
+    }
+
     private class GenericAddTask<T extends ElasticsearchStorable> extends AsyncTask<T, Void, Void> {
         @Override
         protected Void doInBackground(T... ts) {
@@ -84,7 +92,7 @@ public class ElasticsearchManager {
      * @param t object to add
      * @param <T> type of the object
      */
-    public <T extends ElasticsearchStorable> void addObject(T t) {
+    public <T extends ElasticsearchStorable> void addObject (T t) throws ObjectAlreadyExistsException, OperationFailedException {
         GenericAddTask<T> task = new GenericAddTask<>();
         task.execute(t);
     }
@@ -94,21 +102,21 @@ public class ElasticsearchManager {
      * @param ts objects to add
      * @param <T> type of the objects
      */
-    public <T extends ElasticsearchStorable> void addObjects(Collection<T> ts) {
+    public <T extends ElasticsearchStorable> void addObjects(Collection<T> ts) throws ObjectAlreadyExistsException, OperationFailedException {
         for (T t : ts) {
             addObject(t);
         }
     }
 
     /**
-     * Search the given index for exact match of the field "id".  This method handles getting
+     * Search the given type for exact match of the field "id".  This method handles getting
      * objects with a known id.
-     * @param id The String object that the "id" attribute of the Object holds
-     * @param index The index to search for
      * @param <T> Class of the object
+     * @param id The String object that the "id" attribute of the Object holds
+     * @param type The type to search for
      * @return Matched object
      */
-    public <T extends ElasticsearchStorable> T getObjectFromId(String id, String index) throws ObjectNotFoundException {
+    public <T extends ElasticsearchStorable> T getObjectFromId(String id, String type) throws ObjectNotFoundException, OperationFailedException {
         return null;
     }
 
@@ -117,7 +125,7 @@ public class ElasticsearchManager {
      * @param text text to search
      * @return an ArrayList of Problems that contain the given text
      */
-    public ArrayList<Problem> searchProblems(String text) {
+    public ArrayList<Problem> searchProblems (String text) throws OperationFailedException {
         return null;
     }
 
@@ -127,7 +135,7 @@ public class ElasticsearchManager {
      * @param text text to search
      * @return an ArrayList of PatientRecord
      */
-    public ArrayList<PatientRecord> searhPatientRecords(String text) {
+    public ArrayList<PatientRecord> searhPatientRecords(String text) throws OperationFailedException {
         return null;
     }
 
@@ -136,7 +144,7 @@ public class ElasticsearchManager {
      * @param text text to search
      * @return an ArrayList of CareProviderRecord
      */
-    public ArrayList<CareProviderRecord> searchCareProviderRecord(String text) {
+    public ArrayList<CareProviderRecord> searchCareProviderRecord(String text) throws OperationFailedException {
         return null;
     }
 
@@ -145,7 +153,7 @@ public class ElasticsearchManager {
      * @param patientId the Id of the patient
      * @return the problems of the patient
      */
-    public ArrayList<Problem> getProblemsByPatientId(String patientId){
+    public ArrayList<Problem> getProblemsByPatientId(String patientId) throws OperationFailedException {
         return null;
     }
 
@@ -155,28 +163,38 @@ public class ElasticsearchManager {
      * @param problemId the Id of the problem
      * @return the records of the problem
      */
-    public ArrayList<AbstractRecord> getRecordsByProblemId(String problemId){
+    public ArrayList<AbstractRecord> getRecordsByProblemId(String problemId) throws OperationFailedException {
         return null;
     }
 
     /**
-     * Delete an object that matches the given id in the given index
+     * Delete an object that matches the given id in the given type
      * @param id the id of the Object
-     * @param index the index to search search for
+     * @param type the type to search search for
      */
-    public void deleteObject(String id, String index) throws ObjectNotFoundException {
+    public void deleteObject(String id, String type) throws ObjectNotFoundException, OperationFailedException {
 
     }
 
     /**
-     * Replace the object with the given id in the given index with the given obj
+     * Replace the object with the given id in the given type with the given obj
      * @param id the id of the object to replace
-     * @param index the index the object resides in
+     * @param type the type the object resides in
      * @param obj the object to replace the old object
      * @param <T>
      */
-    public <T extends ElasticsearchStorable> void updateObject(String id, String index, T obj) throws ObjectNotFoundException {
+    public <T extends ElasticsearchStorable> void updateObject(String id, String type, T obj) throws ObjectNotFoundException, OperationFailedException {
 
+    }
+
+    /**
+     * Given an id and type, determin wheather this object exists or not
+     * @param id the id of the object
+     * @param type the type to search for
+     * @return true if the object with the given id exists in the given type
+     */
+    public boolean existObject(String id, String type) throws OperationFailedException {
+        return false;
     }
 
 }
