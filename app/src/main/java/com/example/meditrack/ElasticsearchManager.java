@@ -101,14 +101,14 @@ public class ElasticsearchManager {
     }
 
     /**
-     * Search the given index for exact match of the field "id".  This method handles getting
+     * Search the given type for exact match of the field "id".  This method handles getting
      * objects with a known id.
-     * @param id The String object that the "id" attribute of the Object holds
-     * @param index The index to search for
      * @param <T> Class of the object
+     * @param id The String object that the "id" attribute of the Object holds
+     * @param type The type to search for
      * @return Matched object
      */
-    public <T extends ElasticsearchStorable> T getObjectFromId(String id, String index) throws ObjectNotFoundException {
+    public <T extends ElasticsearchStorable> T getObjectFromId(String id, String type) throws ObjectNotFoundException {
         return null;
     }
 
@@ -160,22 +160,22 @@ public class ElasticsearchManager {
     }
 
     /**
-     * Delete an object that matches the given id in the given index
+     * Delete an object that matches the given id in the given type
      * @param id the id of the Object
-     * @param index the index to search search for
+     * @param type the type to search search for
      */
-    public void deleteObject(String id, String index) throws ObjectNotFoundException {
+    public void deleteObject(String id, String type) throws ObjectNotFoundException {
 
     }
 
     /**
-     * Replace the object with the given id in the given index with the given obj
+     * Replace the object with the given id in the given type with the given obj
      * @param id the id of the object to replace
-     * @param index the index the object resides in
+     * @param type the type the object resides in
      * @param obj the object to replace the old object
      * @param <T>
      */
-    public <T extends ElasticsearchStorable> void updateObject(String id, String index, T obj) throws ObjectNotFoundException {
+    public <T extends ElasticsearchStorable> void updateObject(String id, String type, T obj) throws ObjectNotFoundException {
 
     }
 
