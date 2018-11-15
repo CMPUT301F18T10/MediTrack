@@ -2,7 +2,7 @@ package com.example.meditrack;
 
 import java.util.ArrayList;
 
-public class Patient extends AbstractUser {
+public class Patient extends AbstractUser implements ElasticsearchStorable{
 
     private ArrayList<String> bodyLocationImageIds;
     private ContactInfo contactInfo;
@@ -22,5 +22,10 @@ public class Patient extends AbstractUser {
     public void setContactInfo(ContactInfo contactInfo) {
         this.contactInfo = contactInfo;
     }
-    public void setBodyLocationImageIds(ArrayList<String> listOfImageID){this.bodyLocationImageIds = listOfImageID;}
+    public void setBodyLocationImageIds(ArrayList<String> ImageIds){this.bodyLocationImageIds = ImageIds;}
+
+    @Override
+    public String getElasticsearchType() {
+        return "patients";
+    }
 }
