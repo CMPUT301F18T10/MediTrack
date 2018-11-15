@@ -1,6 +1,5 @@
 package com.example.meditrack;
 
-import java.util.ArrayList;
 
 public class ApplicationManager extends ElasticSearchManager
 {
@@ -20,19 +19,25 @@ public class ApplicationManager extends ElasticSearchManager
         query the ApplicationManager class on whether
         they should be displayed
      */
-
-    enum UserMode { Patient, CareGiver;}
-
-    private boolean mDirty;
+    enum UserMode {Patient, CareGiver;}
     private UserMode mUserMode;
 
-    ApplicationManager()
+    public ApplicationManager(UserMode userMode)
     {
         // TODO: Finish the constructor
-        mDirty = false;
+        this.mUserMode = userMode;
     }
 
-    public static boolean LogIn(UserMode userMode, String userName)
+
+    /**
+     *
+     * @param userMode: To decide which mode to execute.
+     * @param userID: user inputs userName.
+     * @return a boolean value which determines login successfully or not.
+     */
+
+
+    public static boolean LogIn(UserMode userMode, String userID)
     {
         // TODO: Attempts to log in and returns True upon success
         // Make sure to go through ElasticSearchManager for any
@@ -40,36 +45,43 @@ public class ApplicationManager extends ElasticSearchManager
 
         // Make sure to call DataRepositorySingleton.Initialize
         // to populate with appropriate data
-        String userNameInServer;
-        Patient patient;
-        CareProvider careProvider;
+        String testindex;
+        Patient patient = null;
+        CareProvider careProvider = null;
         DataRepositorySingleton dataRepositorySingleton = null;
         boolean login = false;
 
 
-        if (userMode == UserMode.Patient){
-            try{ patient = GetPatient(userName);
-                //may do someting
-                login = true;
-                dataRepositorySingleton.Initialize(userMode,userName);
-                //do someting else.
-            }catch (ItemNotFound e){ }
+        if (userMode == UserMode.Patient){//To handle Patient Mode.
+                patient = getObjectFromId(userID,testindex);//Get patient object from Database.
+                if (patient != null){
+                    login = true;   //Change login target to True.
+                    dataRepositorySingleton.Initialize(userMode,userID);  //Initialize dataRepo for this patient.
+                }
+                else{
+                    //Login failure
+                    //May prompt user to login again
+                    //Or enter the password they have.
 
-            //Need the ElasticSearch to find userName in patient database.
+                }
+
+
+                //do someting else
         }
-        if (userMode == UserMode.CareGiver){
+        else { //userMode == UserMode.CareGiver
             //Need the ElasticSearch to find userName in patient database.
-            try{
-                careProvider = GetCareProvider(userName);
-                //may do someting
-                login = true;
-                dataRepositorySingleton.Initialize(userMode,userName);
-                //do someting else.
-            }catch (ItemNotFound e){ }
-
+                careProvider = getObjectFromId(userID,testindex);
+                if (careProvider != null){
+                    login =true;
+                    dataRepositorySingleton.Initialize(userMode,userID);
+                }
+                else{
+                    //Login failure
+                    //May prompt user to login again
+                    //Or enter the password they have
+                }
 
         }
-
 
 
         // Make sure to call DataRepositorySingleton.Initialize
@@ -79,7 +91,14 @@ public class ApplicationManager extends ElasticSearchManager
 
     }
 
-    public boolean RegisterUser(UserMode userMode, String userName)
+    /**
+     *
+     * @param userMode To decide which mode to execute.
+     * @param userId user inputs userName.
+     * @return a boolean value which determines register successfully or not.
+     */
+
+    public boolean RegisterUser(UserMode userMode, String userId)
     {
         // TODO: Attempts to register and returns True upon success
         // Make sure to go through ElasticSearchManager for any
@@ -89,23 +108,37 @@ public class ApplicationManager extends ElasticSearchManager
         boolean regtiser = false;
 
         if (userMode == UserMode.Patient){
-            //Initialize patient
+            patient = getObjectFromId(userId,testindex);
+            if (patient == null){
+                regtiser = true;
+                patient.userId = userId;
+                addObject(patient);
+                //prompt user to regiser
+                //upload user
+            }
+            else{
+                //This userID has existed in Database.
+                //Prompt the user to login
 
-            regtiser = true;
-
-
-
+            }
         }
-        if (userMode == UserMode.CareGiver) {
+        else{
+            careProvider = getObjectFromId(userId,testindex);
             //Initialize careGiver
-            regtiser = true;
+            if (patient== null){
+                regtiser = true;
+                careProvider.userId = userId;
+                addObject(careProvider);
 
+            }else {
+                //This userID has existed in Database.
+                //Prompt the user to login
+
+            }
 
         }
 
         return regtiser;
-
-
     }
 
     private void SetUser(UserMode userMode, AbstractUser user)
@@ -113,10 +146,16 @@ public class ApplicationManager extends ElasticSearchManager
         // TODO:
     }
 
-    public void UpdateDataRepository()
+    /**
+     * @param userMode To decide which mode to execute.
+     * @param userName user inputs userName.
+     */
+    public void UpdateDataRepository(UserMode userMode, String userName)
     {
         // TODO: Finish this method
         // It will get the updated information from ElasticSearch
+
+
     }
 
     public boolean IsFeatureAllowed(String feature)
