@@ -11,46 +11,53 @@ public class UserManager {
 	private ContactInfo new_contactInfo;
 	private ArrayList<String> BodyImages;
 	private ArrayList<String> patientIds;
-	private Patient patient = DataRepositorySingleton.GetPatient();
-	private CareProvider careProvider = DataRepositorySingleton.GetCareProvider();
+	private Patient patient;
+	private CareProvider careProvider;
+	private DataRepositorySingleton mDRS = DataRepositorySingleton.GetInstance();
 
-	public void EditContactInfo(Patient patient,String email, String phoneNumber)
+	private static UserManager user = null;
+	public UserManager() throws DataRepositorySingleton.InvalidUserMode, DataRepositorySingleton.DataRepositorySingletonNotInitialized {
+		this.patient = mDRS.GetPatient();
+		this.careProvider = mDRS.GetCareProvider();
+
+	}
+	public void EditContactInfo(UserManager user,String email, String phoneNumber)
 	{
 		new_contactInfo.setEmail(email);
 		new_contactInfo.setPhoneNumber(phoneNumber);
-		patient.setContactInfo(new_contactInfo);
+		user.patient.setContactInfo(new_contactInfo);
 	}
 
-	public void addPatient(CareProvider careProvider,String patientUserId)
+	public void addPatient(UserManager user,String patientUserId)
 	{
 		patientIds = careProvider.getPatientIds();
 		patientIds.add(patientUserId);
-        careProvider.setPatientIds(patientIds);
+		user.careProvider.setPatientIds(patientIds);
 
 	}
 
 
-	public void addBodyLocationImage(Patient patient, ImageView image)
+	public void addBodyLocationImage(UserManager user, ImageView image)
 	{
 		//missing part: upload image to database
 		String imageId = String.valueOf(image.getTag());
-		patient.getBodyLocationImages().add(imageId);
+		user.patient.getBodyLocationImages().add(imageId);
 	}
 
-	public int checkBodyImageNumber(Patient patient)
+	public int checkBodyImageNumber(UserManager user)
 	{
-		BodyImages = patient.getBodyLocationImages();
+		BodyImages = user.patient.getBodyLocationImages();
 		return BodyImages.size();
 	}
-	public void deleteBodyLocationImage(Patient patient, String ImageId)
+	public void deleteBodyLocationImage(UserManager user, String ImageId)
 	{
 		//missing part: delete image from database
-		BodyImages = patient.getBodyLocationImages();
+		BodyImages = user.patient.getBodyLocationImages();
 		for(int i = 0; i<BodyImages.size();i++){
 			if(BodyImages.get(i).equals(ImageId)){
 				BodyImages.remove(i);
 			}
 		}
-		patient.setBodyLocationImageIds(BodyImages);
+		user.patient.setBodyLocationImageIds(BodyImages);
 	}
 }
