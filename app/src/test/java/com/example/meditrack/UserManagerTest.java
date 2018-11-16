@@ -1,37 +1,24 @@
 package com.example.meditrack;
 
-import org.junit.Assert;
-import org.junit.Test;
+import java.util.ArrayList;
+import java.util.Arrays;
 
-public class UserManagerTest {
-    @Test
-    public void testUserManager(){
+public class MockDataRepositoryUserManager extends DataRepositorySingleton {
 
-
-        // missing part: test addBodyLocationImage(), didn't do the body location image part yet
-        String email = "Email@ualberta.ca";
-        String phoneNumber = "7806554738";
-        UserManager userManager = new UserManager();
-        userManager.EditContactInfo(MockDataRepositoryUserManager.GetPatient(), email, phoneNumber);
-        Patient patient = MockDataRepositoryUserManager.GetPatient();
-
-        //check EditContactInfo()
-        Assert.assertTrue("Edit method does not work in right way", email.equals(patient.getContactInfo().getEmail()));
-
-        //check checkBodyImageNumber()
-        Assert.assertTrue("check image number method does not work in right way", 3 == userManager.checkBodyImageNumber(MockDataRepositoryUserManager.GetPatient()));
-
-        //check deleteBodyLocationImage()
-        userManager.deleteBodyLocationImage(MockDataRepositoryUserManager.GetPatient(),"Img1224");
-        Assert.assertTrue("delete image method does not work in right way",2 == userManager.checkBodyImageNumber(MockDataRepositoryUserManager.GetPatient()));
-
-        //check addPatient()
-        String id = "22345878";
-        int lengthOfList = MockDataRepositoryUserManager.GetCareProvider().getPatientIds().size();
-        userManager.addPatient(MockDataRepositoryUserManager.GetCareProvider(),id);
-        int new_length = MockDataRepositoryUserManager.GetCareProvider().getPatientIds().size();
-        Assert.assertTrue("add patient method does not work in right way", lengthOfList+1 == new_length );
-
+    public Patient GetPatient()
+    {
+        String email = "testEmail@ualberta.ca";
+        String phoneNumber = "7808001557";
+        ArrayList<String> bodyImageId = new ArrayList<String>(Arrays.asList("Img1223","Img1224","Img1225"));
+        ContactInfo contactInfo = new ContactInfo(email,phoneNumber);
+        Patient patient = new Patient("12345678",bodyImageId,contactInfo);
+        return patient;
     }
 
+    public CareProvider GetCareProvider()
+    {
+        ArrayList<String> patientId = new ArrayList<String>(Arrays.asList("12345678","22345678","32345678"));
+        CareProvider careProvider = new CareProvider("10074289",patientId);
+        return careProvider;
+    }
 }
