@@ -32,6 +32,7 @@ public class ElasticsearchManagerTest {
     private ContactInfo testContactInfo = new ContactInfo("jack2018@cmput301.com", "780-807-078");
 
     private Patient testPatient = new Patient("Jack", null, testContactInfo);
+    private CareProvider careProvider = new CareProvider("Peter");
 
     private Problem testProblem = new Problem("testProblem", "testDescription", testPatient.getUserId());
     private Problem testProblem1 = new Problem("testProblem1", "testDescription1", testPatient.getUserId());
@@ -41,6 +42,9 @@ public class ElasticsearchManagerTest {
     private PatientRecord testPatientRecord1 = new PatientRecord(testProblem.getId(), "title1", "description1", null, null, null);
     private PatientRecord testPatientRecord2 = new PatientRecord(testProblem.getId(), "title2", "description2", null, null, null);
 
+    private CareProviderRecord testCareProviderRecord = new CareProviderRecord(testProblem.getId(), "careProviderComment", careProvider.getUserId());
+    private CareProviderRecord testCareProviderRecord1 = new CareProviderRecord(testProblem.getId(), "careProviderComment2", careProvider.getUserId());
+    private CareProviderRecord testCareProviderRecord2 = new CareProviderRecord(testProblem.getId(), "careProviderComment3", careProvider.getUserId());
 
     @Before
     public void setUp() throws Exception {
@@ -108,10 +112,10 @@ public class ElasticsearchManagerTest {
         patientRecords.add(testPatientRecord1);
         patientRecords.add(testPatientRecord2);
 
+        // getPatientRecordByProblemId should not pick this record up
         PatientRecord randomPatientRecord =  new PatientRecord("randomProblemId", "randomTitle", "randomDescription", null, null, null);
         patientRecords.add(randomPatientRecord);
 
-        // getPatientRecordByProblemId should not pick this record up
         esm.addObjects(patientRecords);
         Thread.sleep(delay);
         ArrayList<PatientRecord> obtained = esm.getPatientRecordByProblemId(testProblem.getId());
@@ -120,6 +124,28 @@ public class ElasticsearchManagerTest {
 
         for (PatientRecord pr : obtained) {
             assertTrue(pr.getProblemId().equals(testProblem.getId()));
+        }
+    }
+
+    @Test
+    public void testGetCareProviderRecordByProblemId() throws  Exception {
+        ArrayList<CareProviderRecord> careProviderRecords = new ArrayList<>();
+        careProviderRecords.add(testCareProviderRecord);
+        careProviderRecords.add(testCareProviderRecord1);
+        careProviderRecords.add(testCareProviderRecord2);
+
+        // getCareProviderRecordByProblemId should not pick this record up
+        CareProviderRecord randomCareProviderRecord = new CareProviderRecord("randomId", "careProviderComment", "randomCareProviderId");
+        careProviderRecords.add(randomCareProviderRecord);
+
+        esm.addObjects(careProviderRecords);
+        Thread.sleep(delay);
+        ArrayList<CareProviderRecord> obtained = esm.getCareProviderRecordByProblemId(testProblem.getId());
+
+        assertTrue(obtained.size() == 3);
+
+        for (CareProviderRecord cpr : obtained) {
+            assertTrue(cpr.getProblemId().equals(testProblem.getId()));
         }
     }
 

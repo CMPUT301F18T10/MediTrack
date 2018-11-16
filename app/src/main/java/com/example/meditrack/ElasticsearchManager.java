@@ -107,9 +107,6 @@ public class ElasticsearchManager {
 
             Search search = new Search.Builder(query).addIndex(elasticsearchIndex).addType(type).build();
 
-            Gson gson = new Gson();
-            Log.i(tag, "query: " + search.getData(gson));
-
             try {
                 SearchResult sr = client.execute(search);
                 if (sr.isSucceeded()) {
@@ -271,7 +268,7 @@ public class ElasticsearchManager {
      * @throws OperationFailedException
      */
     public ArrayList<CareProviderRecord> getCareProviderRecordByProblemId(String problemId) throws OperationFailedException {
-        return null;
+        return new ArrayList<>();
     }
 
     /**
