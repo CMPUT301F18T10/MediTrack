@@ -6,25 +6,25 @@ public abstract class AbstractRecord {
 
     protected Date timestamp;
     protected String problemId;
-    protected String recordId;
+    protected String id;
 
 
     protected Date getTimestamp() {
         return timestamp;
     }
     protected String getProblemId() { return problemId; }
-    protected String getId() { return recordId; }
+    protected String getId() { return id; }
 
     public AbstractRecord(String problemId)
     {
         this.problemId = problemId;
-        this.recordId = GenerateUniqueId();
+        this.id = GenerateUniqueId();
         this.timestamp = new Date();
     }
 
     private String GenerateUniqueId()
     {
-        Date date = new Date();
-        return date.toString();
+        long mills = new Date().getTime();
+        return new Long(mills).toString();
     }
 }
