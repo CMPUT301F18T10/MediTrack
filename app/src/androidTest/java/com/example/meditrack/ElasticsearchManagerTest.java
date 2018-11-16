@@ -8,6 +8,7 @@ import android.util.Log;
 import com.robotium.solo.Solo;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -100,6 +101,25 @@ public class ElasticsearchManagerTest {
         }
     }
 
+    @Test
+    public void testGetPatientRecordByProblemId() throws Exception {
+        ArrayList<PatientRecord> patientRecords = new ArrayList<>();
+        patientRecords.add(testPatientRecord);
+        patientRecords.add(testPatientRecord1);
+        patientRecords.add(testPatientRecord2);
+
+        PatientRecord randomPatientRecord =  new PatientRecord("randomProblemId", "randomTitle", "randomDescription", null, null, null);
+        patientRecords.add(randomPatientRecord);
+
+        // getPatientRecordByProblemId should not pick this record up
+        esm.addObjects(patientRecords);
+        Thread.sleep(delay);
+        ArrayList<PatientRecord> obtained = esm.getPatientRecordByProblemId(testProblem.getId());
+
+        assertTrue(obtained.size() == 3);
+
+        for (PatientRecord pr : obtained) {
+            assertTrue(pr.getProblemId().equals(testProblem.getId()));
         }
     }
 
