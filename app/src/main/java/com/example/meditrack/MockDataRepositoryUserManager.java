@@ -5,7 +5,7 @@ import java.util.Arrays;
 
 public class MockDataRepositoryUserManager extends DataRepositorySingleton {
 
-    public static Patient GetPatient()
+    public Patient GetPatient()
     {
         String email = "testEmail@ualberta.ca";
         String phoneNumber = "7808001557";
@@ -15,7 +15,7 @@ public class MockDataRepositoryUserManager extends DataRepositorySingleton {
         return patient;
     }
 
-    public static CareProvider GetCareProvider()
+    public CareProvider GetCareProvider()
     {
         ArrayList<String> patientId = new ArrayList<String>(Arrays.asList("12345678","22345678","32345678"));
         CareProvider careProvider = new CareProvider("10074289",patientId);
