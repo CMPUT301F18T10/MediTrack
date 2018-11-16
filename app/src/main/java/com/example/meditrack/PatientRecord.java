@@ -14,6 +14,13 @@ public class PatientRecord extends AbstractRecord implements ElasticsearchStorab
     private BodyLocation bodyLocation;
     private Location location;
 
+    public PatientRecord(String problemId)
+    {
+        // Added for debug and techincal reaons
+        // PLEASE DON'T USE IN APPLICATION
+        super(problemId);
+    }
+
     public PatientRecord(String problemId, String title, String description, ArrayList<String> photoIds, BodyLocation bodyLocation, Location location) {
         super(problemId);
         this.title = title;

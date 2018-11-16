@@ -1,10 +1,11 @@
 package com.example.meditrack;
 
+import android.graphics.Bitmap;
 import android.util.Log;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
-import java.util.Iterator;
 import java.util.ListIterator;
 
 public class DataRepositorySingleton
@@ -33,6 +34,7 @@ public class DataRepositorySingleton
      */
 
     private static DataRepositorySingleton instance = null;
+    private final String tag = "DRS";
     private ElasticsearchManager mESM;
 
     private boolean mDirty;
@@ -53,7 +55,8 @@ public class DataRepositorySingleton
     private Deque<CareProviderRecord> mNewCareProviderRecords;
     private Deque<String> mDeletedCareProviderRecordIds;
 
-    private AbstractUser mUser = null;
+    private Patient mPatientUser = null;
+    private CareProvider mCareProvider = null;
 
     private ApplicationManager.UserMode mUserMode = ApplicationManager.UserMode.Invalid;
     private String mUserName;
@@ -79,29 +82,91 @@ public class DataRepositorySingleton
         // Making the method static would've been a potential solution
         // but ElasticSearchManager has generic code and static methods
         // can't be called on generic types
-        AbstractUser user = null;
-        ContactInfo tempContact = new ContactInfo("", "");
-        if (userMode == ApplicationManager.UserMode.Patient) user = new Patient("temp", new ArrayList<String>(), tempContact);
-        else if (userMode == ApplicationManager.UserMode.CareGiver) user = new CareProvider("tempid", new ArrayList<String>());
-
         try
         {
-            mUser = mESM.getObjectFromId(userName, user.getElasticsearchType());
+            if (userMode == ApplicationManager.UserMode.Patient)
+            {
+                Patient user;
+                ContactInfo tempContact = new ContactInfo("", "");
+                user = new Patient("temp", new ArrayList<String>(), tempContact);
+                mPatientUser = mESM.getObjectFromId(userName, user.getElasticsearchType());
+            }
+            else if (userMode == ApplicationManager.UserMode.CareGiver)
+            {
+                CareProvider user;
+                user = new CareProvider("tempid", new ArrayList<String>());
+                mCareProvider = mESM.getObjectFromId(userName, user.getElasticsearchType());
+            }
         }
         catch(ElasticsearchManager.ObjectNotFoundException e)
         {
+            Log.e(tag, "User object was not found by ESM");
+            e.printStackTrace();
+        }
+        catch(ElasticsearchManager.OperationFailedException e)
+        {
+            Log.e(tag, "Get operation in ESM failed");
             e.printStackTrace();
         }
     }
 
     private void PopulateProblemList()
     {
-
+        // if user is Patient pull all problems for patient id
+        if (mUserMode == ApplicationManager.UserMode.Patient)
+        {
+            try
+            {
+                mProblemList.addAll(mESM.getProblemsByPatientId(mPatientUser.getUserId()));
+            }
+            catch(ElasticsearchManager.OperationFailedException e)
+            {
+                Log.e(tag, "mESM.getProblemsByPatientId for Patient failed");
+                e.printStackTrace();
+            }
+        }
+        // if user is CareProvider pull all problems for all patient ids
+        else if (mUserMode == ApplicationManager.UserMode.CareGiver)
+        {
+            for (String patientId : mCareProvider.getPatientIds())
+            {
+                try
+                {
+                    mProblemList.addAll(mESM.getProblemsByPatientId(patientId));
+                }
+                catch(ElasticsearchManager.OperationFailedException e)
+                {
+                    Log.e(tag, "mESM.getProblemsByPatientId for CareProvider failed");
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     private void PopulateRecordList()
     {
+        // pull all records for all problem ids
+        for (Problem currentProblem : mProblemList)
+        {
+            try
+            {
+                mPatientRecordList.addAll(mESM.getPatientRecordByProblemId(currentProblem.getId()));
+                mCareProviderRecordsList.addAll(mESM.getCareProviderRecordByProblemId(currentProblem.getId()));
+            }
+            catch(ElasticsearchManager.OperationFailedException e)
+            {
+                Log.e(tag, "Getting records by ProblemId from ESM failed");
+                e.printStackTrace();
+            }
+        }
 
+    }
+
+    private void ClearDataRepository()
+    {
+        mProblemList.clear();
+        mPatientRecordList.clear();
+        mCareProviderRecordsList.clear();
     }
 
     public void Initialize(ApplicationManager.UserMode userMode, String userName, ElasticsearchManager esm)
@@ -110,16 +175,143 @@ public class DataRepositorySingleton
         mUserMode = userMode;
         mUserName = userName;
         mESM = esm;
+
+        mProblemList = new ArrayList<>();
+        mNewProblems = new ArrayDeque<>();
+        mEditedProblems = new ArrayDeque<>();
+        mDeletedProblemIds = new ArrayDeque<>();
+
+        mPatientRecordList = new ArrayList<>();
+        mNewPatientRecords = new ArrayDeque<>();
+        mDeletedPatientRecordIds = new ArrayDeque<>();
+
+        mCareProviderRecordsList = new ArrayList<>();
+        mNewCareProviderRecords = new ArrayDeque<>();
+        mDeletedCareProviderRecordIds = new ArrayDeque<>();
+
         DownloadData(userMode, userName);
     }
 
     private void UploadData()
     {
-        // TODO: Finish the method
-        // Go through all the deques and post them to ElasticSearch
-        // Send the new Problems
-        // Send the new Records
-        // Send the edited Problems
+        // Add the new problems
+        while (!mNewProblems.isEmpty())
+        {
+            try { mESM.addObject(mNewProblems.pop()); }
+            catch (ElasticsearchManager.ObjectAlreadyExistsException e)
+            {
+                Log.e(tag, "Trying to add a problem that already exists");
+                e.printStackTrace();
+            }
+            catch (ElasticsearchManager.OperationFailedException e)
+            {
+                Log.e(tag, "AddProblem Operation failed");
+                e.printStackTrace();
+            }
+        }
+
+        // Update the edited problems
+        while (!mEditedProblems.isEmpty())
+        {
+            try
+            {
+                Problem currentProblem = mEditedProblems.pop();
+                mESM.updateObject(currentProblem.getId(), currentProblem.getElasticsearchType(), currentProblem);
+            }
+            catch (ElasticsearchManager.ObjectNotFoundException e)
+            {
+                Log.e(tag, "Editing a problem that doesn't exist");
+                e.printStackTrace();
+            }
+            catch (ElasticsearchManager.OperationFailedException e)
+            {
+                Log.e(tag, "EditProblem operation failed");
+                e.printStackTrace();
+            }
+        }
+
+        // Delete the problems
+        Problem tempProblem = new Problem("tempTitle", "tempDescription", "tempPatientId");
+        while (!mDeletedProblemIds.isEmpty())
+        {
+            try { mESM.deleteObject(mDeletedProblemIds.pop(), tempProblem.getElasticsearchType()); }
+            catch (ElasticsearchManager.ObjectNotFoundException e)
+            {
+                Log.e(tag, "Attempting to delete non-existent problem");
+                e.printStackTrace();
+            }
+            catch (ElasticsearchManager.OperationFailedException e)
+            {
+                Log.e(tag, "DeleteProblem operation failed");
+                e.printStackTrace();
+            }
+        }
+
+        // Add the new CareProvider Records
+        CareProviderRecord tempCPRecord = new CareProviderRecord("TempProblemId", "TempComment", "tempCareProviderId");
+        while (!mNewCareProviderRecords.isEmpty())
+        {
+            try { mESM.addObject(mNewCareProviderRecords.pop()); }
+            catch (ElasticsearchManager.ObjectAlreadyExistsException e)
+            {
+                Log.e(tag, "Trying to add a CareProviderRecord that already exists");
+                e.printStackTrace();
+            }
+            catch (ElasticsearchManager.OperationFailedException e)
+            {
+                Log.e(tag, "AddCareProviderRecord Operation failed");
+                e.printStackTrace();
+            }
+        }
+
+        // Delete the CareProvider Records
+        while (!mDeletedCareProviderRecordIds.isEmpty())
+        {
+            try { mESM.deleteObject(mDeletedCareProviderRecordIds.pop(), tempCPRecord.getElasticsearchType()); }
+            catch (ElasticsearchManager.ObjectNotFoundException e)
+            {
+                Log.e(tag, "Attempting to delete non-existent CareProviderRecord");
+                e.printStackTrace();
+            }
+            catch (ElasticsearchManager.OperationFailedException e)
+            {
+                Log.e(tag, "DeleteCareProvider operation failed");
+                e.printStackTrace();
+            }
+        }
+
+        // Add the new Patient Records
+        PatientRecord tempPatientRecord = new PatientRecord("tempProblemId");
+        while (!mNewPatientRecords.isEmpty())
+        {
+            try { mESM.addObject(mNewPatientRecords.pop());}
+            catch (ElasticsearchManager.ObjectAlreadyExistsException e)
+            {
+                Log.e(tag, "Trying to add a PatientRecord that already exists");
+                e.printStackTrace();
+            }
+            catch (ElasticsearchManager.OperationFailedException e)
+            {
+                Log.e(tag, "AddPatientRecord Operation failed");
+                e.printStackTrace();
+            }
+        }
+
+        while (!mDeletedPatientRecordIds.isEmpty())
+        {
+            try { mESM.deleteObject(mDeletedPatientRecordIds.pop(), tempPatientRecord.getElasticsearchType());}
+            catch (ElasticsearchManager.ObjectNotFoundException e)
+            {
+                Log.e(tag, "Attempting to delete non-existent PatientRecord");
+                e.printStackTrace();
+            }
+            catch (ElasticsearchManager.OperationFailedException e)
+            {
+                Log.e(tag, "DeletePatientRecord operation failed");
+                e.printStackTrace();
+            }
+        }
+        SetDirty(false);
     }
 
     private void DownloadData(ApplicationManager.UserMode userMode, String userName)
@@ -136,7 +328,7 @@ public class DataRepositorySingleton
             UploadData();
             SetDirty(false);
         }
-
+        ClearDataRepository();
         DownloadData(mUserMode, mUserName);
     }
 
@@ -217,11 +409,24 @@ public class DataRepositorySingleton
     }
 
     // Query Methods
-    public AbstractUser GetUser() throws DataRepositorySingletonNotInitialized
-    {
-        if (mUser == null) throw new DataRepositorySingletonNotInitialized();
 
-        return mUser;
+    public Patient GetPatient() throws DataRepositorySingletonNotInitialized, InvalidUserMode
+    {
+        if (mUserMode != ApplicationManager.UserMode.Patient) { throw new InvalidUserMode("Not in patient user mode"); }
+
+        else if (mPatientUser == null) { throw new DataRepositorySingletonNotInitialized(); }
+
+        else { return mPatientUser; }
+    }
+
+    public CareProvider GetCareProvider() throws DataRepositorySingletonNotInitialized, InvalidUserMode
+    {
+        if (mUserMode != ApplicationManager.UserMode.CareGiver) { throw new InvalidUserMode("Not in CareProviderMode"); }
+
+        else if (mCareProvider == null) { throw new DataRepositorySingletonNotInitialized(); }
+
+        else { return mCareProvider; }
+
     }
 
     public ApplicationManager.UserMode GetUserMode() throws DataRepositorySingletonNotInitialized
@@ -265,7 +470,27 @@ public class DataRepositorySingleton
 
     public boolean DoesUserExist(String userName, ApplicationManager.UserMode userMode)
     {
-        // TODO: check ElasticSearch object for the user
+        try
+        {
+            if (userMode == ApplicationManager.UserMode.Patient)
+            {
+                Patient user;
+                ContactInfo tempContact = new ContactInfo("", "");
+                user = new Patient("temp", new ArrayList<String>(), tempContact);
+                return mESM.existObject(userName, user.getElasticsearchType());
+            }
+            else if (userMode == ApplicationManager.UserMode.CareGiver)
+            {
+                CareProvider user;
+                user = new CareProvider("tempid", new ArrayList<String>());
+                return mESM.existObject(userName, user.getElasticsearchType());
+            }
+        }
+        catch(ElasticsearchManager.OperationFailedException e)
+        {
+            Log.e(tag, "Get operation in ESM failed");
+            e.printStackTrace();
+        }
         return false;
     }
 
@@ -299,5 +524,10 @@ public class DataRepositorySingleton
     public class DataRepositorySingletonNotInitialized extends Exception
     {
         public DataRepositorySingletonNotInitialized() { super("DataRepositorySingleton has not been initialized yet!"); }
+    }
+
+    public class InvalidUserMode extends Exception
+    {
+        public InvalidUserMode(String message) { super(message); }
     }
 }
