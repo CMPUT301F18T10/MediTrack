@@ -89,13 +89,13 @@ public class DataRepositorySingleton
                 Patient user;
                 ContactInfo tempContact = new ContactInfo("", "");
                 user = new Patient("temp", new ArrayList<String>(), tempContact);
-                mPatientUser = mESM.getObjectFromId(userName, user.getElasticsearchType());
+                mPatientUser = mESM.getObjectFromId(userName, user.getElasticsearchType(), user.getClass());
             }
             else if (userMode == ApplicationManager.UserMode.CareGiver)
             {
                 CareProvider user;
                 user = new CareProvider("tempid", new ArrayList<String>());
-                mCareProvider = mESM.getObjectFromId(userName, user.getElasticsearchType());
+                mCareProvider = mESM.getObjectFromId(userName, user.getElasticsearchType(), user.getClass());
             }
         }
         catch(ElasticsearchManager.ObjectNotFoundException e)
@@ -234,7 +234,7 @@ public class DataRepositorySingleton
         Problem tempProblem = new Problem("tempTitle", "tempDescription", "tempPatientId");
         while (!mDeletedProblemIds.isEmpty())
         {
-            try { mESM.deleteObject(mDeletedProblemIds.pop(), tempProblem.getElasticsearchType()); }
+            try { mESM.deleteObject(mDeletedProblemIds.pop(), tempProblem.getElasticsearchType(), tempProblem.getClass()); }
             catch (ElasticsearchManager.ObjectNotFoundException e)
             {
                 Log.e(tag, "Attempting to delete non-existent problem");
@@ -267,7 +267,7 @@ public class DataRepositorySingleton
         // Delete the CareProvider Records
         while (!mDeletedCareProviderRecordIds.isEmpty())
         {
-            try { mESM.deleteObject(mDeletedCareProviderRecordIds.pop(), tempCPRecord.getElasticsearchType()); }
+            try { mESM.deleteObject(mDeletedCareProviderRecordIds.pop(), tempCPRecord.getElasticsearchType(), tempCPRecord.getClass()); }
             catch (ElasticsearchManager.ObjectNotFoundException e)
             {
                 Log.e(tag, "Attempting to delete non-existent CareProviderRecord");
@@ -299,7 +299,7 @@ public class DataRepositorySingleton
 
         while (!mDeletedPatientRecordIds.isEmpty())
         {
-            try { mESM.deleteObject(mDeletedPatientRecordIds.pop(), tempPatientRecord.getElasticsearchType());}
+            try { mESM.deleteObject(mDeletedPatientRecordIds.pop(), tempPatientRecord.getElasticsearchType(), tempPatientRecord.getClass());}
             catch (ElasticsearchManager.ObjectNotFoundException e)
             {
                 Log.e(tag, "Attempting to delete non-existent PatientRecord");
@@ -477,13 +477,13 @@ public class DataRepositorySingleton
                 Patient user;
                 ContactInfo tempContact = new ContactInfo("", "");
                 user = new Patient("temp", new ArrayList<String>(), tempContact);
-                return mESM.existObject(userName, user.getElasticsearchType());
+                return mESM.existObject(userName, user.getElasticsearchType(), Patient.class);
             }
             else if (userMode == ApplicationManager.UserMode.CareGiver)
             {
                 CareProvider user;
                 user = new CareProvider("tempid", new ArrayList<String>());
-                return mESM.existObject(userName, user.getElasticsearchType());
+                return mESM.existObject(userName, user.getElasticsearchType(), CareProvider.class);
             }
         }
         catch(ElasticsearchManager.OperationFailedException e)

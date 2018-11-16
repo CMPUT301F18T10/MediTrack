@@ -38,7 +38,12 @@ public class ElasticsearchManagerTest {
     public void testAdd() throws Exception {
         Problem problem = new Problem("testProblem", "testDescription", "testPatientId");
         esm.addObject(problem);
-        assert(true);
+
+        // Wait a bit so the given problem is properly added to Elasticsearch server
+        Thread.sleep(5000);
+
+        Problem problem2 = esm.getObjectFromId(problem.getId(), problem.getElasticsearchType(), problem.getClass());
+        assert(problem.getId() == problem2.getId());
     }
 
 }
