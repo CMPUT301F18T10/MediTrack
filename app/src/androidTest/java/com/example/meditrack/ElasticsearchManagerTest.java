@@ -15,6 +15,8 @@ import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 
+import static junit.framework.TestCase.assertTrue;
+
 @RunWith(AndroidJUnit4.class)
 public class ElasticsearchManagerTest {
 
@@ -61,7 +63,7 @@ public class ElasticsearchManagerTest {
         Thread.sleep(delay);
 
         Problem obtained = esm.getObjectFromId(testProblem.getId(), testProblem.getElasticsearchType(), testProblem.getClass());
-        assert(testProblem.getId() == obtained.getId());
+        assertTrue(testProblem.getId().equals(obtained.getId()));
     }
 
     @Test
@@ -71,7 +73,7 @@ public class ElasticsearchManagerTest {
         Thread.sleep(delay);
 
         PatientRecord obtained = esm.getObjectFromId(testPatientRecord.getId(), testPatientRecord.getElasticsearchType(), testPatientRecord.getClass());
-        assert(testPatientRecord.getId() == obtained.getId());
+        assertTrue(testPatientRecord.getId().equals(obtained.getId()));
     }
 
     @Test
@@ -90,10 +92,14 @@ public class ElasticsearchManagerTest {
         Thread.sleep(delay);
         ArrayList<Problem> obtained = esm.getProblemsByPatientId(testPatient.getUserId());
 
-        assert(obtained.size() == problems.size() - 1);
+        Log.i("esm", "obtained..: " + new Integer(obtained.size()).toString());
+        assertTrue(obtained.size() == 3);
 
         for (Problem p : obtained) {
-            assert(p.getPatientId() == testPatient.getUserId());
+            assertTrue(p.getPatientId().equals(testPatient.getUserId()));
+        }
+    }
+
         }
     }
 
