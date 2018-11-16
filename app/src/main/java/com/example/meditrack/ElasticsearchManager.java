@@ -31,14 +31,6 @@ public class ElasticsearchManager {
     private final String ELASTICSEARCH_TEST_INDEX = "cmput301f18t10test";
     private final String tag = "esm";
 
-    // username: Miserable Variable, userid: miserable-variable, url: https://stackoverflow.com/questions/507602/how-can-i-initialise-a-static-map
-    private static final Map<Class, String> idFieldMap;
-    static {
-        Map<Class, String> tempMap = new HashMap<Class, String>();
-        tempMap.put(Problem.class, "problemId");
-        idFieldMap = Collections.unmodifiableMap(tempMap);
-    }
-
     private JestDroidClient client;
 
     private String elasticsearchIndex;
@@ -169,7 +161,7 @@ public class ElasticsearchManager {
         String query =
         "{\n" +
             "\"query\": {\n" +
-              "\"term\" : {" + "\"" + idFieldMap.get(cls) + "\"" + ":" + "\"" + id.toLowerCase() + "\"" + "}\n" +
+              "\"term\" : {" + "\"" + "id" + "\"" + ":" + "\"" + id.toLowerCase() + "\"" + "}\n" +
             "}\n" +
         "}";
         QueryTask<T> task = new QueryTask<>();
