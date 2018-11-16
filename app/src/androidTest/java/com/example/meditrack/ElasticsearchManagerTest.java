@@ -29,6 +29,7 @@ public class ElasticsearchManagerTest {
         solo = new Solo(InstrumentationRegistry.getInstrumentation(), activityTestRule.getActivity());
         esm = new ElasticsearchManager();
         esm.setTestingMode();
+        esm.resetIndex();
     }
 
     @After

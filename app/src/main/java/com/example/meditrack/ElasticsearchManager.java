@@ -19,10 +19,13 @@ import java.util.List;
 import java.util.Map;
 
 import io.searchbox.client.JestClient;
+import io.searchbox.client.JestResult;
 import io.searchbox.core.DocumentResult;
 import io.searchbox.core.Index;
 import io.searchbox.core.Search;
 import io.searchbox.core.SearchResult;
+import io.searchbox.indices.CreateIndex;
+import io.searchbox.indices.DeleteIndex;
 
 public class ElasticsearchManager {
 
@@ -272,6 +275,28 @@ public class ElasticsearchManager {
      */
     public boolean existObject(String id, String type, Class<? extends ElasticsearchStorable> cls) throws OperationFailedException {
         return false;
+    }
+
+    private boolean deleteIndex() throws java.io.IOException{
+        DeleteIndex idx = new DeleteIndex.Builder(elasticsearchIndex).build();
+        JestResult r  = client.execute(idx);
+        return r.isSucceeded();
+    }
+
+    private boolean createIndex() throws java.io.IOException {
+        CreateIndex idx = new CreateIndex.Builder(elasticsearchIndex).build();
+        JestResult r = client.execute(idx);
+        return r.isSucceeded();
+    }
+
+    public void resetIndex() throws OperationFailedException {
+        try {
+            if (!(deleteIndex() && createIndex())){
+                throw new OperationFailedException();
+            }
+        } catch (java.io.IOException e) {
+            throw new OperationFailedException();
+        }
     }
 
 }
