@@ -169,7 +169,7 @@ public class ElasticsearchManager {
         String query =
         "{\n" +
             "\"query\": {\n" +
-              "\"match\" : {" + "\"" + idFieldMap.get(cls) + "\"" + ":" + "\"" + id.toLowerCase() + "\"" + "}\n" +
+              "\"term\" : {" + "\"" + idFieldMap.get(cls) + "\"" + ":" + "\"" + id.toLowerCase() + "\"" + "}\n" +
             "}\n" +
         "}";
         QueryTask<T> task = new QueryTask<>();

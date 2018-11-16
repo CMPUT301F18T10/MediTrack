@@ -24,7 +24,7 @@ public abstract class AbstractRecord {
 
     private String GenerateUniqueId()
     {
-        Date date = new Date();
-        return date.toString();
+        long mills = new Date().getTime();
+        return new Long(mills).toString();
     }
 }

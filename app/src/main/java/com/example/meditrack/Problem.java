@@ -30,8 +30,8 @@ public class Problem implements ElasticsearchStorable{
 
     private String GenerateUniqueId()
     {
-        Date date = new Date();
-        return date.toString();
+        Long mills = new Date().getTime();
+        return new Long(mills).toString();
     }
 
     @Override
