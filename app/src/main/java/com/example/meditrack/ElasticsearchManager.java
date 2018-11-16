@@ -107,6 +107,9 @@ public class ElasticsearchManager {
 
             Search search = new Search.Builder(query).addIndex(elasticsearchIndex).addType(type).build();
 
+            Gson gson = new Gson();
+            Log.i(tag, "query: " + search.getData(gson));
+
             try {
                 SearchResult sr = client.execute(search);
                 if (sr.isSucceeded()) {
@@ -317,7 +320,8 @@ public class ElasticsearchManager {
 
     public void resetIndex() throws OperationFailedException {
         try {
-            if (!(deleteIndex() && createIndex())){
+            deleteIndex();
+            if (!createIndex()){
                 throw new OperationFailedException();
             }
         } catch (java.io.IOException e) {
