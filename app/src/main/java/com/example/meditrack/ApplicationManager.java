@@ -1,7 +1,10 @@
 package com.example.meditrack;
 
+import android.util.Log;
 
-public class ApplicationManager extends ElasticSearchManager
+import java.util.ArrayList;
+
+public class ApplicationManager extends ElasticsearchManager
 {
     /* This class will hold state information about the app
         It would hold the userMode: {Patient, CareGiver},
@@ -19,127 +22,119 @@ public class ApplicationManager extends ElasticSearchManager
         query the ApplicationManager class on whether
         they should be displayed
      */
-    enum UserMode {Patient, CareGiver;}
-    private UserMode mUserMode;
-    DataRepositorySingleton dataRepositorySingleton;
 
-    public ApplicationManager(UserMode userMode)
+    enum UserMode { Patient, CareGiver, Invalid;}
+
+    private boolean mDirty;
+    private UserMode mUserMode;
+
+
+
+    ApplicationManager(UserMode userMode)
     {
         // TODO: Finish the constructor
         this.mUserMode = userMode;
+        mDirty = false;
     }
 
 
-    /**
-     *
-     * @param userMode: To decide which mode to execute.
-     * @param userID: user inputs userName.
-     * @return a boolean value which determines login successfully or not.
-     */
 
 
-    public static boolean LogIn(UserMode userMode, String userID)
+    public static boolean IsUserExits(UserMode userMode, String userName, ElasticsearchManager elasticsearchManager) {
+        boolean isExits = false;
+        Patient patient = null;
+        CareProvider careProvider = null;
+        switch (userMode){
+            case Patient:
+                try {
+                    isExits = elasticsearchManager.existObject(userName,"Patient");
+                } catch (OperationFailedException eof) {
+                    eof.printStackTrace();
+                }
+                break;
+
+            case CareGiver:
+                try {
+                    isExits = elasticsearchManager.existObject(userName,"CareGiver");
+                }  catch (OperationFailedException eof) {
+                    eof.printStackTrace();
+                }
+                break;
+            case Invalid:
+                if (userMode == UserMode.Invalid)  {
+                    Log.e("Failure","Invalid Operations");
+
+                }
+                break;
+        }
+
+        return isExits;
+    }
+
+    public static boolean LogIn(UserMode userMode, String userName,ElasticsearchManager elasticsearchManager,DataRepositorySingleton dataRepositorySingleton)
     {
         // TODO: Attempts to log in and returns True upon success
-        // Make sure to go through ElasticSearchManager for any
+        // Make sure to go through ElasticsearchManager for any
         // interaction with the server
 
         // Make sure to call DataRepositorySingleton.Initialize
         // to populate with appropriate data
-        String testindex;
         Patient patient = null;
         CareProvider careProvider = null;
-        DataRepositorySingleton dataRepositorySingleton = null;
         boolean login = false;
 
 
-        if (userMode == UserMode.Patient){//To handle Patient Mode.
-                patient = getObjectFromId(userID,testindex);//Get patient object from Database.
-                if (patient != null){
-                    login = true;   //Change login target to True.
-                    dataRepositorySingleton.Initialize(userMode,userID);  //Initialize dataRepo for this patient.
-                }
-                else{
-                    //Login failure
-                    //May prompt user to login again
-                    //Or enter the password they have.
-
-                }
-
-
-                //do someting else
+        if (IsUserExits(userMode,userName,elasticsearchManager)){
+            login= true;
+            dataRepositorySingleton.Initialize(userMode,userName,elasticsearchManager);
         }
-        else { //userMode == UserMode.CareGiver
-            //Need the ElasticSearch to find userName in patient database.
-                careProvider = getObjectFromId(userID,testindex);
-                if (careProvider != null){
-                    login =true;
-                    dataRepositorySingleton.Initialize(userMode,userID);
-                }
-                else{
-                    //Login failure
-                    //May prompt user to login again
-                    //Or enter the password they have
-                }
-
+        else{
+            Log.e("Failure","Login Failure");
         }
 
-
-        // Make sure to call DataRepositorySingleton.Initialize
-        // to populate with appropriate data
         return login;
-
-
     }
 
-    /**
-     *
-     * @param userMode To decide which mode to execute.
-     * @param userId user inputs userName.
-     * @return a boolean value which determines register successfully or not.
-     */
-
-    public boolean RegisterUser(UserMode userMode, String userId)
+    public boolean RegisterUser(UserMode userMode, String userName,ElasticsearchManager elasticsearchManager)
     {
         // TODO: Attempts to register and returns True upon success
-        // Make sure to go through ElasticSearchManager for any
+        // Make sure to go through ElasticsearchManager for any
         // interaction with the server
-        Patient patient = null;
-        CareProvider careProvider = null;
-        boolean regtiser = false;
-
-        if (userMode == UserMode.Patient){
-            patient = getObjectFromId(userId,testindex);
-            if (patient == null){
-                regtiser = true;
-                patient.userId = userId;
-                addObject(patient);
-                //prompt user to regiser
-                //upload user
-            }
-            else{
-                //This userID has existed in Database.
-                //Prompt the user to login
-
+        ContactInfo testContactInfo = new ContactInfo("Test@email","TestNumber");
+        Patient patient = new Patient(userName,new ArrayList<String>(), testContactInfo);
+        CareProvider careProvider = new CareProvider(userName,new ArrayList<String>());
+        boolean register = false;
+        if (!IsUserExits(userMode,userName,elasticsearchManager)){
+            register= true;
+            switch (userMode){
+                case Invalid:
+                    Log.e("Failure","Invalid Operations");
+                    break;
+                case Patient:
+                    try{
+                        elasticsearchManager.addObject(patient);
+                    }catch (OperationFailedException eof) {
+                        eof.printStackTrace();
+                    }catch (ObjectAlreadyExistsException eae){
+                        eae.printStackTrace();
+                    }
+                    break;
+                case CareGiver:
+                    try{
+                        elasticsearchManager.addObject(careProvider);
+                    }catch (OperationFailedException eof) {
+                        eof.printStackTrace();
+                    }catch (ObjectAlreadyExistsException eae){
+                        eae.printStackTrace();
+                    }
+                    break;
             }
         }
         else{
-            careProvider = getObjectFromId(userId,testindex);
-            //Initialize careGiver
-            if (patient== null){
-                regtiser = true;
-                careProvider.userId = userId;
-                addObject(careProvider);
-
-            }else {
-                //This userID has existed in Database.
-                //Prompt the user to login
-
-            }
-
+            //Given userName exists in database.
+            Log.e("Failure","Object Already Exists");
         }
-
-        return regtiser;
+        return register;
     }
 
     private void SetUser(UserMode userMode, AbstractUser user)
@@ -147,15 +142,12 @@ public class ApplicationManager extends ElasticSearchManager
         // TODO:
     }
 
-    public void UpdateDataRepository()
+    public void UpdateDataRepository(DataRepositorySingleton dataRepositorySingleton)
+
     {
-        dataRepositorySingleton.RefreshDataRepositorySingleton();
-
-
-
         // TODO: Finish this method
         // It will get the updated information from ElasticSearch
-
+        dataRepositorySingleton.RefreshDataRepositorySingleton();
 
     }
 
