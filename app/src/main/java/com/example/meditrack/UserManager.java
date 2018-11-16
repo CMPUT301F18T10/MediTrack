@@ -11,8 +11,8 @@ public class UserManager {
 	private ContactInfo new_contactInfo;
 	private ArrayList<String> BodyImages;
 	private ArrayList<String> patientIds;
-	private Patient patient;
-	private CareProvider careProvider;
+	protected Patient patient;
+	protected CareProvider careProvider;
 	private DataRepositorySingleton mDRS = DataRepositorySingleton.GetInstance();
 
 	private static UserManager user = null;
@@ -30,7 +30,7 @@ public class UserManager {
 
 	public void addPatient(UserManager user,String patientUserId)
 	{
-		patientIds = careProvider.getPatientIds();
+		patientIds = user.careProvider.getPatientIds();
 		patientIds.add(patientUserId);
 		user.careProvider.setPatientIds(patientIds);
 
