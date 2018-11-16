@@ -1,3 +1,6 @@
+package com.example.meditrack;
+import android.widget.ImageView;
+
 import java.util.ArrayList;
 
 public class UserManager {
@@ -8,44 +11,46 @@ public class UserManager {
 	private ContactInfo new_contactInfo;
 	private ArrayList<String> BodyImages;
 	private ArrayList<String> patientIds;
+	private Patient patient = DataRepositorySingleton.GetPatient();
+	private CareProvider careProvider = DataRepositorySingleton.GetCareProvider();
 
-	public void EditContactInfo(String email, String phoneNumber)
+	public void EditContactInfo(Patient patient,String email, String phoneNumber)
 	{
 		new_contactInfo.setEmail(email);
 		new_contactInfo.setPhoneNumber(phoneNumber);
-		DataRepositorySingleton.GetPatient().setContactInfo(new_contactInfo);
+		patient.setContactInfo(new_contactInfo);
 	}
 
-	public void addPatient(String patientUserId)
+	public void addPatient(CareProvider careProvider,String patientUserId)
 	{
-		patientIds = DataRepositorySingleton.GetCareProvider().getPatientIds();
+		patientIds = careProvider.getPatientIds();
 		patientIds.add(patientUserId);
-		DataRepositorySingleton.GetCareProvider().setPatientIds(patientIds);
+        careProvider.setPatientIds(patientIds);
 
 	}
 
 
-	public void addBodyLocationImage(ImageView image)
+	public void addBodyLocationImage(Patient patient, ImageView image)
 	{
 		//missing part: upload image to database
 		String imageId = String.valueOf(image.getTag());
-		DataRepositorySingleton.GetPatient().getBodyLocationImages().add(imageId);
+		patient.getBodyLocationImages().add(imageId);
 	}
 
-	public int checkBodyImageNumber()
+	public int checkBodyImageNumber(Patient patient)
 	{
-		BodyImages = DataRepositorySingleton.GetPatient().getBodyLocationImages();
+		BodyImages = patient.getBodyLocationImages();
 		return BodyImages.size();
 	}
-	public void deleteBodyLocationImage(String ImageId)
+	public void deleteBodyLocationImage(Patient patient, String ImageId)
 	{
 		//missing part: delete image from database
-		BodyImages = DataRepositorySingleton.GetPatient().getBodyLocationImages();
+		BodyImages = patient.getBodyLocationImages();
 		for(int i = 0; i<BodyImages.size();i++){
 			if(BodyImages.get(i).equals(ImageId)){
 				BodyImages.remove(i);
 			}
 		}
-		DataRepositorySingleton.GetPatient().setBodyLocationImageIds(BodyImages);
+		patient.setBodyLocationImageIds(BodyImages);
 	}
 }
