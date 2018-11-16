@@ -1,6 +1,3 @@
-package com.example.meditrack;
-import android.widget.ImageView;
-
 import java.util.ArrayList;
 
 public class UserManager {
@@ -16,14 +13,14 @@ public class UserManager {
 	{
 		new_contactInfo.setEmail(email);
 		new_contactInfo.setPhoneNumber(phoneNumber);
-		MockDataRepositoryUserManager.GetPatient().setContactInfo(new_contactInfo);
+		DataRepositorySingleton.GetPatient().setContactInfo(new_contactInfo);
 	}
 
 	public void addPatient(String patientUserId)
 	{
-		patientIds = MockDataRepositoryUserManager.GetCareProvider().getPatientIds();
+		patientIds = DataRepositorySingleton.GetCareProvider().getPatientIds();
 		patientIds.add(patientUserId);
-		MockDataRepositoryUserManager.GetCareProvider().setPatientIds(patientIds);
+		DataRepositorySingleton.GetCareProvider().setPatientIds(patientIds);
 
 	}
 
@@ -32,23 +29,23 @@ public class UserManager {
 	{
 		//missing part: upload image to database
 		String imageId = String.valueOf(image.getTag());
-		MockDataRepositoryUserManager.GetPatient().getBodyLocationImages().add(imageId);
+		DataRepositorySingleton.GetPatient().getBodyLocationImages().add(imageId);
 	}
 
 	public int checkBodyImageNumber()
 	{
-		BodyImages = MockDataRepositoryUserManager.GetPatient().getBodyLocationImages();
+		BodyImages = DataRepositorySingleton.GetPatient().getBodyLocationImages();
 		return BodyImages.size();
 	}
 	public void deleteBodyLocationImage(String ImageId)
 	{
 		//missing part: delete image from database
-		BodyImages = MockDataRepositoryUserManager.GetPatient().getBodyLocationImages();
+		BodyImages = DataRepositorySingleton.GetPatient().getBodyLocationImages();
 		for(int i = 0; i<BodyImages.size();i++){
 			if(BodyImages.get(i).equals(ImageId)){
 				BodyImages.remove(i);
 			}
 		}
-		MockDataRepositoryUserManager.GetPatient().setBodyLocationImageIds(BodyImages);
+		DataRepositorySingleton.GetPatient().setBodyLocationImageIds(BodyImages);
 	}
 }
