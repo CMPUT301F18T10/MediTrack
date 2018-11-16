@@ -11,7 +11,7 @@ public abstract class AbstractUser implements ElasticsearchStorable{
         return id;
     }
 
-    public AbstractUser(String userId) {
+    public AbstractUser(String id) {
         this.id = id;
     }
 }

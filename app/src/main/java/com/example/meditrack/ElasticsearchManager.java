@@ -222,7 +222,20 @@ public class ElasticsearchManager {
      * @return the problems of the patient
      */
     public ArrayList<Problem> getProblemsByPatientId(String patientId) throws OperationFailedException {
-        return null;
+        ArrayList<Problem> problems;
+        String query =
+        "{\n" +
+            "\"query\": {\n" +
+              "\"term\" : {" + "\"" + "problemId" + "\"" + ":" + "\"" + patientId.toLowerCase() + "\"" + "}\n" +
+            "}\n" +
+        "}";
+        QueryTask<Problem> task = new QueryTask<>();
+        try {
+            problems = task.execute(query, "problems", Problem.class).get();
+        } catch (Exception e) {
+            throw new OperationFailedException();
+        }
+        return problems;
     }
 
     /**
@@ -277,7 +290,7 @@ public class ElasticsearchManager {
         return false;
     }
 
-    private boolean deleteIndex() throws java.io.IOException{
+    private boolean deleteIndex() throws java.io.IOException {
         DeleteIndex idx = new DeleteIndex.Builder(elasticsearchIndex).build();
         JestResult r  = client.execute(idx);
         return r.isSucceeded();
