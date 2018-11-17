@@ -12,12 +12,12 @@ public class ProblemManagerService
        collect the necessary info from user and call this service to
        update the DataRepositorySingleton instance holding the information
      */
-    ProblemManagerService(){}
+    public ProblemManagerService(){}
 
     public static void AddProblem(Problem problem)
     {
         if (DataRepositorySingleton.GetInstance().DoesProblemExist(problem.getId())){
-            Exception e;
+
             Log.e("Failure", "Problem Id already exists");
         }
 
@@ -28,15 +28,29 @@ public class ProblemManagerService
 
     public static void EditProblem(Problem problem)
     {
-        // TODO: Finish the method
+        if (!DataRepositorySingleton.GetInstance().DoesProblemExist(problem.getId())){
+
+            Log.e("Failure", "Problem Id does not exist");
+        }
+
+        else{
+            DataRepositorySingleton.GetInstance().EditProblem(problem);
+        }
     }
 
-    public static void DeleteProblem(Integer problemId)
+    public static void DeleteProblem(String problemId)
     {
-        // TODO: Finish the method
+        if (!DataRepositorySingleton.GetInstance().DoesProblemExist(problemId)){
+
+            Log.e("Failure", "Problem Id does not exist");
+        }
+
+        else{
+            DataRepositorySingleton.GetInstance().DeleteProblem(problemId);
+        }
     }
 
-    public static void AddRecord(Integer problemId, AbstractRecord record)
+    public static void AddPatientRecord(Integer problemId, AbstractRecord record)
     {
         // TODO: Finish the method
     }
