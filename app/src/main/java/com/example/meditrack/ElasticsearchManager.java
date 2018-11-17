@@ -313,7 +313,12 @@ public class ElasticsearchManager {
      * @return true if the object with the given id exists in the given type
      */
     public boolean existObject(String id, String type, Class<? extends ElasticsearchStorable> cls) throws OperationFailedException {
-        return false;
+        try {
+            getObjectFromId(id, type, cls);
+        } catch (ObjectNotFoundException e) {
+            return false;
+        }
+        return true;
     }
 
     private boolean deleteIndex() throws java.io.IOException {
