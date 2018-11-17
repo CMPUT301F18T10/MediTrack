@@ -1,7 +1,11 @@
 package com.example.meditrack;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import java.math.BigInteger;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Random;
 
 public class Problem implements ElasticsearchStorable{
@@ -32,6 +36,22 @@ public class Problem implements ElasticsearchStorable{
     private String GenerateUniqueId()
     {
         return new BigInteger(128, new Random()).toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Problem problem = (Problem) o;
+        return  Objects.equals(getTitle(), problem.getTitle()) &&
+                Objects.equals(getDescription(), problem.getDescription()) &&
+                Objects.equals(getPatientId(), problem.getPatientId()) &&
+                Objects.equals(getId(), problem.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getTitle(), getDescription(), getPatientId(), getId());
     }
 
     @Override

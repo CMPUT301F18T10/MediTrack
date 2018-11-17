@@ -3,6 +3,7 @@ package com.example.meditrack;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.util.Log;
 
 import com.robotium.solo.Solo;
 
@@ -13,7 +14,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
+import static junit.framework.Assert.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
@@ -35,17 +39,17 @@ public class ElasticsearchManagerTest {
 
     private CareProvider testCareProvider = new CareProvider("Peter");
 
-    private Problem testProblem = new Problem("testProblem", "testDescription", testPatient.getId());
-    private Problem testProblem1 = new Problem("testProblem1", "testDescription1", testPatient.getId());
-    private Problem testProblem2 = new Problem("testProblem2", "testDescription2", testPatient.getId());
+    private Problem testProblem = new Problem("testProblem", "CMPUT301 is hard", testPatient.getId());
+    private Problem testProblem1 = new Problem("CMPUT301", "testDescription1", testPatient.getId());
+    private Problem testProblem2 = new Problem("testProblem2", "CMPUT401 is even harder", testPatient.getId());
 
-    private PatientRecord testPatientRecord = new PatientRecord(testProblem.getId(), "title", "description", null, null, null);
-    private PatientRecord testPatientRecord1 = new PatientRecord(testProblem.getId(), "title1", "description1", null, null, null);
-    private PatientRecord testPatientRecord2 = new PatientRecord(testProblem.getId(), "title2", "description2", null, null, null);
+    private PatientRecord testPatientRecord = new PatientRecord(testProblem.getId(), "Elasticsearch!", "I love Elasticsearch", null, null, null);
+    private PatientRecord testPatientRecord1 = new PatientRecord(testProblem.getId(), "Hmm", "I think that was a bold statement", null, null, null);
+    private PatientRecord testPatientRecord2 = new PatientRecord(testProblem.getId(), "OK", "I hate Elasticsearch", null, null, null);
 
-    private CareProviderRecord testCareProviderRecord = new CareProviderRecord(testProblem.getId(), "careProviderComment", testCareProvider.getId());
-    private CareProviderRecord testCareProviderRecord1 = new CareProviderRecord(testProblem.getId(), "careProviderComment2", testCareProvider.getId());
-    private CareProviderRecord testCareProviderRecord2 = new CareProviderRecord(testProblem.getId(), "careProviderComment3", testCareProvider.getId());
+    private CareProviderRecord testCareProviderRecord = new CareProviderRecord(testProblem.getId(), "Good to hear!", testCareProvider.getId());
+    private CareProviderRecord testCareProviderRecord1 = new CareProviderRecord(testProblem.getId(), "Elasticsearch is good, don't hate it.", testCareProvider.getId());
+    private CareProviderRecord testCareProviderRecord2 = new CareProviderRecord(testProblem.getId(), "Get over it.", testCareProvider.getId());
 
     @Before
     public void setUp() throws Exception {
@@ -58,6 +62,28 @@ public class ElasticsearchManagerTest {
     @After
     public void tearDown() throws Exception {
         solo.finishOpenedActivities();
+    }
+
+    @Test
+    public void testObjectDoesNotExistException() throws Exception {
+        try {
+            esm.deleteObject("DoesNotExist", "problems", Problem.class);
+            assertTrue(false);
+        } catch (ElasticsearchManager.ObjectNotFoundException e) {
+            assertTrue(true);
+        }
+    }
+
+    @Test
+    public void testObjectAlreadyExistsException() throws Exception {
+        esm.addObject(testProblem);
+        Thread.sleep(delay);
+        try {
+            esm.addObject(testProblem);
+            assertTrue(false);
+        } catch (ElasticsearchManager.ObjectAlreadyExistsException e) {
+            assertTrue(true);
+        }
     }
 
     @Test
@@ -188,6 +214,69 @@ public class ElasticsearchManagerTest {
         Thread.sleep(delay);
         obtained = esm.getObjectFromId(testCareProvider.getId(), testCareProvider.getElasticsearchType(), testCareProvider.getClass());
         assertTrue(obtained.equals(testCareProvider));
+    }
+
+    @Test
+    public void testSearchProblems() throws Exception {
+        ArrayList<Problem> problems = new ArrayList<>();
+        problems.add(testProblem);
+        problems.add(testProblem1);
+        problems.add(testProblem2);
+
+        esm.addObjects(problems);
+        Thread.sleep(delay);
+
+        ArrayList<Problem> obtained = esm.searchProblems("CMPUT301");
+        HashSet<Problem> obtainedSet = new HashSet<>(obtained);
+
+        HashSet<Problem> expectedSet = new HashSet();
+        expectedSet.add(testProblem);
+        expectedSet.add(testProblem1);
+        /* Search results should not contain testProblem2 */
+
+        assertEquals(obtainedSet, expectedSet);
+    }
+
+    @Test
+    public void testSearchPatientRecords() throws Exception {
+        ArrayList<PatientRecord> patientRecords = new ArrayList<>();
+        patientRecords.add(testPatientRecord);
+        patientRecords.add(testPatientRecord1);
+        patientRecords.add(testPatientRecord2);
+
+        esm.addObjects(patientRecords);
+        Thread.sleep(delay);
+
+        ArrayList<PatientRecord> obtained = esm.searchPatientRecords("Elasticsearch");
+        HashSet<PatientRecord> obtainedSet = new HashSet<>(obtained);
+
+        HashSet<PatientRecord> expectedSet = new HashSet<>();
+        expectedSet.add(testPatientRecord);
+        /* Search results should not contain testPatientRecord1 */
+        expectedSet.add(testPatientRecord2);
+
+        assertEquals(expectedSet, obtainedSet);
+    }
+
+    @Test
+    public void testSearchCareProviderRecord() throws Exception {
+        ArrayList<CareProviderRecord> careProviderRecords = new ArrayList<>();
+        careProviderRecords.add(testCareProviderRecord);
+        careProviderRecords.add(testCareProviderRecord1);
+        careProviderRecords.add(testCareProviderRecord2);
+
+        esm.addObjects(careProviderRecords);
+        Thread.sleep(delay);
+
+        ArrayList<CareProviderRecord> obtained = esm.searchCareProviderRecord("good");
+        HashSet<CareProviderRecord> obtainedSet = new HashSet<>(obtained);
+
+        HashSet<CareProviderRecord> expectedSet = new HashSet<>();
+        expectedSet.add(testCareProviderRecord);
+        expectedSet.add(testCareProviderRecord1);
+        /* Search results should not contain testCareProviderRecord2 */
+
+        assertEquals(expectedSet, obtainedSet);
     }
 
 }

@@ -5,6 +5,7 @@ import android.location.Location;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Objects;
 
 public class PatientRecord extends AbstractRecord implements ElasticsearchStorable{
 
@@ -48,6 +49,24 @@ public class PatientRecord extends AbstractRecord implements ElasticsearchStorab
 
     public Location getLocation() {
         return location;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PatientRecord that = (PatientRecord) o;
+        return Objects.equals(getTitle(), that.getTitle()) &&
+                Objects.equals(getDescription(), that.getDescription()) &&
+                Objects.equals(getPhotoIds(), that.getPhotoIds()) &&
+                Objects.equals(getBodyLocation(), that.getBodyLocation()) &&
+                Objects.equals(getLocation(), that.getLocation());
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(getTitle(), getDescription(), getPhotoIds(), getBodyLocation(), getLocation());
     }
 
     @Override

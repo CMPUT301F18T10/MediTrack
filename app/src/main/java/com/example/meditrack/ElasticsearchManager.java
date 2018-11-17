@@ -11,6 +11,7 @@ import com.searchly.jestdroid.JestDroidClient;
 
 import org.w3c.dom.Document;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -34,6 +35,7 @@ public class ElasticsearchManager {
     private final String ELASTICSEARCH_INDEX = "cmput301f18t10";
     private final String ELASTICSEARCH_TEST_INDEX = "cmput301f18t10test";
     private final String tag = "esm";
+    private final long delay = 1000;
 
     private JestDroidClient client;
 
@@ -70,9 +72,9 @@ public class ElasticsearchManager {
 
     }
 
-    private class GenericAddTask<T extends ElasticsearchStorable> extends AsyncTask<T, Void, Void> {
+    private class GenericAddTask<T extends ElasticsearchStorable> extends AsyncTask<T, Void, OperationFailedException> {
         @Override
-        protected Void doInBackground(T... ts) {
+        protected OperationFailedException doInBackground(T... ts) {
             initElasticsearch();
             for (T t : ts){
                 Index index = new Index.Builder(t).index(elasticsearchIndex).type(t.getElasticsearchType()).id(t.getId()).build();
@@ -86,6 +88,7 @@ public class ElasticsearchManager {
                 } catch(java.io.IOException e){
                     Log.i(tag, "Failure: IOException");
                     e.printStackTrace();
+                    return new OperationFailedException();
                 }
             }
             return null;
@@ -137,8 +140,18 @@ public class ElasticsearchManager {
      * @param <T> type of the object
      */
     public <T extends ElasticsearchStorable> void addObject (T t) throws ObjectAlreadyExistsException, OperationFailedException {
+        if (existObject(t.getId(), t.getElasticsearchType(), t.getClass())) {
+            throw new ObjectAlreadyExistsException();
+        }
         GenericAddTask<T> task = new GenericAddTask<>();
-        task.execute(t);
+        try {
+            OperationFailedException e = task.execute(t).get();
+            if (e != null) {
+                throw e;
+            }
+        } catch (Exception e) {
+            throw new OperationFailedException();
+        }
     }
 
     /**
@@ -191,23 +204,42 @@ public class ElasticsearchManager {
         return result;
     }
 
+    private <T extends ElasticsearchStorable> ArrayList<T> searchObjects(String string, String type, Class<T> cls) throws OperationFailedException {
+        ArrayList<T> result;
+        String query =
+        "{\n" +
+            "\"query\": {\n" +
+                "\"term\" : {" + "\"" + "_all" + "\"" + ":" + "\"" + string.toLowerCase() + "\"" + "}\n" +
+            "}\n" +
+        "}";
+        QueryTask<T> task = new QueryTask<>();
+        try {
+            result = task.execute(query, type, cls).get();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new OperationFailedException();
+        }
+        return result;
+    }
+
     /**
      * Search for all problems containing the given text
      * @param text text to search
      * @return an ArrayList of Problems that contain the given text
      */
     public ArrayList<Problem> searchProblems (String text) throws OperationFailedException {
-        return null;
+        // TODO: remove hard-coded type
+        return searchObjects(text, "problems", Problem.class);
     }
-
 
     /**
      * Search for all patient records that contain the given text
      * @param text text to search
      * @return an ArrayList of PatientRecord
      */
-    public ArrayList<PatientRecord> searhPatientRecords(String text) throws OperationFailedException {
-        return null;
+    public ArrayList<PatientRecord> searchPatientRecords(String text) throws OperationFailedException {
+        // TODO: remove hard-coded type
+        return searchObjects(text, "patient_records", PatientRecord.class);
     }
 
     /**
@@ -216,7 +248,7 @@ public class ElasticsearchManager {
      * @return an ArrayList of CareProviderRecord
      */
     public ArrayList<CareProviderRecord> searchCareProviderRecord(String text) throws OperationFailedException {
-        return null;
+        return searchObjects(text, "care_provider_records", CareProviderRecord.class);
     }
 
     /**
@@ -314,9 +346,12 @@ public class ElasticsearchManager {
     public <T extends ElasticsearchStorable> void updateObject(String id, String type, T obj) throws ObjectNotFoundException, OperationFailedException {
         deleteObject(obj.getId(), obj.getElasticsearchType(), obj.getClass());
         try {
+            Thread.sleep(delay);
             addObject(obj);
         } catch (ObjectAlreadyExistsException e) {
             Log.i(tag, "Object with exact same id added while it's deleted");
+            throw new OperationFailedException();
+        } catch (java.lang.InterruptedException e) {
             throw new OperationFailedException();
         }
     }
