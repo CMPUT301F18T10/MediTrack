@@ -158,4 +158,15 @@ public class ElasticsearchManagerTest {
         assertTrue(esm.existObject(testPatient.getId(), testPatient.getElasticsearchType(), testPatient.getClass()));
     }
 
+    @Test
+    public void testDeleteObject() throws Exception {
+        esm.addObject(testPatient);
+        Thread.sleep(delay);
+        assertTrue(esm.existObject(testPatient.getId(), testPatient.getElasticsearchType(), testPatient.getClass()));
+
+        esm.deleteObject(testPatient.getId(), testPatient.getElasticsearchType(), testPatient.getClass());
+        Thread.sleep(delay);
+        assertTrue(!esm.existObject(testPatient.getId(), testPatient.getElasticsearchType(), testPatient.getClass()));
+    }
+
 }
