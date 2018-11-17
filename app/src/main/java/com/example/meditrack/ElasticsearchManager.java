@@ -11,6 +11,7 @@ import com.searchly.jestdroid.JestDroidClient;
 
 import org.w3c.dom.Document;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -222,8 +223,8 @@ public class ElasticsearchManager {
      * @param text text to search
      * @return an ArrayList of PatientRecord
      */
-    public ArrayList<PatientRecord> searhPatientRecords(String text) throws OperationFailedException {
-        return null;
+    public ArrayList<PatientRecord> searchPatientRecords(String text) throws OperationFailedException {
+        return new ArrayList<>();
     }
 
     /**
@@ -232,7 +233,7 @@ public class ElasticsearchManager {
      * @return an ArrayList of CareProviderRecord
      */
     public ArrayList<CareProviderRecord> searchCareProviderRecord(String text) throws OperationFailedException {
-        return null;
+        return new ArrayList<>();
     }
 
     /**

@@ -43,9 +43,9 @@ public class ElasticsearchManagerTest {
     private Problem testProblem1 = new Problem("CMPUT301", "testDescription1", testPatient.getId());
     private Problem testProblem2 = new Problem("testProblem2", "CMPUT401 is even harder", testPatient.getId());
 
-    private PatientRecord testPatientRecord = new PatientRecord(testProblem.getId(), "title", "description", null, null, null);
-    private PatientRecord testPatientRecord1 = new PatientRecord(testProblem.getId(), "title1", "description1", null, null, null);
-    private PatientRecord testPatientRecord2 = new PatientRecord(testProblem.getId(), "title2", "description2", null, null, null);
+    private PatientRecord testPatientRecord = new PatientRecord(testProblem.getId(), "Elasticsearch!", "I love Elasticsearch", null, null, null);
+    private PatientRecord testPatientRecord1 = new PatientRecord(testProblem.getId(), "Hmm", "I think that was a bold statement", null, null, null);
+    private PatientRecord testPatientRecord2 = new PatientRecord(testProblem.getId(), "OK", "I hate Elasticsearch", null, null, null);
 
     private CareProviderRecord testCareProviderRecord = new CareProviderRecord(testProblem.getId(), "careProviderComment", testCareProvider.getId());
     private CareProviderRecord testCareProviderRecord1 = new CareProviderRecord(testProblem.getId(), "careProviderComment2", testCareProvider.getId());
@@ -212,7 +212,27 @@ public class ElasticsearchManagerTest {
         expectedSet.add(testProblem1);
         /* Search results should not contain testProblem2 */
 
-        assertTrue(expectedSet.size() == obtainedSet.size());
+        assertEquals(obtainedSet, expectedSet);
+    }
+
+    @Test
+    public void testSearchPatientRecords() throws Exception {
+        ArrayList<PatientRecord> patientRecords = new ArrayList<>();
+        patientRecords.add(testPatientRecord);
+        patientRecords.add(testPatientRecord1);
+        patientRecords.add(testPatientRecord2);
+
+        esm.addObjects(patientRecords);
+        Thread.sleep(delay);
+
+        ArrayList<PatientRecord> obtained = esm.searchPatientRecords("Elasticsearch");
+        HashSet<PatientRecord> obtainedSet = new HashSet<>(obtained);
+
+        HashSet<PatientRecord> expectedSet = new HashSet<>();
+        expectedSet.add(testPatientRecord);
+        /* Search results should not contain testPatientRecord1 */
+        expectedSet.add(testPatientRecord2);
+
         assertEquals(obtainedSet, expectedSet);
     }
 
