@@ -50,13 +50,51 @@ public class ProblemManagerService
         }
     }
 
-    public static void AddPatientRecord(Integer problemId, AbstractRecord record)
+    public static void AddPatientRecord(PatientRecord record)
     {
-        // TODO: Finish the method
+        if (DataRepositorySingleton.GetInstance().DoesPatientRecordExist(record.getProblemId(), record.getId())){
+
+            Log.e("Failure", "Record Id already exists");
+        }
+
+        else{
+            DataRepositorySingleton.GetInstance().AddPatientRecord(record);
+        }
     }
 
-    public static void DeleteRecord(Integer recordId)
+    public static void AddCareProviderRecord(CareProviderRecord record)
     {
-        // TODO: Finish the method
+        if (DataRepositorySingleton.GetInstance().DoesCareGiverRecordExist(record.getProblemId(), record.getId())){
+
+            Log.e("Failure", "Record Id already exists");
+        }
+
+        else{
+            DataRepositorySingleton.GetInstance().AddCareProviderRecord(record);
+        }
+    }
+
+    public static void DeletePatientRecord(String problemId, String recordId)
+    {
+        if (!DataRepositorySingleton.GetInstance().DoesPatientRecordExist(problemId, recordId)){
+
+            Log.e("Failure", "Record Id does not exist");
+        }
+
+        else{
+            DataRepositorySingleton.GetInstance().DeletePatientRecord(recordId);
+        }
+    }
+
+    public static void DeleteCareProviderRecord(String problemId, String recordId)
+    {
+        if (!DataRepositorySingleton.GetInstance().DoesCareGiverRecordExist(problemId, recordId)){
+
+            Log.e("Failure", "Record Id does not exist");
+        }
+
+        else{
+            DataRepositorySingleton.GetInstance().DeleteCareProviderRecord(recordId);
+        }
     }
 }
