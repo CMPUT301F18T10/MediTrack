@@ -1,6 +1,5 @@
 package com.example.meditrack;
 
-import android.graphics.Bitmap;
 import android.util.Log;
 
 import java.util.ArrayDeque;
@@ -117,7 +116,7 @@ public class DataRepositorySingleton
         {
             try
             {
-                mProblemList.addAll(mESM.getProblemsByPatientId(mPatientUser.getUserId()));
+                mProblemList.addAll(mESM.getProblemsByPatientId(mPatientUser.getId()));
             }
             catch(ElasticsearchManager.OperationFailedException e)
             {

@@ -3,7 +3,6 @@ package com.example.meditrack;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.util.Log;
 
 import com.robotium.solo.Solo;
 
@@ -14,6 +13,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
+
+import static junit.framework.TestCase.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class ElasticsearchManagerTest {
@@ -29,15 +30,19 @@ public class ElasticsearchManagerTest {
     private ContactInfo testContactInfo = new ContactInfo("jack2018@cmput301.com", "780-807-078");
 
     private Patient testPatient = new Patient("Jack", null, testContactInfo);
+    private CareProvider careProvider = new CareProvider("Peter");
 
-    private Problem testProblem = new Problem("testProblem", "testDescription", testPatient.getUserId());
-    private Problem testProblem1 = new Problem("testProblem1", "testDescription1", testPatient.getUserId());
-    private Problem testProblem2 = new Problem("testProblem2", "testDescription2", testPatient.getUserId());
+    private Problem testProblem = new Problem("testProblem", "testDescription", testPatient.getId());
+    private Problem testProblem1 = new Problem("testProblem1", "testDescription1", testPatient.getId());
+    private Problem testProblem2 = new Problem("testProblem2", "testDescription2", testPatient.getId());
 
     private PatientRecord testPatientRecord = new PatientRecord(testProblem.getId(), "title", "description", null, null, null);
     private PatientRecord testPatientRecord1 = new PatientRecord(testProblem.getId(), "title1", "description1", null, null, null);
     private PatientRecord testPatientRecord2 = new PatientRecord(testProblem.getId(), "title2", "description2", null, null, null);
 
+    private CareProviderRecord testCareProviderRecord = new CareProviderRecord(testProblem.getId(), "careProviderComment", careProvider.getId());
+    private CareProviderRecord testCareProviderRecord1 = new CareProviderRecord(testProblem.getId(), "careProviderComment2", careProvider.getId());
+    private CareProviderRecord testCareProviderRecord2 = new CareProviderRecord(testProblem.getId(), "careProviderComment3", careProvider.getId());
 
     @Before
     public void setUp() throws Exception {
@@ -61,7 +66,7 @@ public class ElasticsearchManagerTest {
         Thread.sleep(delay);
 
         Problem obtained = esm.getObjectFromId(testProblem.getId(), testProblem.getElasticsearchType(), testProblem.getClass());
-        assert(testProblem.getId() == obtained.getId());
+        assertTrue(testProblem.getId().equals(obtained.getId()));
     }
 
     @Test
@@ -71,7 +76,7 @@ public class ElasticsearchManagerTest {
         Thread.sleep(delay);
 
         PatientRecord obtained = esm.getObjectFromId(testPatientRecord.getId(), testPatientRecord.getElasticsearchType(), testPatientRecord.getClass());
-        assert(testPatientRecord.getId() == obtained.getId());
+        assertTrue(testPatientRecord.getId().equals(obtained.getId()));
     }
 
     @Test
@@ -88,13 +93,78 @@ public class ElasticsearchManagerTest {
 
         esm.addObjects(problems);
         Thread.sleep(delay);
-        ArrayList<Problem> obtained = esm.getProblemsByPatientId(testPatient.getUserId());
+        ArrayList<Problem> obtained = esm.getProblemsByPatientId(testPatient.getId());
 
-        assert(obtained.size() == problems.size() - 1);
+        assertTrue(obtained.size() == 3);
 
         for (Problem p : obtained) {
-            assert(p.getPatientId() == testPatient.getUserId());
+            assertTrue(p.getPatientId().equals(testPatient.getId()));
         }
+    }
+
+    @Test
+    public void testGetPatientRecordByProblemId() throws Exception {
+        ArrayList<PatientRecord> patientRecords = new ArrayList<>();
+        patientRecords.add(testPatientRecord);
+        patientRecords.add(testPatientRecord1);
+        patientRecords.add(testPatientRecord2);
+
+        // getPatientRecordByProblemId should not pick this record up
+        PatientRecord randomPatientRecord =  new PatientRecord("randomProblemId", "randomTitle", "randomDescription", null, null, null);
+        patientRecords.add(randomPatientRecord);
+
+        esm.addObjects(patientRecords);
+        Thread.sleep(delay);
+        ArrayList<PatientRecord> obtained = esm.getPatientRecordByProblemId(testProblem.getId());
+
+        assertTrue(obtained.size() == 3);
+
+        for (PatientRecord pr : obtained) {
+            assertTrue(pr.getProblemId().equals(testProblem.getId()));
+        }
+    }
+
+    @Test
+    public void testGetCareProviderRecordByProblemId() throws  Exception {
+        ArrayList<CareProviderRecord> careProviderRecords = new ArrayList<>();
+        careProviderRecords.add(testCareProviderRecord);
+        careProviderRecords.add(testCareProviderRecord1);
+        careProviderRecords.add(testCareProviderRecord2);
+
+        // getCareProviderRecordByProblemId should not pick this record up
+        CareProviderRecord randomCareProviderRecord = new CareProviderRecord("randomId", "careProviderComment", "randomCareProviderId");
+        careProviderRecords.add(randomCareProviderRecord);
+
+        esm.addObjects(careProviderRecords);
+        Thread.sleep(delay);
+        ArrayList<CareProviderRecord> obtained = esm.getCareProviderRecordByProblemId(testProblem.getId());
+
+        assertTrue(obtained.size() == 3);
+
+        for (CareProviderRecord cpr : obtained) {
+            assertTrue(cpr.getProblemId().equals(testProblem.getId()));
+        }
+    }
+
+    @Test
+    public void testExistObject() throws Exception {
+        assertTrue(!esm.existObject(testPatient.getId(), testPatient.getElasticsearchType(), testPatient.getClass()));
+
+        esm.addObject(testPatient);
+        Thread.sleep(delay);
+
+        assertTrue(esm.existObject(testPatient.getId(), testPatient.getElasticsearchType(), testPatient.getClass()));
+    }
+
+    @Test
+    public void testDeleteObject() throws Exception {
+        esm.addObject(testPatient);
+        Thread.sleep(delay);
+        assertTrue(esm.existObject(testPatient.getId(), testPatient.getElasticsearchType(), testPatient.getClass()));
+
+        esm.deleteObject(testPatient.getId(), testPatient.getElasticsearchType(), testPatient.getClass());
+        Thread.sleep(delay);
+        assertTrue(!esm.existObject(testPatient.getId(), testPatient.getElasticsearchType(), testPatient.getClass()));
     }
 
 }

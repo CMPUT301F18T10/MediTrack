@@ -20,6 +20,7 @@ import java.util.Map;
 
 import io.searchbox.client.JestClient;
 import io.searchbox.client.JestResult;
+import io.searchbox.core.Delete;
 import io.searchbox.core.DocumentResult;
 import io.searchbox.core.Index;
 import io.searchbox.core.Search;
@@ -72,7 +73,7 @@ public class ElasticsearchManager {
         protected Void doInBackground(T... ts) {
             initElasticsearch();
             for (T t : ts){
-                Index index = new Index.Builder(t).index(elasticsearchIndex).type(t.getElasticsearchType()).build();
+                Index index = new Index.Builder(t).index(elasticsearchIndex).type(t.getElasticsearchType()).id(t.getId()).build();
                 try {
                     DocumentResult result = client.execute(index);
                     if (result.isSucceeded()){
@@ -226,7 +227,7 @@ public class ElasticsearchManager {
         String query =
         "{\n" +
             "\"query\": {\n" +
-              "\"term\" : {" + "\"" + "problemId" + "\"" + ":" + "\"" + patientId.toLowerCase() + "\"" + "}\n" +
+              "\"term\" : {" + "\"" + "patientId" + "\"" + ":" + "\"" + patientId.toLowerCase() + "\"" + "}\n" +
             "}\n" +
         "}";
         QueryTask<Problem> task = new QueryTask<>();
@@ -245,7 +246,20 @@ public class ElasticsearchManager {
      * @throws OperationFailedException
      */
     public ArrayList<PatientRecord> getPatientRecordByProblemId(String problemId) throws OperationFailedException {
-        return null;
+        ArrayList<PatientRecord> patientRecords;
+        String query =
+                "{\n" +
+                        "\"query\": {\n" +
+                        "\"term\" : {" + "\"" + "problemId" + "\"" + ":" + "\"" + problemId.toLowerCase() + "\"" + "}\n" +
+                        "}\n" +
+                        "}";
+        QueryTask<PatientRecord> task = new QueryTask<>();
+        try {
+            patientRecords = task.execute(query, "patient_records", PatientRecord.class).get();
+        } catch (Exception e) {
+            throw new OperationFailedException();
+        }
+        return patientRecords;
     }
 
     /**
@@ -255,7 +269,20 @@ public class ElasticsearchManager {
      * @throws OperationFailedException
      */
     public ArrayList<CareProviderRecord> getCareProviderRecordByProblemId(String problemId) throws OperationFailedException {
-        return null;
+        ArrayList<CareProviderRecord> careProviderRecords;
+        String query =
+                "{\n" +
+                        "\"query\": {\n" +
+                        "\"term\" : {" + "\"" + "problemId" + "\"" + ":" + "\"" + problemId.toLowerCase() + "\"" + "}\n" +
+                        "}\n" +
+                        "}";
+        QueryTask<CareProviderRecord> task = new QueryTask<>();
+        try {
+            careProviderRecords = task.execute(query, "care_provider_records", CareProviderRecord.class).get();
+        } catch (Exception e) {
+            throw new OperationFailedException();
+        }
+        return careProviderRecords;
     }
 
     /**
@@ -265,7 +292,14 @@ public class ElasticsearchManager {
      * @param cls class of the object
      */
     public void deleteObject(String id, String type, Class<? extends ElasticsearchStorable> cls) throws ObjectNotFoundException, OperationFailedException {
-
+        if (!existObject(id, type, cls)) {
+            throw new ObjectNotFoundException();
+        }
+        try {
+            client.execute(new Delete.Builder(id).index(elasticsearchIndex).type(type).build());
+        } catch (java.io.IOException e) {
+            throw new OperationFailedException();
+        }
     }
 
     /**
@@ -287,7 +321,12 @@ public class ElasticsearchManager {
      * @return true if the object with the given id exists in the given type
      */
     public boolean existObject(String id, String type, Class<? extends ElasticsearchStorable> cls) throws OperationFailedException {
-        return false;
+        try {
+            getObjectFromId(id, type, cls);
+        } catch (ObjectNotFoundException e) {
+            return false;
+        }
+        return true;
     }
 
     private boolean deleteIndex() throws java.io.IOException {
@@ -304,7 +343,8 @@ public class ElasticsearchManager {
 
     public void resetIndex() throws OperationFailedException {
         try {
-            if (!(deleteIndex() && createIndex())){
+            deleteIndex();
+            if (!createIndex()){
                 throw new OperationFailedException();
             }
         } catch (java.io.IOException e) {

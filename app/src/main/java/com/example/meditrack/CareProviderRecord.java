@@ -23,7 +23,13 @@ public class CareProviderRecord extends AbstractRecord implements ElasticsearchS
         return careProviderID;
     }
 
+    @Override
     public String getElasticsearchType(){
         return "care_provider_records";
+    }
+
+    @Override
+    public String getId() {
+        return super.getId();
     }
 }
