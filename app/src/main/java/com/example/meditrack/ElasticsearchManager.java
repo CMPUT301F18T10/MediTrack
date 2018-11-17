@@ -310,7 +310,13 @@ public class ElasticsearchManager {
      * @param <T>
      */
     public <T extends ElasticsearchStorable> void updateObject(String id, String type, T obj) throws ObjectNotFoundException, OperationFailedException {
-
+        deleteObject(obj.getId(), obj.getElasticsearchType(), obj.getClass());
+        try {
+            addObject(obj);
+        } catch (ObjectAlreadyExistsException e) {
+            Log.i(tag, "Object with exact same id added while it's deleted");
+            throw new OperationFailedException();
+        }
     }
 
     /**
