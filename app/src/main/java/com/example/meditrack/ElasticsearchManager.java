@@ -234,7 +234,7 @@ public class ElasticsearchManager {
      * @return an ArrayList of CareProviderRecord
      */
     public ArrayList<CareProviderRecord> searchCareProviderRecord(String text) throws OperationFailedException {
-        return new ArrayList<>();
+        return searchObjects(text, "care_provider_records", CareProviderRecord.class);
     }
 
     /**
