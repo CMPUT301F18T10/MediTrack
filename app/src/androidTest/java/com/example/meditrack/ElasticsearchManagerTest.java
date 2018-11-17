@@ -233,7 +233,7 @@ public class ElasticsearchManagerTest {
         /* Search results should not contain testPatientRecord1 */
         expectedSet.add(testPatientRecord2);
 
-        assertEquals(obtainedSet, expectedSet);
+        assertEquals(expectedSet, obtainedSet);
     }
 
 }
