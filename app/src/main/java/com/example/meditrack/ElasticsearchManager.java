@@ -213,9 +213,9 @@ public class ElasticsearchManager {
      * @return an ArrayList of Problems that contain the given text
      */
     public ArrayList<Problem> searchProblems (String text) throws OperationFailedException {
-        return new ArrayList<>();
+        // TODO: remove hard-coded type
+        return searchObjects(text, "problems", Problem.class);
     }
-
 
     /**
      * Search for all patient records that contain the given text

@@ -3,6 +3,7 @@ package com.example.meditrack;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.util.Log;
 
 import com.robotium.solo.Solo;
 
@@ -13,8 +14,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
+import java.util.HashSet;
+import java.util.Set;
 
+import static junit.framework.Assert.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
@@ -202,14 +205,15 @@ public class ElasticsearchManagerTest {
         Thread.sleep(delay);
 
         ArrayList<Problem> obtained = esm.searchProblems("CMPUT301");
-        LinkedHashSet<Problem> obtainedSet = new LinkedHashSet<>(obtained);
+        HashSet<Problem> obtainedSet = new HashSet<>(obtained);
 
-        LinkedHashSet<Problem> expectedSet = new LinkedHashSet();
+        HashSet<Problem> expectedSet = new HashSet();
         expectedSet.add(testProblem);
         expectedSet.add(testProblem1);
         /* Search results should not contain testProblem2 */
 
-        assertTrue(obtainedSet.equals(expectedSet));
+        assertTrue(expectedSet.size() == obtainedSet.size());
+        assertEquals(obtainedSet, expectedSet);
     }
 
 }
