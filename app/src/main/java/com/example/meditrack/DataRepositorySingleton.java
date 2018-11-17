@@ -411,21 +411,18 @@ public class DataRepositorySingleton
 
     public Patient GetPatient() throws DataRepositorySingletonNotInitialized, InvalidUserMode
     {
-        if (mUserMode != ApplicationManager.UserMode.Patient) { throw new InvalidUserMode("Not in patient user mode"); }
-
-        else if (mPatientUser == null) { throw new DataRepositorySingletonNotInitialized(); }
+        if ((mPatientUser == null && mCareProvider == null) || mUserMode == ApplicationManager.UserMode.Invalid) { throw new DataRepositorySingletonNotInitialized(); }
+        else if (mUserMode != ApplicationManager.UserMode.Patient) { throw new InvalidUserMode("Not in patient user mode"); }
 
         else { return mPatientUser; }
     }
 
     public CareProvider GetCareProvider() throws DataRepositorySingletonNotInitialized, InvalidUserMode
     {
-        if (mUserMode != ApplicationManager.UserMode.CareGiver) { throw new InvalidUserMode("Not in CareProviderMode"); }
-
-        else if (mCareProvider == null) { throw new DataRepositorySingletonNotInitialized(); }
+        if ((mPatientUser == null && mCareProvider == null) || mUserMode == ApplicationManager.UserMode.Invalid) { throw new DataRepositorySingletonNotInitialized(); }
+        else if (mUserMode != ApplicationManager.UserMode.CareGiver) { throw new InvalidUserMode("Not in CareProviderMode"); }
 
         else { return mCareProvider; }
-
     }
 
     public ApplicationManager.UserMode GetUserMode() throws DataRepositorySingletonNotInitialized

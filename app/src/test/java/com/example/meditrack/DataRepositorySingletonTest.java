@@ -8,6 +8,10 @@ import java.util.ArrayList;
 
 public class DataRepositorySingletonTest
 {
+    // We will often be testing multiple methods in one test method
+
+    MockElasticSearchManager mESM;
+
     public class MockElasticSearchManager extends ElasticsearchManager
     {
         public ArrayList<Problem> mProblems;
@@ -211,7 +215,7 @@ public class DataRepositorySingletonTest
     @Before
     public void SetUp()
     {
-
+        mESM = new MockElasticSearchManager();
     }
 
     @After
@@ -220,10 +224,53 @@ public class DataRepositorySingletonTest
 
     }
 
-    @Test
-    public void MockTest()
+    @Test()
+    public void TestInitialize()
     {
-        MockElasticSearchManager mESM = new MockElasticSearchManager();
+        String CareProviderId = "TestCareProvider";
+        String ProblemTitle = "TestProblemTitle";
+        String ProblemDescription = "TestProblemDescription";
+        String ProblemPatientId = "TestProblemPatientId";
+        Problem problem = new Problem(ProblemTitle, ProblemDescription, ProblemPatientId);
+        ArrayList<String> PatientIds = new ArrayList<>();
+        PatientIds.add(ProblemPatientId);
+        mESM.mCareProviders.add(new CareProvider(CareProviderId, PatientIds));
+
+        mESM.mProblems.add(problem);
+        mESM.mPatientRecords.add(new PatientRecord(ProblemTitle));
+        mESM.mPatientRecords.add(new PatientRecord(ProblemTitle));
+
+        DataRepositorySingleton DRS = DataRepositorySingleton.GetInstance();
+
+        // Test Case: Before initialization
+        try { CareProvider CP = DRS.GetCareProvider(); }
+        catch(DataRepositorySingleton.DataRepositorySingletonNotInitialized e) { assert true; }
+        catch (DataRepositorySingleton.InvalidUserMode e) { assert false; }
+
+        DRS.Initialize(ApplicationManager.UserMode.CareGiver, CareProviderId, mESM);
+
+        // Test Case: Expecting no throws
+        CareProvider careProvider;
+        try
+        {
+            careProvider = DRS.GetCareProvider();
+            assert (careProvider.getId().equals(CareProviderId));
+        }
+        catch(Exception e){} // we should not encounter any exceptions
+
+        // Test Case: Expecting InvalidUserMode exception
+        try { Patient patient = DRS.GetPatient(); }
+        catch (DataRepositorySingleton.InvalidUserMode e) { assert true; }
+        catch (DataRepositorySingleton.DataRepositorySingletonNotInitialized e) { assert false; } // we don't expect this exception
+
+        // Test Case: Fetch the problem
+        ArrayList<Problem> resultProblems = DRS.GetProblemsForPatientId(ProblemPatientId);
+        assert (resultProblems.get(0).getDescription().equals(ProblemDescription));
+        assert  (resultProblems.get(0).getPatientId().equals(ProblemPatientId));
+
+        // Test Case: Check for empty CareProvider Records
+        ArrayList<CareProviderRecord> resultCPRecords = DRS.GetCareGiverRecordsForProblemId(ProblemTitle);
+        assert (resultCPRecords.size() == 0);
     }
 
 
