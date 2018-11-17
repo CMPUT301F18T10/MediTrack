@@ -29,13 +29,13 @@ public class LoginActivity extends AppCompatActivity {
         if(caretakerRadio.isChecked()){
             Intent caretakerIntent = new Intent(LoginActivity.this, PatientsListActivity.class);
             //caretakerIntent.putExtra("caretakerID", userEmail);
-            ApplicationManager.LogIn(CareGiver, userEmail);
+            ApplicationManager.LogIn(CareGiver, userEmail, new ElasticsearchManager(), new DataRepositorySingleton());
             startActivity(caretakerIntent);
         }
         else{
             Intent patientIntent = new Intent(LoginActivity.this, ProblemsListActivity.class);
             //patientIntent.putExtra("patientID", userEmail);
-            ApplicationManager.LogIn(ApplicationManager.UserMode.Patient, userEmail);
+            ApplicationManager.LogIn(ApplicationManager.UserMode.Patient, userEmail, new ElasticsearchManager(), new DataRepositorySingleton());
             startActivity(patientIntent);
         }
 
