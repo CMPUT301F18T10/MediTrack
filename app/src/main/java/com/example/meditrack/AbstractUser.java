@@ -1,13 +1,13 @@
 package com.example.meditrack;
 
-public abstract class AbstractUser implements ElasticsearchStorable{
+public abstract class AbstractUser {
 
     String id;
 
     // Maybe we will implement password later
     // String password;
 
-    protected String getUserId() {
+    protected String getId() {
         return id;
     }
 

@@ -54,4 +54,9 @@ public class PatientRecord extends AbstractRecord implements ElasticsearchStorab
     public String getElasticsearchType() {
         return "patient_records";
     }
+
+    @Override
+    public String getId() {
+        return super.getId();
+    }
 }

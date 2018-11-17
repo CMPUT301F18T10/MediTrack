@@ -28,4 +28,9 @@ public class Patient extends AbstractUser implements ElasticsearchStorable{
     public String getElasticsearchType() {
         return "patients";
     }
+
+    @Override
+    public String getId() {
+        return super.getId();
+    }
 }

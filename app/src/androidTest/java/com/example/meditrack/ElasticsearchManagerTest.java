@@ -34,17 +34,17 @@ public class ElasticsearchManagerTest {
     private Patient testPatient = new Patient("Jack", null, testContactInfo);
     private CareProvider careProvider = new CareProvider("Peter");
 
-    private Problem testProblem = new Problem("testProblem", "testDescription", testPatient.getUserId());
-    private Problem testProblem1 = new Problem("testProblem1", "testDescription1", testPatient.getUserId());
-    private Problem testProblem2 = new Problem("testProblem2", "testDescription2", testPatient.getUserId());
+    private Problem testProblem = new Problem("testProblem", "testDescription", testPatient.getId());
+    private Problem testProblem1 = new Problem("testProblem1", "testDescription1", testPatient.getId());
+    private Problem testProblem2 = new Problem("testProblem2", "testDescription2", testPatient.getId());
 
     private PatientRecord testPatientRecord = new PatientRecord(testProblem.getId(), "title", "description", null, null, null);
     private PatientRecord testPatientRecord1 = new PatientRecord(testProblem.getId(), "title1", "description1", null, null, null);
     private PatientRecord testPatientRecord2 = new PatientRecord(testProblem.getId(), "title2", "description2", null, null, null);
 
-    private CareProviderRecord testCareProviderRecord = new CareProviderRecord(testProblem.getId(), "careProviderComment", careProvider.getUserId());
-    private CareProviderRecord testCareProviderRecord1 = new CareProviderRecord(testProblem.getId(), "careProviderComment2", careProvider.getUserId());
-    private CareProviderRecord testCareProviderRecord2 = new CareProviderRecord(testProblem.getId(), "careProviderComment3", careProvider.getUserId());
+    private CareProviderRecord testCareProviderRecord = new CareProviderRecord(testProblem.getId(), "careProviderComment", careProvider.getId());
+    private CareProviderRecord testCareProviderRecord1 = new CareProviderRecord(testProblem.getId(), "careProviderComment2", careProvider.getId());
+    private CareProviderRecord testCareProviderRecord2 = new CareProviderRecord(testProblem.getId(), "careProviderComment3", careProvider.getId());
 
     @Before
     public void setUp() throws Exception {
@@ -95,13 +95,12 @@ public class ElasticsearchManagerTest {
 
         esm.addObjects(problems);
         Thread.sleep(delay);
-        ArrayList<Problem> obtained = esm.getProblemsByPatientId(testPatient.getUserId());
+        ArrayList<Problem> obtained = esm.getProblemsByPatientId(testPatient.getId());
 
-        Log.i("esm", "obtained..: " + new Integer(obtained.size()).toString());
         assertTrue(obtained.size() == 3);
 
         for (Problem p : obtained) {
-            assertTrue(p.getPatientId().equals(testPatient.getUserId()));
+            assertTrue(p.getPatientId().equals(testPatient.getId()));
         }
     }
 
@@ -151,12 +150,12 @@ public class ElasticsearchManagerTest {
 
     @Test
     public void testExistObject() throws Exception {
-        assertTrue(!esm.existObject(testPatient.getUserId(), testPatient.getElasticsearchType(), testPatient.getClass()));
+        assertTrue(!esm.existObject(testPatient.getId(), testPatient.getElasticsearchType(), testPatient.getClass()));
 
         esm.addObject(testPatient);
         Thread.sleep(delay);
 
-        assertTrue(esm.existObject(testPatient.getUserId(), testPatient.getElasticsearchType(), testPatient.getClass()));
+        assertTrue(esm.existObject(testPatient.getId(), testPatient.getElasticsearchType(), testPatient.getClass()));
     }
 
 }
