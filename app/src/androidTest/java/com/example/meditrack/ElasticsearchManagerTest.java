@@ -30,7 +30,10 @@ public class ElasticsearchManagerTest {
     private ContactInfo testContactInfo = new ContactInfo("jack2018@cmput301.com", "780-807-078");
 
     private Patient testPatient = new Patient("Jack", null, testContactInfo);
-    private CareProvider careProvider = new CareProvider("Peter");
+    private Patient testPatient1 = new Patient("Joe", null, testContactInfo);
+    private Patient testPatient2 = new Patient("Mary", null, testContactInfo);
+
+    private CareProvider testCareProvider = new CareProvider("Peter");
 
     private Problem testProblem = new Problem("testProblem", "testDescription", testPatient.getId());
     private Problem testProblem1 = new Problem("testProblem1", "testDescription1", testPatient.getId());
@@ -40,9 +43,9 @@ public class ElasticsearchManagerTest {
     private PatientRecord testPatientRecord1 = new PatientRecord(testProblem.getId(), "title1", "description1", null, null, null);
     private PatientRecord testPatientRecord2 = new PatientRecord(testProblem.getId(), "title2", "description2", null, null, null);
 
-    private CareProviderRecord testCareProviderRecord = new CareProviderRecord(testProblem.getId(), "careProviderComment", careProvider.getId());
-    private CareProviderRecord testCareProviderRecord1 = new CareProviderRecord(testProblem.getId(), "careProviderComment2", careProvider.getId());
-    private CareProviderRecord testCareProviderRecord2 = new CareProviderRecord(testProblem.getId(), "careProviderComment3", careProvider.getId());
+    private CareProviderRecord testCareProviderRecord = new CareProviderRecord(testProblem.getId(), "careProviderComment", testCareProvider.getId());
+    private CareProviderRecord testCareProviderRecord1 = new CareProviderRecord(testProblem.getId(), "careProviderComment2", testCareProvider.getId());
+    private CareProviderRecord testCareProviderRecord2 = new CareProviderRecord(testProblem.getId(), "careProviderComment3", testCareProvider.getId());
 
     @Before
     public void setUp() throws Exception {
@@ -165,6 +168,26 @@ public class ElasticsearchManagerTest {
         esm.deleteObject(testPatient.getId(), testPatient.getElasticsearchType(), testPatient.getClass());
         Thread.sleep(delay);
         assertTrue(!esm.existObject(testPatient.getId(), testPatient.getElasticsearchType(), testPatient.getClass()));
+    }
+
+    @Test
+    public void testUpdateObject() throws Exception {
+        CareProvider obtained;
+
+        esm.addObject(testCareProvider);
+        Thread.sleep(delay);
+        obtained = esm.getObjectFromId(testCareProvider.getId(), testCareProvider.getElasticsearchType(), testCareProvider.getClass());
+        assertTrue(obtained.equals(testCareProvider));
+
+        ArrayList<String> patientIds = new ArrayList<>();
+        patientIds.add(testPatient.getId());
+        patientIds.add(testPatient1.getId());
+        testCareProvider.setPatientIds(patientIds);
+
+        esm.updateObject(testCareProvider.getId(), testCareProvider.getElasticsearchType(), testCareProvider);
+        Thread.sleep(delay);
+        obtained = esm.getObjectFromId(testCareProvider.getId(), testCareProvider.getElasticsearchType(), testCareProvider.getClass());
+        assertTrue(obtained.equals(testCareProvider));
     }
 
 }

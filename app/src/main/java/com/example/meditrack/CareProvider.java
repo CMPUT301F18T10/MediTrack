@@ -1,6 +1,7 @@
 package com.example.meditrack;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class CareProvider extends AbstractUser implements ElasticsearchStorable{
 
@@ -25,6 +26,14 @@ public class CareProvider extends AbstractUser implements ElasticsearchStorable{
     }
 
     public void setPatientIds(ArrayList<String> listOfIds){this.patientIds = listOfIds;}
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CareProvider that = (CareProvider) o;
+        return this.patientIds.equals(that.getPatientIds()) && super.id.equals(that.getId());
+    }
 
     @Override
     public String getElasticsearchType(){
