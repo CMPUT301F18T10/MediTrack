@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 
 import static junit.framework.TestCase.assertTrue;
 
@@ -35,9 +36,9 @@ public class ElasticsearchManagerTest {
 
     private CareProvider testCareProvider = new CareProvider("Peter");
 
-    private Problem testProblem = new Problem("testProblem", "testDescription", testPatient.getId());
-    private Problem testProblem1 = new Problem("testProblem1", "testDescription1", testPatient.getId());
-    private Problem testProblem2 = new Problem("testProblem2", "testDescription2", testPatient.getId());
+    private Problem testProblem = new Problem("testProblem", "CMPUT301 is hard", testPatient.getId());
+    private Problem testProblem1 = new Problem("CMPUT301", "testDescription1", testPatient.getId());
+    private Problem testProblem2 = new Problem("testProblem2", "CMPUT401 is even harder", testPatient.getId());
 
     private PatientRecord testPatientRecord = new PatientRecord(testProblem.getId(), "title", "description", null, null, null);
     private PatientRecord testPatientRecord1 = new PatientRecord(testProblem.getId(), "title1", "description1", null, null, null);
@@ -188,6 +189,27 @@ public class ElasticsearchManagerTest {
         Thread.sleep(delay);
         obtained = esm.getObjectFromId(testCareProvider.getId(), testCareProvider.getElasticsearchType(), testCareProvider.getClass());
         assertTrue(obtained.equals(testCareProvider));
+    }
+
+    @Test
+    public void testSearchProblems() throws Exception {
+        ArrayList<Problem> problems = new ArrayList<>();
+        problems.add(testProblem);
+        problems.add(testProblem1);
+        problems.add(testProblem2);
+
+        esm.addObjects(problems);
+        Thread.sleep(delay);
+
+        ArrayList<Problem> obtained = esm.searchProblems("CMPUT301");
+        LinkedHashSet<Problem> obtainedSet = new LinkedHashSet<>(obtained);
+
+        LinkedHashSet<Problem> expectedSet = new LinkedHashSet();
+        expectedSet.add(testProblem);
+        expectedSet.add(testProblem1);
+        /* Search results should not contain testProblem2 */
+
+        assertTrue(obtainedSet.equals(expectedSet));
     }
 
 }

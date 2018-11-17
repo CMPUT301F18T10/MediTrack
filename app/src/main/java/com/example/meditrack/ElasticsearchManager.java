@@ -195,7 +195,7 @@ public class ElasticsearchManager {
      * @return an ArrayList of Problems that contain the given text
      */
     public ArrayList<Problem> searchProblems (String text) throws OperationFailedException {
-        return null;
+        return new ArrayList<>();
     }
 
 
