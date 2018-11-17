@@ -268,7 +268,20 @@ public class ElasticsearchManager {
      * @throws OperationFailedException
      */
     public ArrayList<CareProviderRecord> getCareProviderRecordByProblemId(String problemId) throws OperationFailedException {
-        return new ArrayList<>();
+        ArrayList<CareProviderRecord> careProviderRecords;
+        String query =
+                "{\n" +
+                        "\"query\": {\n" +
+                        "\"term\" : {" + "\"" + "problemId" + "\"" + ":" + "\"" + problemId.toLowerCase() + "\"" + "}\n" +
+                        "}\n" +
+                        "}";
+        QueryTask<CareProviderRecord> task = new QueryTask<>();
+        try {
+            careProviderRecords = task.execute(query, "care_provider_records", CareProviderRecord.class).get();
+        } catch (Exception e) {
+            throw new OperationFailedException();
+        }
+        return careProviderRecords;
     }
 
     /**
