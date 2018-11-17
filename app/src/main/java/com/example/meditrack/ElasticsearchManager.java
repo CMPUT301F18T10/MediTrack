@@ -20,6 +20,7 @@ import java.util.Map;
 
 import io.searchbox.client.JestClient;
 import io.searchbox.client.JestResult;
+import io.searchbox.core.Delete;
 import io.searchbox.core.DocumentResult;
 import io.searchbox.core.Index;
 import io.searchbox.core.Search;
@@ -291,7 +292,14 @@ public class ElasticsearchManager {
      * @param cls class of the object
      */
     public void deleteObject(String id, String type, Class<? extends ElasticsearchStorable> cls) throws ObjectNotFoundException, OperationFailedException {
-
+        if (!existObject(id, type, cls)) {
+            throw new ObjectNotFoundException();
+        }
+        try {
+            client.execute(new Delete.Builder(id).index(elasticsearchIndex).type(type).build());
+        } catch (java.io.IOException e) {
+            throw new OperationFailedException();
+        }
     }
 
     /**
