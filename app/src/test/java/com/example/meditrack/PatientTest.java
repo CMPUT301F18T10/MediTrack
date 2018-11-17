@@ -1,4 +1,4 @@
-package com.example.meditrack;
+/*package com.example.meditrack;
 
 import android.graphics.Bitmap;
 
@@ -58,3 +58,4 @@ public class PatientTest {
         Assert.assertTrue("contact new phone number is not equal",newPhoneNumber.equals(patient.getContactInfo().getPhoneNumber()));
     }
 }
+*/

@@ -44,7 +44,9 @@ public class ElasticsearchManager {
         this.elasticsearchIndex = ELASTICSEARCH_INDEX;
     }
 
-    private void initElasticsearch() {
+    // Originally a private method, had to be changed to protected
+    // to enable mocking of the class
+    protected void initElasticsearch() {
         if (client == null){
 
             DroidClientConfig.Builder builder = new DroidClientConfig.Builder(ELASTICSEARCH_URL);
