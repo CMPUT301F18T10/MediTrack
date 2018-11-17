@@ -13,13 +13,16 @@ public class ProblemManagerServiceTest
     Problem problemToBeEdited;
     CareProviderRecord record;
     CareProviderRecord record2;
+    PatientRecord record3;
+    PatientRecord record4;
     @Before
     public void SetUp()
     {
-        problem = new Problem("Test Title", "Test Description", new Date(), 1);
-        problemToBeDeleted = new Problem("Test Title 2", "Test Description 2", new Date(), 100);
-        problemToBeEdited = new Problem("Test Title", "Test Description", new Date());
-        record = new CareProviderRecord(new Date(), "Test Comment", "Test ID");
+        problem = new Problem("Test Title", "Test Description", "lol");
+        problemToBeDeleted = new Problem("Test Title 2", "Test Description 2",  "100");
+        problemToBeEdited = new Problem("Test Title", "Test Description","20");
+        record = new CareProviderRecord("20", "Test Comment", "Test ID");
+        record3 = new PatientRecord("30");
     }
 
     @After
@@ -39,7 +42,7 @@ public class ProblemManagerServiceTest
     public void TestDeleteProblem() throws Exception
     {
         ProblemManagerService.AddProblem(problemToBeDeleted);
-        ProblemManagerService.DeleteProblem(100);
+        ProblemManagerService.DeleteProblem("100");
         SearchManager.getProblemForTitle(problemToBeDeleted.getTitle());
     }
 
@@ -58,7 +61,7 @@ public class ProblemManagerServiceTest
     {
         assert(SearchManager.GetRecordCountForProblemId(1) == 0);
 
-        ProblemManagerService.AddRecord(1, record);
+        ProblemManagerService.AddPatientRecord(record);
         assert(SearchManager.GetRecordCountForProblemId(1) ==  1);
 
         ProblemManagerService.AddRecord(1, record2);
@@ -69,4 +72,5 @@ public class ProblemManagerServiceTest
     }
 
 }
+
 */
