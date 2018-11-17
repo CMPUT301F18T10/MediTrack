@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">MediTrack</string>
     <!-- Strings related to login -->
+    <string name="log_in_toast">Logging in</string>
+    <string name="register_toast">Creating new profile</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password (optional)</string>
     <string name="action_sign_in">Sign in or register</string>

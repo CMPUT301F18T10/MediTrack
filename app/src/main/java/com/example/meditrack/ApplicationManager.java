@@ -22,25 +22,24 @@ public class ApplicationManager extends ElasticsearchManager
      */
 
     enum UserMode { Patient, CareGiver, Invalid;}
-    private boolean mDirty;
     private UserMode mUserMode;
-    private static ContactInfo testContactInfo = new ContactInfo("Test@email","TestNumber");
+    private static ContactInfo defaultContactInfo = new ContactInfo("default@email","000-000-0000");
+    private ElasticsearchManager mESM;
 
     ApplicationManager(UserMode userMode)
     {
-        // TODO: Finish the constructor
-        this.mUserMode = userMode;
-        mDirty = false;
+        mUserMode = userMode;
+        mESM = new ElasticsearchManager();
     }
 
-    public static boolean IsUserExits(UserMode userMode, String userName, ElasticsearchManager elasticsearchManager) {
-        boolean isExits = false;
-        Patient tempPatient = new Patient(userName,new ArrayList<String>(), testContactInfo);
+    public boolean DoesUserExist(String userName) {
+        boolean doesExist = false;
+        Patient tempPatient = new Patient(userName,new ArrayList<String>(), defaultContactInfo);
         CareProvider tempCareProvider = new CareProvider(userName,new ArrayList<String>());
-        switch (userMode){
+        switch (mUserMode){
             case Patient:
                 try {
-                    isExits = elasticsearchManager.existObject(userName,tempPatient.getElasticsearchType(),tempPatient.getClass());
+                    doesExist = mESM.existObject(userName,tempPatient.getElasticsearchType(),tempPatient.getClass());
                 } catch (OperationFailedException eof) {
                     eof.printStackTrace();
                 }
@@ -48,38 +47,29 @@ public class ApplicationManager extends ElasticsearchManager
 
             case CareGiver:
                 try {
-                    isExits = elasticsearchManager.existObject(userName,tempCareProvider.getElasticsearchType(),tempCareProvider.getClass());
+                    doesExist = mESM.existObject(userName,tempCareProvider.getElasticsearchType(),tempCareProvider.getClass());
                 }  catch (OperationFailedException eof) {
                     eof.printStackTrace();
                 }
                 break;
             case Invalid:
-                if (userMode == UserMode.Invalid)  {
+                if (mUserMode == UserMode.Invalid)  {
                     Log.e("Failure","Invalid Operations");
 
                 }
                 break;
         }
 
-        return isExits;
+        return doesExist;
     }
 
-    public static boolean LogIn(UserMode userMode, String userName,ElasticsearchManager elasticsearchManager,DataRepositorySingleton dataRepositorySingleton)
+    public boolean LogIn(String userName, DataRepositorySingleton dataRepositorySingleton)
     {
-        // TODO: Attempts to log in and returns True upon success
-        // Make sure to go through ElasticsearchManager for any
-        // interaction with the server
-
-        // Make sure to call DataRepositorySingleton.Initialize
-        // to populate with appropriate data
-        Patient patient = null;
-        CareProvider careProvider = null;
         boolean login = false;
 
-
-        if (IsUserExits(userMode,userName,elasticsearchManager)){
+        if (DoesUserExist(userName)){
             login= true;
-            dataRepositorySingleton.Initialize(userMode,userName,elasticsearchManager);
+            dataRepositorySingleton.Initialize(mUserMode, userName, mESM);
         }
         else{
             Log.e("Failure","Login Failure");
@@ -88,24 +78,22 @@ public class ApplicationManager extends ElasticsearchManager
         return login;
     }
 
-    public boolean RegisterUser(UserMode userMode, String userName,ElasticsearchManager elasticsearchManager)
+    public boolean RegisterUser(String userName)
     {
-        // TODO: Attempts to register and returns True upon success
-        // Make sure to go through ElasticsearchManager for any
-        // interaction with the server
+        // TODO: ApplicationManager shouldn't be talking to ElasticSearchManager, there should be a wrapper method in DRS
 
-        Patient patient = new Patient(userName,new ArrayList<String>(), testContactInfo);
+        Patient patient = new Patient(userName,new ArrayList<String>(), defaultContactInfo);
         CareProvider careProvider = new CareProvider(userName,new ArrayList<String>());
         boolean register = false;
-        if (!IsUserExits(userMode,userName,elasticsearchManager)){
+        if (!DoesUserExist(userName)){
             register= true;
-            switch (userMode){
+            switch (mUserMode){
                 case Invalid:
                     Log.e("Failure","Invalid Operations");
                     break;
                 case Patient:
                     try{
-                        elasticsearchManager.addObject(patient);
+                        mESM.addObject(patient);
                     }catch (OperationFailedException eof) {
                         eof.printStackTrace();
                     }catch (ObjectAlreadyExistsException eae){
@@ -114,7 +102,7 @@ public class ApplicationManager extends ElasticsearchManager
                     break;
                 case CareGiver:
                     try{
-                        elasticsearchManager.addObject(careProvider);
+                        mESM.addObject(careProvider);
                     }catch (OperationFailedException eof) {
                         eof.printStackTrace();
                     }catch (ObjectAlreadyExistsException eae){
@@ -130,18 +118,9 @@ public class ApplicationManager extends ElasticsearchManager
         return register;
     }
 
-    private void SetUser(UserMode userMode, AbstractUser user)
-    {
-        // TODO:
-    }
-
     public void UpdateDataRepository(DataRepositorySingleton dataRepositorySingleton)
-
     {
-        // TODO: Finish this method
-        // It will get the updated information from ElasticSearch
         dataRepositorySingleton.RefreshDataRepositorySingleton();
-
     }
 
     public boolean IsFeatureAllowed(String feature)
