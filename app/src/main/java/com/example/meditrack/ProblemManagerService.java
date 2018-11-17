@@ -1,5 +1,7 @@
 package com.example.meditrack;
 
+import android.util.Log;
+
 public class ProblemManagerService
 {
     /* This class is responsible for operating on Problems and Records
@@ -14,7 +16,14 @@ public class ProblemManagerService
 
     public static void AddProblem(Problem problem)
     {
-        // TODO: Finish the method
+        if (DataRepositorySingleton.GetInstance().DoesProblemExist(problem.getId())){
+            Exception e;
+            Log.e("Failure", "Problem Id already exists");
+        }
+
+        else{
+            DataRepositorySingleton.GetInstance().AddProblem(problem);
+        }
     }
 
     public static void EditProblem(Problem problem)
