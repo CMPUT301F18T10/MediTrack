@@ -65,6 +65,28 @@ public class ElasticsearchManagerTest {
     }
 
     @Test
+    public void testObjectDoesNotExistException() throws Exception {
+        try {
+            esm.deleteObject("DoesNotExist", "problems", Problem.class);
+            assertTrue(false);
+        } catch (ElasticsearchManager.ObjectNotFoundException e) {
+            assertTrue(true);
+        }
+    }
+
+    @Test
+    public void testObjectAlreadyExistsException() throws Exception {
+        esm.addObject(testProblem);
+        Thread.sleep(delay);
+        try {
+            esm.addObject(testProblem);
+            assertTrue(false);
+        } catch (ElasticsearchManager.ObjectAlreadyExistsException e) {
+            assertTrue(true);
+        }
+    }
+
+    @Test
     public void testAddProblem() throws Exception {
 
         esm.addObject(testProblem);
