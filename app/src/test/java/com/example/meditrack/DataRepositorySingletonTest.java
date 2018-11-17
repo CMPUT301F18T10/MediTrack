@@ -224,7 +224,7 @@ public class DataRepositorySingletonTest
 
     }
 
-    @Test()
+    @Test
     public void TestInitialize()
     {
         String CareProviderId = "TestCareProvider";
@@ -271,6 +271,45 @@ public class DataRepositorySingletonTest
         // Test Case: Check for empty CareProvider Records
         ArrayList<CareProviderRecord> resultCPRecords = DRS.GetCareGiverRecordsForProblemId(ProblemTitle);
         assert (resultCPRecords.size() == 0);
+    }
+
+    @Test
+    public void TestRefreshDataRepositorySingleton()
+    {
+        Patient patient1 = new Patient("Patient1");
+        String ProblemTitle = "TestProblemTitle";
+        String ProblemDescription = "TestProblemDescription";
+        String ProblemPatientId = patient1.getId();
+        String CareProviderComment = "TestCPComment";
+        String CareProviderId = "TestCareProviderId";
+        Problem problem1 = new Problem(ProblemTitle, ProblemDescription, ProblemPatientId);
+        CareProviderRecord record1 = new CareProviderRecord(problem1.getId(), CareProviderComment, CareProviderId);
+
+        mESM.mPatients.add(patient1);
+        mESM.mProblems.add(problem1);
+        mESM.mCareProviderRecords.add(record1);
+
+        DataRepositorySingleton DRS = DataRepositorySingleton.GetInstance();
+        DRS.Initialize(ApplicationManager.UserMode.Patient, patient1.getId(), mESM);
+
+        // Test Case: Add a CareProvider Record to ESM and check DRS
+        assert (DRS.GetCareGiverRecordsForProblemId(problem1.getId()).size() == 1);
+
+        String CareProviderComment2 = "TestCPComment2";
+        CareProviderRecord record2 = new CareProviderRecord(problem1.getId(), CareProviderComment2, CareProviderId);
+        mESM.mCareProviderRecords.add(record2);
+        DRS.RefreshDataRepositorySingleton();
+
+        assert (DRS.GetCareGiverRecordsForProblemId(problem1.getId()).size() == 2);
+        assert (DRS.GetCareGiverRecordsForProblemId(problem1.getId()).contains(record2));
+
+        // Test Case: Add a CareProvider Record to DRS and check ESM
+        String CareProviderComment3 = "TestCPComment3";
+        CareProviderRecord record3 = new CareProviderRecord(problem1.getId(), CareProviderComment3, CareProviderId);
+        DRS.AddCareProviderRecord(record3);
+        DRS.RefreshDataRepositorySingleton();
+
+        assert (mESM.mCareProviderRecords.contains(record3));
     }
 
 

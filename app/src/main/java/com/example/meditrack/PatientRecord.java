@@ -17,7 +17,7 @@ public class PatientRecord extends AbstractRecord implements ElasticsearchStorab
 
     public PatientRecord(String problemId)
     {
-        // Added for debug and techincal reaons
+        // Added for debug and technical reasons
         // PLEASE DON'T USE IN APPLICATION
         super(problemId);
     }

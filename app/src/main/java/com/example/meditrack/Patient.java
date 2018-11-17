@@ -7,6 +7,12 @@ public class Patient extends AbstractUser implements ElasticsearchStorable{
     private ArrayList<String> bodyLocationImageIds;
     private ContactInfo contactInfo;
 
+    // Added for debug and technical reasons
+    // PLEASE DON'T USE IN APPLICATION
+    public Patient(String userId) {
+        super(userId);
+    }
+
     public Patient(String userId, ArrayList<String> bodyLocationImages, ContactInfo contactInfo) {
         super(userId);
         this.bodyLocationImageIds = bodyLocationImages;
