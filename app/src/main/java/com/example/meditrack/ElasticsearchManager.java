@@ -72,7 +72,7 @@ public class ElasticsearchManager {
         protected Void doInBackground(T... ts) {
             initElasticsearch();
             for (T t : ts){
-                Index index = new Index.Builder(t).index(elasticsearchIndex).type(t.getElasticsearchType()).build();
+                Index index = new Index.Builder(t).index(elasticsearchIndex).type(t.getElasticsearchType()).id(t.getId()).build();
                 try {
                     DocumentResult result = client.execute(index);
                     if (result.isSucceeded()){
