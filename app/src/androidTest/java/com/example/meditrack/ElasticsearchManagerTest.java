@@ -47,9 +47,9 @@ public class ElasticsearchManagerTest {
     private PatientRecord testPatientRecord1 = new PatientRecord(testProblem.getId(), "Hmm", "I think that was a bold statement", null, null, null);
     private PatientRecord testPatientRecord2 = new PatientRecord(testProblem.getId(), "OK", "I hate Elasticsearch", null, null, null);
 
-    private CareProviderRecord testCareProviderRecord = new CareProviderRecord(testProblem.getId(), "careProviderComment", testCareProvider.getId());
-    private CareProviderRecord testCareProviderRecord1 = new CareProviderRecord(testProblem.getId(), "careProviderComment2", testCareProvider.getId());
-    private CareProviderRecord testCareProviderRecord2 = new CareProviderRecord(testProblem.getId(), "careProviderComment3", testCareProvider.getId());
+    private CareProviderRecord testCareProviderRecord = new CareProviderRecord(testProblem.getId(), "Good to hear!", testCareProvider.getId());
+    private CareProviderRecord testCareProviderRecord1 = new CareProviderRecord(testProblem.getId(), "Elasticsearch is good, don't hate it.", testCareProvider.getId());
+    private CareProviderRecord testCareProviderRecord2 = new CareProviderRecord(testProblem.getId(), "Get over it.", testCareProvider.getId());
 
     @Before
     public void setUp() throws Exception {
@@ -232,6 +232,27 @@ public class ElasticsearchManagerTest {
         expectedSet.add(testPatientRecord);
         /* Search results should not contain testPatientRecord1 */
         expectedSet.add(testPatientRecord2);
+
+        assertEquals(expectedSet, obtainedSet);
+    }
+
+    @Test
+    public void testSearchCareProviderRecord() throws Exception {
+        ArrayList<CareProviderRecord> careProviderRecords = new ArrayList<>();
+        careProviderRecords.add(testCareProviderRecord);
+        careProviderRecords.add(testCareProviderRecord1);
+        careProviderRecords.add(testCareProviderRecord2);
+
+        esm.addObjects(careProviderRecords);
+        Thread.sleep(delay);
+
+        ArrayList<CareProviderRecord> obtained = esm.searchCareProviderRecord("good");
+        HashSet<CareProviderRecord> obtainedSet = new HashSet<>(obtained);
+
+        HashSet<CareProviderRecord> expectedSet = new HashSet<>();
+        expectedSet.add(testCareProviderRecord);
+        expectedSet.add(testCareProviderRecord1);
+        /* Search results should not contain testCareProviderRecord2 */
 
         assertEquals(expectedSet, obtainedSet);
     }
