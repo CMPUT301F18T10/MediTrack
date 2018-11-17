@@ -189,6 +189,24 @@ public class ElasticsearchManager {
         return result;
     }
 
+    private <T extends ElasticsearchStorable> ArrayList<T> searchObjects(String string, String type, Class<T> cls) throws OperationFailedException {
+        ArrayList<T> result;
+        String query =
+        "{\n" +
+            "\"query\": {\n" +
+                "\"term\" : {" + "\"" + "_all" + "\"" + ":" + "\"" + string.toLowerCase() + "\"" + "}\n" +
+            "}\n" +
+        "}";
+        QueryTask<T> task = new QueryTask<>();
+        try {
+            result = task.execute(query, type, cls).get();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new OperationFailedException();
+        }
+        return result;
+    }
+
     /**
      * Search for all problems containing the given text
      * @param text text to search
