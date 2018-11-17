@@ -1,6 +1,8 @@
 package com.example.meditrack;
 
+import java.math.BigInteger;
 import java.util.Date;
+import java.util.Random;
 
 public class Problem implements ElasticsearchStorable{
 
@@ -29,8 +31,7 @@ public class Problem implements ElasticsearchStorable{
 
     private String GenerateUniqueId()
     {
-        Long mills = new Date().getTime();
-        return new Long(mills).toString();
+        return new BigInteger(128, new Random()).toString();
     }
 
     @Override

@@ -1,6 +1,8 @@
 package com.example.meditrack;
 
+import java.math.BigInteger;
 import java.util.Date;
+import java.util.Random;
 
 public abstract class AbstractRecord {
 
@@ -24,7 +26,6 @@ public abstract class AbstractRecord {
 
     private String GenerateUniqueId()
     {
-        long mills = new Date().getTime();
-        return new Long(mills).toString();
+        return new BigInteger(128, new Random()).toString();
     }
 }
