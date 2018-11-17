@@ -30,7 +30,7 @@ public class ProblemManagerService
     {
         if (!DataRepositorySingleton.GetInstance().DoesProblemExist(problem.getId())){
 
-            Log.e("Failure", "Problem Id does not exist");
+            Log.e("Failure", "Problem does not exist");
         }
 
         else{
@@ -42,7 +42,7 @@ public class ProblemManagerService
     {
         if (!DataRepositorySingleton.GetInstance().DoesProblemExist(problemId)){
 
-            Log.e("Failure", "Problem Id does not exist");
+            Log.e("Failure", "Problem does not exist");
         }
 
         else{
@@ -78,7 +78,7 @@ public class ProblemManagerService
     {
         if (!DataRepositorySingleton.GetInstance().DoesPatientRecordExist(problemId, recordId)){
 
-            Log.e("Failure", "Record Id does not exist");
+            Log.e("Failure", "Patient Record does not exist");
         }
 
         else{
@@ -90,7 +90,7 @@ public class ProblemManagerService
     {
         if (!DataRepositorySingleton.GetInstance().DoesCareGiverRecordExist(problemId, recordId)){
 
-            Log.e("Failure", "Record Id does not exist");
+            Log.e("Failure", "Care Provider Record does not exist");
         }
 
         else{
