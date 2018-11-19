@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 public class PatientsListActivity extends AppCompatActivity {
+    private String patientUserName = "";
     private String patientName = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +59,8 @@ public class PatientsListActivity extends AppCompatActivity {
                 /** this should open problemslistactivity in caretaker mode with that patient's info
                  */
                 Intent intent = new Intent(PatientsListActivity.this, ProblemsListActivity.class);
+                // provide the patient Id for ProblemsListActivity
+                intent.putExtra("patientID", patientUserName);
                 startActivity(intent);
             }
         });

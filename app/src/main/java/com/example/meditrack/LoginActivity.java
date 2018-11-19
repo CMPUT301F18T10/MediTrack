@@ -36,18 +36,12 @@ public class LoginActivity extends AppCompatActivity {
             {
                 // Log in
                 mApplicationManager.LogIn(mUserEmail, DataRepositorySingleton.GetInstance());
-                Snackbar logInSnackBar = Snackbar.make(v, R.string.log_in_toast, 2000);
-                logInSnackBar.show();
             }
             else
             {
                 // Register user and then log in
                 mApplicationManager.RegisterUser(mUserEmail);
-                Snackbar registerSnackBar = Snackbar.make(v, R.string.register_toast, 2000);
-                registerSnackBar.show();
                 mApplicationManager.LogIn(mUserEmail, DataRepositorySingleton.GetInstance());
-                Snackbar logInSnackBar = Snackbar.make(v, R.string.log_in_toast, 2000);
-                logInSnackBar.show();
             }
             Intent caretakerIntent = new Intent(LoginActivity.this, PatientsListActivity.class);
             caretakerIntent.putExtra("caretakerID", mUserEmail);
@@ -59,18 +53,12 @@ public class LoginActivity extends AppCompatActivity {
             {
                 // Log in
                 mApplicationManager.LogIn(mUserEmail, DataRepositorySingleton.GetInstance());
-                Snackbar logInSnackBar = Snackbar.make(v, R.string.log_in_toast, 2000);
-                logInSnackBar.show();
             }
             else
             {
                 // Register user and then log in
                 mApplicationManager.RegisterUser(mUserEmail);
-                Snackbar registerSnackBar = Snackbar.make(v, R.string.register_toast, 2000);
-                registerSnackBar.show();
                 mApplicationManager.LogIn(mUserEmail, DataRepositorySingleton.GetInstance());
-                Snackbar logInSnackBar = Snackbar.make(v, R.string.log_in_toast, 2000);
-                logInSnackBar.show();
             }
             Intent patientIntent = new Intent(LoginActivity.this, ProblemsListActivity.class);
             patientIntent.putExtra("patientID", mUserEmail);

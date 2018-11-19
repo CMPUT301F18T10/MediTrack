@@ -10,16 +10,24 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import java.util.ArrayList;
+
 public class ProblemsListActivity extends AppCompatActivity {
 
+    ArrayList<Problem> mProblemList;
+    String mPatientId;
+    DataRepositorySingleton mDRS;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_problems_list);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         Intent intent = getIntent();
-        String currentUser = intent.getStringExtra("patientID");
+        mPatientId = intent.getStringExtra("patientID");
+        mDRS = DataRepositorySingleton.GetInstance();
+        mProblemList = mDRS.GetProblemsForPatientId(mPatientId);
 
         FloatingActionButton addFAB = (FloatingActionButton) findViewById(R.id.problemsListAddFAB);
         addFAB.setOnClickListener(new View.OnClickListener() {
