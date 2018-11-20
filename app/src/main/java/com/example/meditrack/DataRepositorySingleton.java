@@ -163,9 +163,9 @@ public class DataRepositorySingleton
 
     private void ClearDataRepository()
     {
-        mProblemList.clear();
-        mPatientRecordList.clear();
-        mCareProviderRecordsList.clear();
+        if (mProblemList != null) mProblemList.clear();
+        if (mPatientRecordList != null) mPatientRecordList.clear();
+        if (mCareProviderRecordsList != null) mCareProviderRecordsList.clear();
     }
 
     public void Initialize(ApplicationManager.UserMode userMode, String userName, ElasticsearchManager esm)

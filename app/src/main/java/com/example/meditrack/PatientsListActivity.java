@@ -53,31 +53,24 @@ public class PatientsListActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         patientId=input.getText().toString();
-                        try {
-                            if (mESM.existObject(patientId, "patients", Patient.class)){
-                                try{
-                                    mDRS.GetCareProvider().AddPatientId(patientId);
-                                    patientList = mDRS.GetCareProvider().getPatientIds();
-
-                                }
-                                catch (DataRepositorySingleton.DataRepositorySingletonNotInitialized e)
-                                {
-                                    Log.e("Operation failed", "DataRepositorySingleton not yet initialized. It is expected to be at this point");
-                                }
-                                catch (DataRepositorySingleton.InvalidUserMode e)
-                                {
-                                    Log.e("Operation failed", "Invalid User Mode");
-                                }
+                        if (mDRS.DoesUserExist(patientId, ApplicationManager.UserMode.Patient)){
+                            try{
+                                mDRS.GetCareProvider().AddPatientId(patientId);
+                                patientList = mDRS.GetCareProvider().getPatientIds();
                             }
+                            catch (DataRepositorySingleton.DataRepositorySingletonNotInitialized e)
+                            {
+                                Log.e("Operation failed", "DataRepositorySingleton not yet initialized. It is expected to be at this point");
+                            }
+                            catch (DataRepositorySingleton.InvalidUserMode e)
+                            {
+                                Log.e("Operation failed", "Invalid User Mode");
+                            }
+                        }
                             /** check patient name with database,
                              *   >if it exists, add to list and refresh listview
                              *   >if does not exists, toast invalid patient username
                              */
-                        }
-                        catch(ElasticsearchManager.OperationFailedException e) {
-                            Log.e("Operation Failed", "Get operation in ESM failed");
-                            e.printStackTrace();
-                        }
                     }
                 });
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
