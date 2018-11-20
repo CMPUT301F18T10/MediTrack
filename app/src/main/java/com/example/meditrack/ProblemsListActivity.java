@@ -97,10 +97,11 @@ public class ProblemsListActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Problem problem = new Problem("Default Title", "Default Description", mPatientId);
                 String problemId = problem.getId();
-                try{
-                    ProblemManagerService.AddProblem(problem);}
-                catch(Exception ObjectAlreadyExists){
-                    System.err.println("ObjectAlreadyException Csught"+ObjectAlreadyExists);}
+                try{ ProblemManagerService.AddProblem(problem); }
+                catch(Exception ObjectAlreadyExists)
+                {
+                    Log.e(tag, "Tried to add Problem with existing Id");
+                }
                 ApplicationManager.UpdateDataRepository();
                 Intent intent = new Intent(ProblemsListActivity.this, viewProblemActivity.class);
                 intent.putExtra("problemId", problemId);
