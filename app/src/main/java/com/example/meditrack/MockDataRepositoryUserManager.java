@@ -11,7 +11,7 @@ public class MockDataRepositoryUserManager extends DataRepositorySingleton {
         String phoneNumber = "7808001557";
         ArrayList<String> bodyImageId = new ArrayList<String>(Arrays.asList("Img1223","Img1224","Img1225"));
         ContactInfo contactInfo = new ContactInfo(email,phoneNumber);
-        Patient patient = new Patient("12345678",bodyImageId,contactInfo);
+        Patient patient = new Patient("12345678",bodyImageId,new ArrayList<>(),contactInfo);
         return patient;
     }
 
