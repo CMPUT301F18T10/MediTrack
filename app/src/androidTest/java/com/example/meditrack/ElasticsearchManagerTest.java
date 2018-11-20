@@ -33,9 +33,9 @@ public class ElasticsearchManagerTest {
 
     private ContactInfo testContactInfo = new ContactInfo("jack2018@cmput301.com", "780-807-078");
 
-    private Patient testPatient = new Patient("Jack", null, testContactInfo);
-    private Patient testPatient1 = new Patient("Joe", null, testContactInfo);
-    private Patient testPatient2 = new Patient("Mary", null, testContactInfo);
+    private Patient testPatient = new Patient("Jack", null, new ArrayList<>(),testContactInfo);
+    private Patient testPatient1 = new Patient("Joe", null, new ArrayList<>(), testContactInfo);
+    private Patient testPatient2 = new Patient("Mary", null, new ArrayList<>(), testContactInfo);
 
     private CareProvider testCareProvider = new CareProvider("Peter");
 

@@ -16,7 +16,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.io.Console;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 public class ProblemsListActivity extends AppCompatActivity {
 
@@ -95,7 +97,10 @@ public class ProblemsListActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Problem problem = new Problem("Default Title", "Default Description", mPatientId);
                 String problemId = problem.getId();
-                ProblemManagerService.AddProblem(problem);
+                try{
+                    ProblemManagerService.AddProblem(problem);}
+                catch(Exception ObjectAlreadyExists){
+                    System.err.println("ObjectAlreadyException Csught"+ObjectAlreadyExists);}
                 ApplicationManager.UpdateDataRepository();
                 Intent intent = new Intent(ProblemsListActivity.this, viewProblemActivity.class);
                 intent.putExtra("problemId", problemId);
