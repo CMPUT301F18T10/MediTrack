@@ -442,6 +442,15 @@ public class DataRepositorySingleton
         return matchingProblems;
     }
 
+    public Problem GetProblemForId(String problemId) throws ItemNotFound
+    {
+        for (Problem problem : mProblemList)
+        {
+            if (problem.getId().equals(problemId)) return problem;
+        }
+        throw new ItemNotFound("Patient Record with Id: " + problemId + " not found!");
+    }
+
     public ArrayList<CareProviderRecord> GetCareGiverRecordsForProblemId(String problemId)
     {
         ArrayList<CareProviderRecord> matchingRecords = new ArrayList<>();
@@ -462,6 +471,15 @@ public class DataRepositorySingleton
         }
 
         return matchingRecords;
+    }
+
+    public PatientRecord GetPatientRecordForId(String recordId) throws ItemNotFound
+    {
+        for (PatientRecord record : mPatientRecordList)
+        {
+            if (record.getId().equals(recordId)) return record;
+        }
+        throw new ItemNotFound("Patient Record with Id: " + recordId + " not found!");
     }
 
     public boolean DoesUserExist(String userName, ApplicationManager.UserMode userMode)

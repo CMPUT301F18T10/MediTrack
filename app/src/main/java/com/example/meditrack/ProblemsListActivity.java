@@ -53,16 +53,21 @@ public class ProblemsListActivity extends AppCompatActivity {
             problemTimeStamp.setText(problem.getDate().toString());
             return rowView;
         }
-
-
     }
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_problems_list);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        ApplicationManager.UpdateDataRepository();
+
+        // TODO: We currently don't support deleting patients
+        View deleteButtonView = findViewById(R.id.problemListDeleteButton);
+        deleteButtonView.setVisibility(View.INVISIBLE);
+
         setSupportActionBar(toolbar);
 
         Intent intent = getIntent();
@@ -97,9 +102,11 @@ public class ProblemsListActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
         ListView listView = findViewById(R.id.problemsListListView);
         ProblemListAdapter adapter = new ProblemListAdapter(mProblemList, this);
         listView.setAdapter(adapter);
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -108,6 +115,7 @@ public class ProblemsListActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
         FloatingActionButton searchFAB = (FloatingActionButton) findViewById(R.id.problemsListSearchFAB);
         searchFAB.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,6 +124,7 @@ public class ProblemsListActivity extends AppCompatActivity {
                 startActivity(searchIntent);
             }
         });
+
         FloatingActionButton profileFAB = (FloatingActionButton) findViewById(R.id.problemsListProfileFAB);
         profileFAB.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,7 +134,6 @@ public class ProblemsListActivity extends AppCompatActivity {
                 startActivity(profileIntent);
             }
         });
-
     }
 
 }
