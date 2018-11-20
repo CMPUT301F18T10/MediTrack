@@ -29,9 +29,16 @@ public class viewProblemActivity extends AppCompatActivity {
     private String problemTitle;
     private String problemDesc;
     private DataRepositorySingleton dataRepositorySingleton = DataRepositorySingleton.GetInstance();
+
+
+    //Test String
     public Problem mockProblem = new Problem("TestTitle", "Test descpt", "ABC");
     public static final String testTitle = "Test Title";
     public static final String testDesc = "Test Description";
+
+
+
+
     public class RecordListAdapter extends ArrayAdapter<PatientRecord> {
         private ArrayList<PatientRecord> patientRecords;
         Context context;
@@ -102,6 +109,7 @@ public class viewProblemActivity extends AppCompatActivity {
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.viewProblemAddFAB);
         View fabButtonView = findViewById(R.id.viewProblemAddFAB);
+
         if (!ApplicationManager.IsFeatureAllowed("AddRecord",userMode)) fabButtonView.setVisibility(View.GONE);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,6 +121,7 @@ public class viewProblemActivity extends AppCompatActivity {
                 catch(Exception ObjectAlreadyExists){
                     System.err.println("ObjectAlreadyException Csught"+ObjectAlreadyExists);}
                 ApplicationManager.UpdateDataRepository();
+                SaveEditedProblem(view);
                 Intent intent = new Intent(viewProblemActivity.this, viewRecordActivity.class);
                 intent.putExtra("recordId",recordId);
                 startActivity(intent);
@@ -128,6 +137,7 @@ public class viewProblemActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(viewProblemActivity.this, viewRecordActivity.class);
+                SaveEditedProblem(view);
                 intent.putExtra("recordId",patientRecordArrayList.get(position).getId());
                 intent.putExtra("problemId",problem.getId());
                 startActivity(intent);
