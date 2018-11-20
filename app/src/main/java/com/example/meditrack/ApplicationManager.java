@@ -118,15 +118,25 @@ public class ApplicationManager extends ElasticsearchManager
         return register;
     }
 
-    public void UpdateDataRepository(DataRepositorySingleton dataRepositorySingleton)
+    public static void UpdateDataRepository()
     {
-        dataRepositorySingleton.RefreshDataRepositorySingleton();
+        // This is just to provide a static context for Activities to update DRS
+        // before pulling any data, and also acts as a gatekeeper since I don't
+        // want the activities talking to DRS directly unless it's for queries
+        DataRepositorySingleton.GetInstance().RefreshDataRepositorySingleton();
     }
 
-    public boolean IsFeatureAllowed(String feature)
+    public static boolean IsFeatureAllowed(String feature, UserMode userMode)
     {
-        // TODO: The design for this is not finalized
-        // We could potentially just have a map of permissions
+        // TODO: I want to have a xml file holding all the permissions eventually - Adit
+        switch (feature)
+        {
+            case "AddProblem":
+            {
+                if (userMode == UserMode.Patient) { return true; }
+                else { return false; }
+            }
+        }
         return false;
     }
 }
