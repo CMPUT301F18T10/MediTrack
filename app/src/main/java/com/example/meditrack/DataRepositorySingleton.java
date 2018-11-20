@@ -87,7 +87,7 @@ public class DataRepositorySingleton
             {
                 Patient user;
                 ContactInfo tempContact = new ContactInfo("", "");
-                user = new Patient("temp", new ArrayList<String>(), tempContact);
+                user = new Patient("temp", new ArrayList<String>(), new ArrayList<String>(),tempContact);
                 mPatientUser = mESM.getObjectFromId(userName, user.getElasticsearchType(), user.getClass());
             }
             else if (userMode == ApplicationManager.UserMode.CareGiver)
@@ -472,7 +472,7 @@ public class DataRepositorySingleton
             {
                 Patient user;
                 ContactInfo tempContact = new ContactInfo("", "");
-                user = new Patient("temp", new ArrayList<String>(), tempContact);
+                user = new Patient("temp", new ArrayList<String>(),new ArrayList<String>(), tempContact);
                 return mESM.existObject(userName, user.getElasticsearchType(), Patient.class);
             }
             else if (userMode == ApplicationManager.UserMode.CareGiver)

@@ -34,7 +34,7 @@ public class ApplicationManager extends ElasticsearchManager
 
     public boolean DoesUserExist(String userName) {
         boolean doesExist = false;
-        Patient tempPatient = new Patient(userName,new ArrayList<String>(), defaultContactInfo);
+        Patient tempPatient = new Patient(userName,new ArrayList<String>(),new ArrayList<String>(), defaultContactInfo);
         CareProvider tempCareProvider = new CareProvider(userName,new ArrayList<String>());
         switch (mUserMode){
             case Patient:
@@ -82,7 +82,7 @@ public class ApplicationManager extends ElasticsearchManager
     {
         // TODO: ApplicationManager shouldn't be talking to ElasticSearchManager, there should be a wrapper method in DRS
 
-        Patient patient = new Patient(userName,new ArrayList<String>(), defaultContactInfo);
+        Patient patient = new Patient(userName,new ArrayList<String>(),new ArrayList<String>(), defaultContactInfo);
         CareProvider careProvider = new CareProvider(userName,new ArrayList<String>());
         boolean register = false;
         if (!DoesUserExist(userName)){
