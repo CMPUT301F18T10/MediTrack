@@ -31,19 +31,9 @@ public class Patient extends AbstractUser implements ElasticsearchStorable{
     public void setContactInfo(ContactInfo contactInfo) {
         this.contactInfo = contactInfo;
     }
+
     public void setBodyLocationImageIds(ArrayList<String> ImageIds){this.bodyLocationImageIds = ImageIds;}
     public void setCareProviderId(ArrayList<String> ids){this.careProviderId = ids;}
-    public void addCareProviderId(String id){
-        ArrayList<String> cpIds = getCareProviderId();
-        cpIds.add(id);
-        setCareProviderId(cpIds);
-    }
-    public void deleteId(String id){
-        ArrayList<String> cpIds = getCareProviderId();
-        cpIds.remove(id);
-        setCareProviderId(cpIds);
-    }
-
     @Override
     public String getElasticsearchType() {
         return "patients";
