@@ -14,11 +14,11 @@ public class ProblemManagerService
      */
     public ProblemManagerService(){}
 
-    public static void AddProblem(Problem problem)
+    public static void AddProblem(Problem problem) throws ObjectIdAlreadyExists
     {
         if (DataRepositorySingleton.GetInstance().DoesProblemExist(problem.getId())){
 
-            Log.e("Failure", "Problem Id already exists");
+            throw new ObjectIdAlreadyExists("Problem Id already exists");
         }
 
         else{
@@ -26,11 +26,11 @@ public class ProblemManagerService
         }
     }
 
-    public static void EditProblem(Problem problem)
+    public static void EditProblem(Problem problem) throws ObjectNotFound
     {
         if (!DataRepositorySingleton.GetInstance().DoesProblemExist(problem.getId())){
 
-            Log.e("Failure", "Problem does not exist");
+            throw new ObjectNotFound("Problem does not exist");
         }
 
         else{
@@ -38,11 +38,11 @@ public class ProblemManagerService
         }
     }
 
-    public static void DeleteProblem(String problemId)
+    public static void DeleteProblem(String problemId) throws ObjectNotFound
     {
         if (!DataRepositorySingleton.GetInstance().DoesProblemExist(problemId)){
 
-            Log.e("Failure", "Problem does not exist");
+            throw new ObjectNotFound("Problem does not exist");
         }
 
         else{
@@ -50,11 +50,11 @@ public class ProblemManagerService
         }
     }
 
-    public static void AddPatientRecord(PatientRecord record)
+    public static void AddPatientRecord(PatientRecord record) throws ObjectIdAlreadyExists
     {
         if (DataRepositorySingleton.GetInstance().DoesPatientRecordExist(record.getProblemId(), record.getId())){
 
-            Log.e("Failure", "Record Id already exists");
+            throw new ObjectIdAlreadyExists("Patient Record Id already exists");
         }
 
         else{
@@ -62,11 +62,11 @@ public class ProblemManagerService
         }
     }
 
-    public static void AddCareProviderRecord(CareProviderRecord record)
+    public static void AddCareProviderRecord(CareProviderRecord record) throws ObjectIdAlreadyExists
     {
         if (DataRepositorySingleton.GetInstance().DoesCareGiverRecordExist(record.getProblemId(), record.getId())){
 
-            Log.e("Failure", "Record Id already exists");
+            throw new ObjectIdAlreadyExists("Care Provider Record Id already exists");
         }
 
         else{
@@ -74,11 +74,12 @@ public class ProblemManagerService
         }
     }
 
-    public static void DeletePatientRecord(String problemId, String recordId)
+    public static void DeletePatientRecord(String problemId, String recordId) throws ObjectNotFound
     {
         if (!DataRepositorySingleton.GetInstance().DoesPatientRecordExist(problemId, recordId)){
 
-            Log.e("Failure", "Patient Record does not exist");
+            throw new ObjectNotFound("Patient Record does not exist");
+
         }
 
         else{
@@ -86,15 +87,24 @@ public class ProblemManagerService
         }
     }
 
-    public static void DeleteCareProviderRecord(String problemId, String recordId)
+    public static void DeleteCareProviderRecord(String problemId, String recordId) throws ObjectNotFound
     {
         if (!DataRepositorySingleton.GetInstance().DoesCareGiverRecordExist(problemId, recordId)){
 
-            Log.e("Failure", "Care Provider Record does not exist");
+            throw new ObjectNotFound("Care Provider Record does not exist");
         }
 
         else{
             DataRepositorySingleton.GetInstance().DeleteCareProviderRecord(recordId);
         }
+    }
+    public static class ObjectIdAlreadyExists extends Exception
+    {
+        public ObjectIdAlreadyExists(String message) { super(message); }
+    }
+
+    public static class ObjectNotFound extends Exception
+    {
+        public ObjectNotFound(String message) { super(message); }
     }
 }
