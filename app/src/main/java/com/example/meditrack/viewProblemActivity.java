@@ -72,12 +72,7 @@ public class viewProblemActivity extends AppCompatActivity {
             dataRepositorySingletonNotInitialized.printStackTrace();
         }
 
-        problemTitle = problem.getTitle();
-        problemDesc = problem.getDescription();
-        editTextTitle.setText(problemTitle);
-        editTextDes.setText(problemDesc);
-
-
+        ShowChangesOnEditText();
         //SaveChangesOnDRS(); 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.viewProblemAddFAB);
         fab.setOnClickListener(new View.OnClickListener() {
