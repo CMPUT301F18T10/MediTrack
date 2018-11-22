@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +24,9 @@ public class viewProblemActivity extends AppCompatActivity {
     private String selectedProblemId;
     private ArrayList<PatientRecord> patientRecordArrayList;
     private ArrayList<CareProviderRecord> careProviderRecordArrayList;
-    Context mcontext;
+
+    private boolean isTitleChanged = false;
+    private boolean isDescChanged = false;
     private ApplicationManager.UserMode userMode = ApplicationManager.UserMode.Invalid;
     private Problem problem;
     private EditText editTextTitle;
@@ -37,6 +40,8 @@ public class viewProblemActivity extends AppCompatActivity {
     public Problem mockProblem = new Problem("TestTitle", "Test descpt", "ABC");
     public static final String testTitle = "Test Title";
     public static final String testDesc = "Test Description";
+    private static final String TAG = "SampleActivity";
+    private static final boolean VERBOSE = true;
 
 
 
@@ -68,11 +73,11 @@ public class viewProblemActivity extends AppCompatActivity {
         } catch (DataRepositorySingleton.DataRepositorySingletonNotInitialized dataRepositorySingletonNotInitialized) {
             dataRepositorySingletonNotInitialized.printStackTrace();
         }
+
         problemTitle = problem.getTitle();
         problemDesc = problem.getDescription();
         editTextTitle.setText(problemTitle);
         editTextDes.setText(problemDesc);
-
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.viewProblemAddFAB);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -105,6 +110,7 @@ public class viewProblemActivity extends AppCompatActivity {
 
 
     }
+
 
 
 }
