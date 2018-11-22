@@ -39,6 +39,7 @@ public class viewRecordActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ApplicationManager.UpdateDataRepository();
+
         mDRS = DataRepositorySingleton.GetInstance();
         Intent intent = getIntent();
         mRecordId = intent.getStringExtra("recordId");

@@ -24,10 +24,7 @@ public class viewProblemActivity extends AppCompatActivity {
     private String selectedProblemId;
     private ArrayList<PatientRecord> patientRecordArrayList;
     private ArrayList<CareProviderRecord> careProviderRecordArrayList;
-
-    private boolean isTitleChanged = false;
-    private boolean isDescChanged = false;
-    private ApplicationManager.UserMode userMode = ApplicationManager.UserMode.Invalid;
+    private ApplicationManager.UserMode mUserMode = ApplicationManager.UserMode.Invalid;
     private Problem problem;
     private EditText editTextTitle;
     private EditText editTextDes;
@@ -50,6 +47,7 @@ public class viewProblemActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_problem);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        ApplicationManager.UpdateDataRepository();
         setSupportActionBar(toolbar);
 
         editTextTitle = ((EditText)findViewById(R.id.problemViewTitle));
@@ -69,7 +67,7 @@ public class viewProblemActivity extends AppCompatActivity {
 
         //Get usermode from DRS;
         try {
-            userMode = dataRepositorySingleton.GetUserMode();
+            mUserMode = dataRepositorySingleton.GetUserMode();
         } catch (DataRepositorySingleton.DataRepositorySingletonNotInitialized dataRepositorySingletonNotInitialized) {
             dataRepositorySingletonNotInitialized.printStackTrace();
         }
@@ -79,10 +77,16 @@ public class viewProblemActivity extends AppCompatActivity {
         editTextTitle.setText(problemTitle);
         editTextDes.setText(problemDesc);
 
+
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.viewProblemAddFAB);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                problem.setTitle(editTextTitle.getText().toString());
+                problem.setDescription(editTextDes.getText().toString());
+                dataRepositorySingleton.EditProblem(problem);
+                ApplicationManager.UpdateDataRepository();
                 PatientRecord patientRecord = new PatientRecord(selectedProblemId,"Default Title","Default descrip", new ArrayList<String>(),null,null);
                 try{ ProblemManagerService.AddPatientRecord(patientRecord);}
                 catch(Exception ObjectAlreadyExists){
@@ -101,6 +105,10 @@ public class viewProblemActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                problem.setTitle(editTextTitle.getText().toString());
+                problem.setDescription(editTextDes.getText().toString());
+                dataRepositorySingleton.EditProblem(problem);
+                ApplicationManager.UpdateDataRepository();
                 Intent intent = new Intent(viewProblemActivity.this, viewRecordActivity.class);
                 intent.putExtra("recordId",patientRecordArrayList.get(position).getId());
                 intent.putExtra("problemId",selectedProblemId);
