@@ -20,12 +20,14 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import static com.example.meditrack.ElasticsearchManager.*;
+
 public class viewProblemActivity extends AppCompatActivity {
     private String selectedProblemId;
     private ArrayList<PatientRecord> patientRecordArrayList;
     private ArrayList<CareProviderRecord> careProviderRecordArrayList;
     private ApplicationManager.UserMode mUserMode = ApplicationManager.UserMode.Invalid;
-    private Problem problem;
+    private Problem currentProblem;
     private EditText editTextTitle;
     private EditText editTextDes;
     private String problemTitle;
@@ -59,7 +61,7 @@ public class viewProblemActivity extends AppCompatActivity {
         selectedProblemId = intent.getStringExtra("problemId");
         //Get problem from DRS;
         try {
-            problem = dataRepositorySingleton.GetProblemForId(selectedProblemId);
+            currentProblem = dataRepositorySingleton.GetProblemForId(selectedProblemId);
             patientRecordArrayList = dataRepositorySingleton.GetPatientRecordsForProblem(selectedProblemId);
         } catch (ItemNotFound itemNotFound) {
             itemNotFound.printStackTrace();
@@ -72,14 +74,19 @@ public class viewProblemActivity extends AppCompatActivity {
             dataRepositorySingletonNotInitialized.printStackTrace();
         }
 
-        ShowChangesOnEditText();
-        //SaveChangesOnDRS(); 
+        problemTitle = currentProblem.getTitle();
+        problemDesc = currentProblem.getDescription();
+        editTextTitle.setText(problemTitle);
+        editTextDes.setText(problemDesc);
+
+
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.viewProblemAddFAB);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //SaveChangesOnDRS(); //Issue is here
-                ShowChangesOnEditText();
+                //SaveChangesOnDRS();
+                //ShowChangesOnEditText();
                 PatientRecord patientRecord = new PatientRecord(selectedProblemId,"Default Title","Default descrip", new ArrayList<String>(),null,null);
                 try{ ProblemManagerService.AddPatientRecord(patientRecord);}
                 catch(Exception ObjectAlreadyExists){
@@ -93,13 +100,19 @@ public class viewProblemActivity extends AppCompatActivity {
             }
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         RecordsListAdapter adapter = new RecordsListAdapter(patientRecordArrayList,this);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //SaveChangesOnDRS(); //Issue is here
-                ShowChangesOnEditText();
+                currentProblem.setTitle(editTextTitle.getText().toString());
+                currentProblem.setDescription(editTextDes.getText().toString());
+                try {
+                    ProblemManagerService.EditProblem(currentProblem);
+                } catch (ProblemManagerService.ObjectNotFound objectNotFound) {
+                    objectNotFound.printStackTrace();
+                }
                 ApplicationManager.UpdateDataRepository();
                 Intent intent = new Intent(viewProblemActivity.this, viewRecordActivity.class);
                 intent.putExtra("recordId",patientRecordArrayList.get(position).getId());
@@ -107,22 +120,9 @@ public class viewProblemActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        
 
 
     }
-    private void ShowChangesOnEditText(){
-        problemTitle = problem.getTitle();
-        problemDesc = problem.getDescription();
-        editTextTitle.setText(problemTitle);
-        editTextDes.setText(problemDesc);
-    }
-    private void SaveChangesOnDRS(){
-        problem.setTitle(editTextTitle.getText().toString());
-        problem.setDescription(editTextDes.getText().toString());
-        dataRepositorySingleton.EditProblem(problem);
-        }
-
 
 
 
