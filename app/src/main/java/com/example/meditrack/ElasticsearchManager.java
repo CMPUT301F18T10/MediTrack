@@ -1,25 +1,19 @@
 package com.example.meditrack;
 
-import android.media.VolumeShaper;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.google.gson.Gson;
 import com.searchly.jestdroid.DroidClientConfig;
 import com.searchly.jestdroid.JestClientFactory;
 import com.searchly.jestdroid.JestDroidClient;
 
+
 import org.w3c.dom.Document;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
-import io.searchbox.client.JestClient;
+import io.searchbox.action.Action;
 import io.searchbox.client.JestResult;
 import io.searchbox.core.Delete;
 import io.searchbox.core.DocumentResult;
@@ -126,6 +120,21 @@ public class ElasticsearchManager {
         }
     }
 
+    private class GenericExecuteTask<T extends JestResult> extends AsyncTask<Action<T>, Void, T> {
+        @Override
+        protected T doInBackground(Action<T>... idxs) {
+            T t = null;
+            for (Action<T> idx : idxs) {
+                try {
+                    t = client.execute(idx);
+                } catch (java.io.IOException e) {
+                    // At this point, it will return a null result
+                }
+            }
+            return t;
+        }
+    }
+
     public void setTestingMode() {
         this.elasticsearchIndex = ELASTICSEARCH_TEST_INDEX;
     }
@@ -178,11 +187,11 @@ public class ElasticsearchManager {
         T result;
 
         String query =
-        "{\n" +
-            "\"query\": {\n" +
-              "\"term\" : {" + "\"" + "id" + "\"" + ":" + "\"" + id.toLowerCase() + "\"" + "}\n" +
-            "}\n" +
-        "}";
+                "{\n" +
+                        "\"query\": {\n" +
+                        "\"term\" : {" + "\"" + "id" + "\"" + ":" + "\"" + id.toLowerCase() + "\"" + "}\n" +
+                        "}\n" +
+                        "}";
         QueryTask<T> task = new QueryTask<>();
 
         try {
@@ -207,11 +216,11 @@ public class ElasticsearchManager {
     private <T extends ElasticsearchStorable> ArrayList<T> searchObjects(String string, String type, Class<T> cls) throws OperationFailedException {
         ArrayList<T> result;
         String query =
-        "{\n" +
-            "\"query\": {\n" +
-                "\"term\" : {" + "\"" + "_all" + "\"" + ":" + "\"" + string.toLowerCase() + "\"" + "}\n" +
-            "}\n" +
-        "}";
+                "{\n" +
+                        "\"query\": {\n" +
+                        "\"term\" : {" + "\"" + "_all" + "\"" + ":" + "\"" + string.toLowerCase() + "\"" + "}\n" +
+                        "}\n" +
+                        "}";
         QueryTask<T> task = new QueryTask<>();
         try {
             result = task.execute(query, type, cls).get();
@@ -259,11 +268,11 @@ public class ElasticsearchManager {
     public ArrayList<Problem> getProblemsByPatientId(String patientId) throws OperationFailedException {
         ArrayList<Problem> problems;
         String query =
-        "{\n" +
-            "\"query\": {\n" +
-              "\"term\" : {" + "\"" + "patientId" + "\"" + ":" + "\"" + patientId.toLowerCase() + "\"" + "}\n" +
-            "}\n" +
-        "}";
+                "{\n" +
+                        "\"query\": {\n" +
+                        "\"term\" : {" + "\"" + "patientId" + "\"" + ":" + "\"" + patientId.toLowerCase() + "\"" + "}\n" +
+                        "}\n" +
+                        "}";
         QueryTask<Problem> task = new QueryTask<>();
         try {
             problems = task.execute(query, "problems", Problem.class).get();
@@ -329,9 +338,14 @@ public class ElasticsearchManager {
         if (!existObject(id, type, cls)) {
             throw new ObjectNotFoundException();
         }
+        Delete del = new Delete.Builder(id).index(elasticsearchIndex).type(type).build();
+        GenericExecuteTask<DocumentResult> task = new GenericExecuteTask<>();
         try {
-            client.execute(new Delete.Builder(id).index(elasticsearchIndex).type(type).build());
-        } catch (java.io.IOException e) {
+            DocumentResult dr = task.execute(del).get();
+            if (dr == null) {
+                throw new OperationFailedException();
+            }
+        } catch (Exception e) {
             throw new OperationFailedException();
         }
     }
@@ -372,25 +386,33 @@ public class ElasticsearchManager {
         return true;
     }
 
-    private boolean deleteIndex() throws java.io.IOException {
+    private boolean deleteIndex() {
         DeleteIndex idx = new DeleteIndex.Builder(elasticsearchIndex).build();
-        JestResult r  = client.execute(idx);
+        GenericExecuteTask<JestResult> task = new GenericExecuteTask<>();
+        JestResult r;
+        try {
+            r = task.execute(idx).get();
+        } catch (Exception e ){
+            return false;
+        }
         return r.isSucceeded();
     }
 
-    private boolean createIndex() throws java.io.IOException {
+    private boolean createIndex() {
         CreateIndex idx = new CreateIndex.Builder(elasticsearchIndex).build();
-        JestResult r = client.execute(idx);
+        GenericExecuteTask<JestResult> task = new GenericExecuteTask<>();
+        JestResult r;
+        try {
+            r = task.execute(idx).get();
+        } catch (Exception e) {
+            return false;
+        }
         return r.isSucceeded();
     }
 
     public void resetIndex() throws OperationFailedException {
-        try {
-            deleteIndex();
-            if (!createIndex()){
-                throw new OperationFailedException();
-            }
-        } catch (java.io.IOException e) {
+        deleteIndex();
+        if (!createIndex()){
             throw new OperationFailedException();
         }
     }
