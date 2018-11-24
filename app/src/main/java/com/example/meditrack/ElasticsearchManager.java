@@ -1,25 +1,17 @@
 package com.example.meditrack;
 
-import android.media.VolumeShaper;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.google.gson.Gson;
 import com.searchly.jestdroid.DroidClientConfig;
 import com.searchly.jestdroid.JestClientFactory;
 import com.searchly.jestdroid.JestDroidClient;
 
-import org.w3c.dom.Document;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
-import io.searchbox.client.JestClient;
+import io.searchbox.action.Action;
 import io.searchbox.client.JestResult;
 import io.searchbox.core.Delete;
 import io.searchbox.core.DocumentResult;
@@ -344,9 +336,14 @@ public class ElasticsearchManager {
         if (!existObject(id, type, cls)) {
             throw new ObjectNotFoundException();
         }
+        Delete del = new Delete.Builder(id).index(elasticsearchIndex).type(type).build();
+        GenericExecuteTask<DocumentResult> task = new GenericExecuteTask<>();
         try {
-            client.execute(new Delete.Builder(id).index(elasticsearchIndex).type(type).build());
-        } catch (java.io.IOException e) {
+            Exception e = task.execute(del).get();
+            if (e != null) {
+                throw e;
+            }
+        } catch (Exception e) {
             throw new OperationFailedException();
         }
     }
