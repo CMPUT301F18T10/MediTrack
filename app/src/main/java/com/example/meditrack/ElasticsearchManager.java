@@ -126,6 +126,21 @@ public class ElasticsearchManager {
         }
     }
 
+    private class GenericExecuteTask<T extends JestResult> extends AsyncTask<Action<T>, Void, Exception> {
+        @Override
+        protected Exception doInBackground(Action<T>... idxs) {
+            Exception exception = null;
+            for (Action<T> idx : idxs) {
+                try {
+                    client.execute(idx);
+                } catch (java.io.IOException e) {
+                    exception = new OperationFailedException();
+                }
+            }
+            return exception;
+        }
+    }
+
     public void setTestingMode() {
         this.elasticsearchIndex = ELASTICSEARCH_TEST_INDEX;
     }
