@@ -386,25 +386,33 @@ public class ElasticsearchManager {
         return true;
     }
 
-    private boolean deleteIndex() throws java.io.IOException {
+    private boolean deleteIndex() {
         DeleteIndex idx = new DeleteIndex.Builder(elasticsearchIndex).build();
-        JestResult r  = client.execute(idx);
+        GenericExecuteTask<JestResult> task = new GenericExecuteTask<>();
+        JestResult r;
+        try {
+            r = task.execute(idx).get();
+        } catch (Exception e ){
+            return false;
+        }
         return r.isSucceeded();
     }
 
-    private boolean createIndex() throws java.io.IOException {
+    private boolean createIndex() {
         CreateIndex idx = new CreateIndex.Builder(elasticsearchIndex).build();
-        JestResult r = client.execute(idx);
+        GenericExecuteTask<JestResult> task = new GenericExecuteTask<>();
+        JestResult r;
+        try {
+            r = task.execute(idx).get();
+        } catch (Exception e) {
+            return false;
+        }
         return r.isSucceeded();
     }
 
     public void resetIndex() throws OperationFailedException {
-        try {
-            deleteIndex();
-            if (!createIndex()){
-                throw new OperationFailedException();
-            }
-        } catch (java.io.IOException e) {
+        deleteIndex();
+        if (!createIndex()){
             throw new OperationFailedException();
         }
     }
