@@ -8,6 +8,8 @@ import com.searchly.jestdroid.JestClientFactory;
 import com.searchly.jestdroid.JestDroidClient;
 
 
+import org.w3c.dom.Document;
+
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -118,18 +120,18 @@ public class ElasticsearchManager {
         }
     }
 
-    private class GenericExecuteTask<T extends JestResult> extends AsyncTask<Action<T>, Void, Exception> {
+    private class GenericExecuteTask<T extends JestResult> extends AsyncTask<Action<T>, Void, T> {
         @Override
-        protected Exception doInBackground(Action<T>... idxs) {
-            Exception exception = null;
+        protected T doInBackground(Action<T>... idxs) {
+            T t = null;
             for (Action<T> idx : idxs) {
                 try {
-                    client.execute(idx);
+                    t = client.execute(idx);
                 } catch (java.io.IOException e) {
-                    exception = new OperationFailedException();
+                    // At this point, it will return a null result
                 }
             }
-            return exception;
+            return t;
         }
     }
 
@@ -339,9 +341,9 @@ public class ElasticsearchManager {
         Delete del = new Delete.Builder(id).index(elasticsearchIndex).type(type).build();
         GenericExecuteTask<DocumentResult> task = new GenericExecuteTask<>();
         try {
-            Exception e = task.execute(del).get();
-            if (e != null) {
-                throw e;
+            DocumentResult dr = task.execute(del).get();
+            if (dr == null) {
+                throw new OperationFailedException();
             }
         } catch (Exception e) {
             throw new OperationFailedException();
