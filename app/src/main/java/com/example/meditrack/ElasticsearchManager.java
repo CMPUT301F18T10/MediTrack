@@ -31,7 +31,7 @@ import io.searchbox.indices.DeleteIndex;
 
 public class ElasticsearchManager {
 
-    private final String ELASTICSEARCH_URL = "http://cmput301.softwareprocess.es:8080";
+    private final String ELASTICSEARCH_URL = "c";
     private final String ELASTICSEARCH_INDEX = "cmput301f18t10";
     private final String ELASTICSEARCH_TEST_INDEX = "cmput301f18t10test";
     private final String tag = "esm";

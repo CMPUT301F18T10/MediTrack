@@ -274,7 +274,7 @@ public class DataRepositorySingletonTest
     }
 
     @Test
-    public void TestRefreshDataRepositorySingleton()
+    public void TestRefreshDataRgyhbepositorySingleton()
     {
         Patient patient1 = new Patient("Patient1");
         String ProblemTitle = "TestProblemTitle";

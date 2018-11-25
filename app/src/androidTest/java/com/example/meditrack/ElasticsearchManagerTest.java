@@ -23,7 +23,7 @@ import static junit.framework.TestCase.assertTrue;
 @RunWith(AndroidJUnit4.class)
 public class ElasticsearchManagerTest {
 
-    private static final long delay = 1000;
+    private static final long delay = 10000;
 
     @Rule
     public ActivityTestRule<LoginActivity> activityTestRule = new ActivityTestRule<>(LoginActivity.class);
