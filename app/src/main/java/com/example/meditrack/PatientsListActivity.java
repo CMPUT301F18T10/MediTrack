@@ -19,12 +19,14 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
 public class PatientsListActivity extends AppCompatActivity {
     private String patientUserName = "";
     private String patientId = "";
+    private String careTakerId = "";
     private ElasticsearchManager mESM;
     ArrayList patientList = new ArrayList<String>();
     ArrayAdapter<String> Patientadapter;
@@ -37,10 +39,29 @@ public class PatientsListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_patients_list);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        ApplicationManager.UpdateDataRepository();
+        Intent intent = getIntent();
+        careTakerId = intent.getStringExtra("caretakerID");
         mDRS = DataRepositorySingleton.GetInstance();
+
+        try{
+
+            patientList = mDRS.GetCareProvider().getPatientIds();
+        }
+        catch (DataRepositorySingleton.DataRepositorySingletonNotInitialized e)
+        {
+            Log.e("Operation failed", "DataRepositorySingleton not yet initialized. It is expected to be at this point");
+        }
+        catch (DataRepositorySingleton.InvalidUserMode e)
+        {
+            Log.e("Operation failed", "Invalid User Mode");
+        }
+        TextView PatientListActivityTitle = (TextView) findViewById(R.id.patientListCaretakerName);
+        PatientListActivityTitle.setText(careTakerId);
+
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.patientsListAddFAB);
         fab.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(PatientsListActivity.this);
@@ -53,10 +74,38 @@ public class PatientsListActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         patientId=input.getText().toString();
-                        if (mDRS.DoesUserExist(patientId, ApplicationManager.UserMode.Patient)){
-                            try{
+                        Toast.makeText(getApplicationContext(), patientId+" added", Toast.LENGTH_SHORT).show();
+                        patientList.add(patientId);
+                        //mDRS.DoesUserExist(patientId, ApplicationManager.UserMode.Patient);
+                        //Patient patient = new Patient("1");
+                        try{
+                            mDRS.GetCareProvider().AddPatientId(patientId);
+                            ApplicationManager.UpdateDataRepository();
+                            patientList = mDRS.GetCareProvider().getPatientIds();
+
+                        }
+                        catch (DataRepositorySingleton.DataRepositorySingletonNotInitialized e)
+                        {
+                            Log.e("Operation failed", "DataRepositorySingleton not yet initialized. It is expected to be at this point");
+                        }
+                        catch (DataRepositorySingleton.InvalidUserMode e)
+                        {
+                            Log.e("Operation failed", "Invalid User Mode");
+                        }
+                        /*try{
+                        mESM.existObject(patientId, "patients", Patient.class);}
+                        catch (ElasticsearchManager.OperationFailedException e){
+
+                            Log.e("Operation Failed", "Get operation in ESM failed");
+                            e.printStackTrace();
+                        }
+                        /*if (mDRS.DoesUserExist(patientId, ApplicationManager.UserMode.Patient)){
+                            Toast.makeText(getApplicationContext(), "Patient exists", Toast.LENGTH_SHORT).show();
+                            /*try{
                                 mDRS.GetCareProvider().AddPatientId(patientId);
+                                //ApplicationManager.UpdateDataRepository();
                                 patientList = mDRS.GetCareProvider().getPatientIds();
+
                             }
                             catch (DataRepositorySingleton.DataRepositorySingletonNotInitialized e)
                             {
@@ -67,10 +116,12 @@ public class PatientsListActivity extends AppCompatActivity {
                                 Log.e("Operation failed", "Invalid User Mode");
                             }
                         }
-                            /** check patient name with database,
-                             *   >if it exists, add to list and refresh listview
-                             *   >if does not exists, toast invalid patient username
-                             */
+                        else{
+                            Toast.makeText(getApplicationContext(), "Patient Does not exist", Toast.LENGTH_SHORT).show();
+                        }*/
+
+
+
                     }
                 });
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
