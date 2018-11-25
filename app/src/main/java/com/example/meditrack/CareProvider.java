@@ -17,8 +17,9 @@ public class CareProvider extends AbstractUser implements ElasticsearchStorable{
         this.patientIds = new ArrayList<String>();
     }
 
-    public void AddPatientId(String patientId){
-        this.patientIds.add(patientId);
+    public void AddPatientId(String patientId)
+    {
+        if (!patientIds.contains(patientId)) { this.patientIds.add(patientId); }
     }
 
     public ArrayList<String> getPatientIds() {

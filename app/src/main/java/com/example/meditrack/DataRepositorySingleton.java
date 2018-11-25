@@ -193,6 +193,44 @@ public class DataRepositorySingleton
 
     private void UploadData()
     {
+        // Update the CareProvider
+        if (mUserMode == ApplicationManager.UserMode.CareGiver)
+        {
+            try
+            {
+                mESM.updateObject(mCareProvider.getId(), mCareProvider.getElasticsearchType(), mCareProvider);
+            }
+            catch (ElasticsearchManager.ObjectNotFoundException e)
+            {
+                Log.e(tag, "Editing a CareProvider that doesn't exist");
+                e.printStackTrace();
+            }
+            catch (ElasticsearchManager.OperationFailedException e)
+            {
+                Log.e(tag, "EditCareProvider operation failed");
+                e.printStackTrace();
+            }
+        }
+
+        // Update the Patient
+        if (mUserMode == ApplicationManager.UserMode.Patient)
+        {
+            try
+            {
+                mESM.updateObject(mPatientUser.getId(), mPatientUser.getElasticsearchType(), mPatientUser);
+            }
+            catch (ElasticsearchManager.ObjectNotFoundException e)
+            {
+                Log.e(tag, "Editing a mPatientUser that doesn't exist");
+                e.printStackTrace();
+            }
+            catch (ElasticsearchManager.OperationFailedException e)
+            {
+                Log.e(tag, "EditPatientUser operation failed");
+                e.printStackTrace();
+            }
+        }
+
         // Add the new problems
         while (!mNewProblems.isEmpty())
         {
@@ -404,6 +442,20 @@ public class DataRepositorySingleton
                 mPatientRecordList.remove(currentRecord);
             }
         }
+        SetDirty(true);
+    }
+
+    public void EditCareProvider(CareProvider user) throws InvalidUserMode
+    {
+        if (mUserMode != ApplicationManager.UserMode.CareGiver) throw new InvalidUserMode("Can't edit CareProvider unless in CareGiver mode");
+        mCareProvider = user;
+        SetDirty(true);
+    }
+
+    public void EditPatient(Patient user) throws InvalidUserMode
+    {
+        if (mUserMode != ApplicationManager.UserMode.Patient) throw new InvalidUserMode("Can't edit Patient unless in Patient mode");
+        mPatientUser = user;
         SetDirty(true);
     }
 
