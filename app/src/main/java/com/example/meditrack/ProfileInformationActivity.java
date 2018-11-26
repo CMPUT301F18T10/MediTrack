@@ -18,9 +18,9 @@ import android.widget.ListView;
 import java.util.ArrayList;
 
 public class ProfileInformationActivity extends AppCompatActivity {
-    /*private String CaretakerAdd;
-    public EditText phoneNumberEdit = (EditText) findViewById(R.id.profilePhoneInput);
-    public EditText emailAddressEdit = (EditText) findViewById(R.id.profileEmailInput);
+    private String CaretakerAdd;
+    //public EditText phoneNumberEdit = (EditText) findViewById(R.id.profilePhoneInput);
+    //public EditText emailAddressEdit = (EditText) findViewById(R.id.profileEmailInput);
     private ArrayList<String> cpIds = null;
     private DataRepositorySingleton dataRepositorySingleton = DataRepositorySingleton.GetInstance();
     private ApplicationManager.UserMode mode;
@@ -35,7 +35,7 @@ public class ProfileInformationActivity extends AppCompatActivity {
         } catch (DataRepositorySingleton.DataRepositorySingletonNotInitialized dataRepositorySingletonNotInitialized) {
             dataRepositorySingletonNotInitialized.printStackTrace();
         }
-    }*/
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +44,8 @@ public class ProfileInformationActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ListView caretakerList = findViewById(R.id.profileCaretakerListListView);
+        EditText phoneNumberEdit = (EditText) findViewById(R.id.profilePhoneInput);
+        EditText emailAddressEdit = (EditText) findViewById(R.id.profileEmailInput);
 
         Intent intent = getIntent();
         String patientID = intent.getStringExtra("patientID");
