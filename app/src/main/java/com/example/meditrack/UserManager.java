@@ -14,50 +14,60 @@ public class UserManager {
 	protected Patient patient;
 	protected CareProvider careProvider;
 	private DataRepositorySingleton mDRS = DataRepositorySingleton.GetInstance();
+	private ApplicationManager.UserMode mode;
 
-	private static UserManager user = null;
-	public UserManager() throws DataRepositorySingleton.InvalidUserMode, DataRepositorySingleton.DataRepositorySingletonNotInitialized {
-		this.patient = mDRS.GetPatient();
-		this.careProvider = mDRS.GetCareProvider();
+	//public UserManager() throws DataRepositorySingleton.InvalidUserMode, DataRepositorySingleton.DataRepositorySingletonNotInitialized {
+	//	this.patient = mDRS.GetPatient();
+	//	this.careProvider = mDRS.GetCareProvider();
+	//}
 
-	}
-	public void EditContactInfo(UserManager user,String email, String phoneNumber)
-	{
+	public void EditContactInfo(String email, String phoneNumber) throws DataRepositorySingleton.InvalidUserMode, DataRepositorySingleton.DataRepositorySingletonNotInitialized {
+
+		if(mDRS.GetUserMode() == ApplicationManager.UserMode.CareGiver){
+			throw new IllegalArgumentException(" Wrong user mode. ");
+		}
 		new_contactInfo.setEmail(email);
 		new_contactInfo.setPhoneNumber(phoneNumber);
-		user.patient.setContactInfo(new_contactInfo);
+		mDRS.GetPatient().setContactInfo(new_contactInfo);
 	}
 
-	public void addPatient(UserManager user,String patientUserId)
-	{
-		patientIds = user.careProvider.getPatientIds();
+	public void addPatient(String patientUserId) throws DataRepositorySingleton.InvalidUserMode, DataRepositorySingleton.DataRepositorySingletonNotInitialized {
+
+		if(mDRS.GetUserMode() == ApplicationManager.UserMode.Patient){
+			throw new IllegalArgumentException(" Wrong user mode. ");
+		}
+		patientIds = mDRS.GetCareProvider().getPatientIds();
 		patientIds.add(patientUserId);
-		user.careProvider.setPatientIds(patientIds);
+		mDRS.GetCareProvider().setPatientIds(patientIds);
 
 	}
 
 
-	public void addBodyLocationImage(UserManager user, ImageView image)
-	{
+	public void addBodyLocationImage( ImageView image) throws DataRepositorySingleton.InvalidUserMode, DataRepositorySingleton.DataRepositorySingletonNotInitialized {
 		//missing part: upload image to database
+		if(mDRS.GetUserMode() == ApplicationManager.UserMode.CareGiver){
+			throw new IllegalArgumentException(" Wrong user mode. ");
+		}
 		String imageId = String.valueOf(image.getTag());
-		user.patient.getBodyLocationImages().add(imageId);
+		mDRS.GetPatient().getBodyLocationImages().add(imageId);
 	}
 
-	public int checkBodyImageNumber(UserManager user)
-	{
-		BodyImages = user.patient.getBodyLocationImages();
+	public int checkBodyImageNumber() throws DataRepositorySingleton.InvalidUserMode, DataRepositorySingleton.DataRepositorySingletonNotInitialized {
+		BodyImages = mDRS.GetPatient().getBodyLocationImages();
 		return BodyImages.size();
 	}
-	public void deleteBodyLocationImage(UserManager user, String ImageId)
-	{
+
+	public void deleteBodyLocationImage(String ImageId) throws DataRepositorySingleton.InvalidUserMode, DataRepositorySingleton.DataRepositorySingletonNotInitialized {
 		//missing part: delete image from database
-		BodyImages = user.patient.getBodyLocationImages();
+		BodyImages = mDRS.GetPatient().getBodyLocationImages();
+		if(BodyImages.size() == 0){
+			throw new IllegalArgumentException("Empty list of body images,cannot do 'delete' ");
+		}
 		for(int i = 0; i<BodyImages.size();i++){
 			if(BodyImages.get(i).equals(ImageId)){
 				BodyImages.remove(i);
 			}
 		}
-		user.patient.setBodyLocationImageIds(BodyImages);
+		mDRS.GetPatient().setBodyLocationImageIds(BodyImages);
 	}
 }
