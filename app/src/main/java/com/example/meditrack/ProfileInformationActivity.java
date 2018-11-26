@@ -23,7 +23,9 @@ public class ProfileInformationActivity extends AppCompatActivity {
     public EditText phoneNumberEdit = (EditText) findViewById(R.id.profilePhoneInput);
     public EditText emailAddressEdit = (EditText) findViewById(R.id.profileEmailInput);
 
-    private UserManager userManager = new UserManager();
+    //private UserManager userManager = new UserManager();
+    private DataRepositorySingleton mDRS = DataRepositorySingleton.GetInstance();
+    private ArrayList<String> cpIds = null;
 
     public ProfileInformationActivity() throws DataRepositorySingleton.InvalidUserMode, DataRepositorySingleton.DataRepositorySingletonNotInitialized {
     }
@@ -36,9 +38,13 @@ public class ProfileInformationActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         ListView caretakerList = findViewById(R.id.profileCaretakerListListView);
 
-
-        ArrayList<String> cpIds;
-        cpIds = userManager.patient.getCareProviderId();
+        try {
+            cpIds = mDRS.GetPatient().getCareProviderId();
+        } catch (DataRepositorySingleton.DataRepositorySingletonNotInitialized dataRepositorySingletonNotInitialized) {
+            dataRepositorySingletonNotInitialized.printStackTrace();
+        } catch (DataRepositorySingleton.InvalidUserMode invalidUserMode) {
+            invalidUserMode.printStackTrace();
+        }
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,cpIds);
         caretakerList.setAdapter(adapter);
 
@@ -54,7 +60,13 @@ public class ProfileInformationActivity extends AppCompatActivity {
                 adb.setPositiveButton("Ok", new AlertDialog.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         cpIds.remove(pos);
-                        userManager.patient.setCareProviderId(cpIds);
+                        try {
+                            mDRS.GetPatient().setCareProviderId(cpIds);
+                        } catch (DataRepositorySingleton.DataRepositorySingletonNotInitialized dataRepositorySingletonNotInitialized) {
+                            dataRepositorySingletonNotInitialized.printStackTrace();
+                        } catch (DataRepositorySingleton.InvalidUserMode invalidUserMode) {
+                            invalidUserMode.printStackTrace();
+                        }
                         adapter.notifyDataSetChanged();
                     }});
                 adb.show();
@@ -75,7 +87,7 @@ public class ProfileInformationActivity extends AppCompatActivity {
         /** same as uploading pictures of record, implement in later part
          */
     }
-    public void addCaretaker(View v) {
+    public void addCaretaker(View v) throws DataRepositorySingleton.InvalidUserMode, DataRepositorySingleton.DataRepositorySingletonNotInitialized {
         AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext()); /** actually not sure if this is required or not, we can probably skip it*/
         builder.setTitle("Add Caretaker");
         final EditText input = new EditText(getApplicationContext());
@@ -84,7 +96,7 @@ public class ProfileInformationActivity extends AppCompatActivity {
 
         ListView caretakerList = findViewById(R.id.profileCaretakerListListView);
         ArrayList<String> cpIds;
-        cpIds = userManager.patient.getCareProviderId();
+        cpIds = mDRS.GetPatient().getCareProviderId();
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,cpIds);
         caretakerList.setAdapter(adapter);
 
@@ -98,7 +110,13 @@ public class ProfileInformationActivity extends AppCompatActivity {
                 ApplicationManager applicationManager = new ApplicationManager(userMode);
                 if(applicationManager.DoesUserExist(CaretakerAdd) == true){
                     cpIds.add(CaretakerAdd);
-                    userManager.patient.setCareProviderId(cpIds);
+                    try {
+                        mDRS.GetPatient().setCareProviderId(cpIds);
+                    } catch (DataRepositorySingleton.DataRepositorySingletonNotInitialized dataRepositorySingletonNotInitialized) {
+                        dataRepositorySingletonNotInitialized.printStackTrace();
+                    } catch (DataRepositorySingleton.InvalidUserMode invalidUserMode) {
+                        invalidUserMode.printStackTrace();
+                    }
                     adapter.notifyDataSetChanged();
                 };
             }
@@ -110,12 +128,12 @@ public class ProfileInformationActivity extends AppCompatActivity {
             }
         });
     }
-    public void profileSave(View v) {
+    public void profileSave(View v) throws DataRepositorySingleton.InvalidUserMode, DataRepositorySingleton.DataRepositorySingletonNotInitialized {
         String phoneNumber = phoneNumberEdit.getText().toString();
         String emailAddress = emailAddressEdit.getText().toString();
         /** update these values data repository */
         ContactInfo contactInfo = new ContactInfo(emailAddress,phoneNumber);
-        userManager.patient.setContactInfo(contactInfo);
+        mDRS.GetPatient().setContactInfo(contactInfo);
     }
 
 }
