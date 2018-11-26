@@ -9,10 +9,10 @@ import android.view.View;
 import android.widget.RadioButton;
 
 public class searchActivity extends AppCompatActivity {
-    RadioButton bodyRadio = (RadioButton) findViewById(R.id.searchBodyRadio);
-    RadioButton GPSRadio = (RadioButton) findViewById(R.id.searchGPSRadio);
-    RadioButton recordRadio = (RadioButton) findViewById(R.id.searchRecordRadio);
-    RadioButton problemRadio = (RadioButton) findViewById(R.id.searchProblemRadio);
+    //RadioButton bodyRadio = (RadioButton) findViewById(R.id.searchBodyRadio);
+    //RadioButton GPSRadio = (RadioButton) findViewById(R.id.searchGPSRadio);
+    //RadioButton recordRadio = (RadioButton) findViewById(R.id.searchRecordRadio);
+    //RadioButton problemRadio = (RadioButton) findViewById(R.id.searchProblemRadio);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +23,10 @@ public class searchActivity extends AppCompatActivity {
 
     }
     public void clickGo(View view) {
+        RadioButton bodyRadio = (RadioButton) findViewById(R.id.searchBodyRadio);
+        RadioButton GPSRadio = (RadioButton) findViewById(R.id.searchGPSRadio);
+        RadioButton recordRadio = (RadioButton) findViewById(R.id.searchRecordRadio);
+        RadioButton problemRadio = (RadioButton) findViewById(R.id.searchProblemRadio);
         if(bodyRadio.isChecked()){
             //searchmanager bodysearch record
         }
