@@ -27,9 +27,6 @@ public class ProfileInformationActivity extends AppCompatActivity {
     private DataRepositorySingleton mDRS = DataRepositorySingleton.GetInstance();
     private ArrayList<String> cpIds = null;
 
-    public ProfileInformationActivity() throws DataRepositorySingleton.InvalidUserMode, DataRepositorySingleton.DataRepositorySingletonNotInitialized {
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +34,9 @@ public class ProfileInformationActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ListView caretakerList = findViewById(R.id.profileCaretakerListListView);
+        
+        Intent intent = getIntent();
+        String patientID = intent.getStringExtra(EXTRA_MESSAGE);
 
         try {
             cpIds = mDRS.GetPatient().getCareProviderId();
