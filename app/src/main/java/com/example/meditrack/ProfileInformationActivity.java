@@ -18,14 +18,24 @@ import android.widget.ListView;
 import java.util.ArrayList;
 
 public class ProfileInformationActivity extends AppCompatActivity {
-    private String CaretakerAdd;
-    public EditText userIDEdit = (EditText) findViewById(R.id.profileUserIDInput);
+    /*private String CaretakerAdd;
     public EditText phoneNumberEdit = (EditText) findViewById(R.id.profilePhoneInput);
     public EditText emailAddressEdit = (EditText) findViewById(R.id.profileEmailInput);
-
-    //private UserManager userManager = new UserManager();
-    private DataRepositorySingleton mDRS = DataRepositorySingleton.GetInstance();
     private ArrayList<String> cpIds = null;
+    private DataRepositorySingleton dataRepositorySingleton = DataRepositorySingleton.GetInstance();
+    private ApplicationManager.UserMode mode;
+
+    private  UserManager userManager;
+
+    {
+        try {
+            userManager = new UserManager();
+        } catch (DataRepositorySingleton.InvalidUserMode invalidUserMode) {
+            invalidUserMode.printStackTrace();
+        } catch (DataRepositorySingleton.DataRepositorySingletonNotInitialized dataRepositorySingletonNotInitialized) {
+            dataRepositorySingletonNotInitialized.printStackTrace();
+        }
+    }*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,24 +44,22 @@ public class ProfileInformationActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ListView caretakerList = findViewById(R.id.profileCaretakerListListView);
-        
-        Intent intent = getIntent();
-        String patientID = intent.getStringExtra(EXTRA_MESSAGE);
 
-        try {
-            cpIds = mDRS.GetPatient().getCareProviderId();
-        } catch (DataRepositorySingleton.DataRepositorySingletonNotInitialized dataRepositorySingletonNotInitialized) {
-            dataRepositorySingletonNotInitialized.printStackTrace();
-        } catch (DataRepositorySingleton.InvalidUserMode invalidUserMode) {
-            invalidUserMode.printStackTrace();
+        Intent intent = getIntent();
+        String patientID = intent.getStringExtra("patientID");
+
+        /*if(!dataRepositorySingleton.DoesUserExist(patientID,ApplicationManager.UserMode.Patient)){
+            throw new IllegalArgumentException(" user does not exist.");
         }
+
+        cpIds = userManager.patient.getCareProviderId();
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,cpIds);
         caretakerList.setAdapter(adapter);
 
         caretakerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                /** remove item from data and update listView */
+                // remove item from data and update listView
                 AlertDialog.Builder adb = new AlertDialog.Builder(getApplicationContext());
                 adb.setTitle("Delete?");
                 adb.setMessage("Are you sure you want to delete " + position);
@@ -60,13 +68,7 @@ public class ProfileInformationActivity extends AppCompatActivity {
                 adb.setPositiveButton("Ok", new AlertDialog.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         cpIds.remove(pos);
-                        try {
-                            mDRS.GetPatient().setCareProviderId(cpIds);
-                        } catch (DataRepositorySingleton.DataRepositorySingletonNotInitialized dataRepositorySingletonNotInitialized) {
-                            dataRepositorySingletonNotInitialized.printStackTrace();
-                        } catch (DataRepositorySingleton.InvalidUserMode invalidUserMode) {
-                            invalidUserMode.printStackTrace();
-                        }
+                        userManager.patient.setCareProviderId(cpIds);
                         adapter.notifyDataSetChanged();
                     }});
                 adb.show();
@@ -77,18 +79,19 @@ public class ProfileInformationActivity extends AppCompatActivity {
         imageList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                /** remove and update */
+                // remove and update
 
             }
         });
 
     }
     public void addBodyImage(View v){
-        /** same as uploading pictures of record, implement in later part
-         */
+        // same as uploading pictures of record, implement in later part
     }
-    public void addCaretaker(View v) throws DataRepositorySingleton.InvalidUserMode, DataRepositorySingleton.DataRepositorySingletonNotInitialized {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext()); /** actually not sure if this is required or not, we can probably skip it*/
+
+    public void addCaretaker(View v) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+        // actually not sure if this is required or not, we can probably skip it
         builder.setTitle("Add Caretaker");
         final EditText input = new EditText(getApplicationContext());
         input.setInputType(InputType.TYPE_CLASS_TEXT);
@@ -96,27 +99,21 @@ public class ProfileInformationActivity extends AppCompatActivity {
 
         ListView caretakerList = findViewById(R.id.profileCaretakerListListView);
         ArrayList<String> cpIds;
-        cpIds = mDRS.GetPatient().getCareProviderId();
+        cpIds = userManager.patient.getCareProviderId();
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,cpIds);
         caretakerList.setAdapter(adapter);
 
         builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                CaretakerAdd=input.getText().toString();
-                /** check if caretaker exists, if so, add this patient to caretaker list
-                 */
+                CaretakerAdd = input.getText().toString();
+                // check if caretaker exists, if so, add this patient to caretaker list
+
                 ApplicationManager.UserMode userMode = ApplicationManager.UserMode.CareGiver;
                 ApplicationManager applicationManager = new ApplicationManager(userMode);
                 if(applicationManager.DoesUserExist(CaretakerAdd) == true){
                     cpIds.add(CaretakerAdd);
-                    try {
-                        mDRS.GetPatient().setCareProviderId(cpIds);
-                    } catch (DataRepositorySingleton.DataRepositorySingletonNotInitialized dataRepositorySingletonNotInitialized) {
-                        dataRepositorySingletonNotInitialized.printStackTrace();
-                    } catch (DataRepositorySingleton.InvalidUserMode invalidUserMode) {
-                        invalidUserMode.printStackTrace();
-                    }
+                    userManager.patient.setCareProviderId(cpIds);
                     adapter.notifyDataSetChanged();
                 };
             }
@@ -128,12 +125,13 @@ public class ProfileInformationActivity extends AppCompatActivity {
             }
         });
     }
-    public void profileSave(View v) throws DataRepositorySingleton.InvalidUserMode, DataRepositorySingleton.DataRepositorySingletonNotInitialized {
+    public void profileSave(View v) {
         String phoneNumber = phoneNumberEdit.getText().toString();
         String emailAddress = emailAddressEdit.getText().toString();
-        /** update these values data repository */
+        // update these values data repository
         ContactInfo contactInfo = new ContactInfo(emailAddress,phoneNumber);
-        mDRS.GetPatient().setContactInfo(contactInfo);
-    }
+        userManager.patient.setContactInfo(contactInfo);
+    }*/
+    } //temp
 
 }
