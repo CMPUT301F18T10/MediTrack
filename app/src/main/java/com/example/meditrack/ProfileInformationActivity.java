@@ -45,13 +45,13 @@ public class ProfileInformationActivity extends AppCompatActivity {
 
         EditText phoneNumberEdit = (EditText) findViewById(R.id.profilePhoneInput);
         EditText emailAddressEdit = (EditText) findViewById(R.id.profileEmailInput);
-        EditText id = (EditText)findViewById(R.id.profileUserIDInput);
+        EditText id = (EditText) findViewById(R.id.profileUserIDInput);
         id.setText(patientID);
         phoneNumberEdit.setText(patient.getContactInfo().getPhoneNumber());
         emailAddressEdit.setText(patient.getContactInfo().getEmail());
 
         cpIds = patient.getCareProviderId();
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,cpIds);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, cpIds);
         caretakerList.setAdapter(adapter);
 
         caretakerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -68,7 +68,8 @@ public class ProfileInformationActivity extends AppCompatActivity {
                         cpIds.remove(pos);
                         patient.setCareProviderId(cpIds);
                         adapter.notifyDataSetChanged();
-                    }});
+                    }
+                });
                 adb.show();
 
             }
@@ -83,12 +84,13 @@ public class ProfileInformationActivity extends AppCompatActivity {
         });
 
     }
-    public void addBodyImage(View v){
+
+    public void addBodyImage(View v) {
         // same as uploading pictures of record, implement in later part
     }
 
     public void addCaretaker(View v) {
-        /*AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
         // actually not sure if this is required or not, we can probably skip it
         builder.setTitle("Add Caretaker");
         final EditText input = new EditText(getApplicationContext());
@@ -107,7 +109,7 @@ public class ProfileInformationActivity extends AppCompatActivity {
         }
         cpIds = patient.getCareProviderId();
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,cpIds);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, cpIds);
         caretakerList.setAdapter(adapter);
 
         builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
@@ -118,11 +120,12 @@ public class ProfileInformationActivity extends AppCompatActivity {
 
                 ApplicationManager.UserMode userMode = ApplicationManager.UserMode.CareGiver;
                 ApplicationManager applicationManager = new ApplicationManager(userMode);
-                if(applicationManager.DoesUserExist(CaretakerAdd) == true){
+                if (applicationManager.DoesUserExist(CaretakerAdd) == true) {
                     cpIds.add(CaretakerAdd);
                     patient.setCareProviderId(cpIds);
                     adapter.notifyDataSetChanged();
-                };
+                }
+                ;
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -130,17 +133,18 @@ public class ProfileInformationActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
             }
-        });*/
+        });
     }
+
     public void profileSave(View v) throws DataRepositorySingleton.DataRepositorySingletonNotInitialized, DataRepositorySingleton.InvalidUserMode {
 
         EditText phoneNumberEdit = (EditText) findViewById(R.id.profilePhoneInput);
         EditText emailAddressEdit = (EditText) findViewById(R.id.profileEmailInput);
         String phoneNumber = phoneNumberEdit.getText().toString();
         String emailAddress = emailAddressEdit.getText().toString();
-        ContactInfo contactInfo = new ContactInfo(emailAddress,phoneNumber);
+        ContactInfo contactInfo = new ContactInfo(emailAddress, phoneNumber);
         // update these values data repository
-        if(dataRepositorySingleton.GetUserMode() == ApplicationManager.UserMode.Patient){
+        if (dataRepositorySingleton.GetUserMode() == ApplicationManager.UserMode.Patient) {
 
             Button saveButton = findViewById(R.id.profileSaveButton);
             saveButton.setOnClickListener(new View.OnClickListener() {
@@ -174,3 +178,5 @@ public class ProfileInformationActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+}
