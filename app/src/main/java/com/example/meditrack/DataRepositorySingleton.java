@@ -7,8 +7,7 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.ListIterator;
 
-public class DataRepositorySingleton
-{
+public class DataRepositorySingleton {
     /*
         DataRepositorySingleton (DRS):
 
@@ -60,81 +59,68 @@ public class DataRepositorySingleton
     private ApplicationManager.UserMode mUserMode = ApplicationManager.UserMode.Invalid;
     private String mUserName;
 
-    protected DataRepositorySingleton() { }
+    private Patient patient = null;
+
+    protected DataRepositorySingleton() {
+    }
 
 
     // lazy construction of the instance
-    public static DataRepositorySingleton GetInstance()
-    {
+    public static DataRepositorySingleton GetInstance() {
         if (instance == null) instance = new DataRepositorySingleton();
         return instance;
     }
 
-    private boolean IsDirty() { return mDirty; }
+    private boolean IsDirty() {
+        return mDirty;
+    }
 
-    private void SetDirty(boolean dirtyFlag) { mDirty = dirtyFlag; }
+    private void SetDirty(boolean dirtyFlag) {
+        mDirty = dirtyFlag;
+    }
 
-    private void PopulateUser(ApplicationManager.UserMode userMode, String userName)
-    {
+    private void PopulateUser(ApplicationManager.UserMode userMode, String userName) {
         // Need to create a temporary user object so that we can call
         // getElasticsearchtype method
         // Making the method static would've been a potential solution
         // but ElasticSearchManager has generic code and static methods
         // can't be called on generic types
-        try
-        {
-            if (userMode == ApplicationManager.UserMode.Patient)
-            {
+        try {
+            if (userMode == ApplicationManager.UserMode.Patient) {
                 Patient user;
                 ContactInfo tempContact = new ContactInfo("", "");
-                user = new Patient("temp", new ArrayList<String>(), new ArrayList<String>(),tempContact);
+                user = new Patient("temp", new ArrayList<String>(), new ArrayList<String>(), tempContact);
                 mPatientUser = mESM.getObjectFromId(userName, user.getElasticsearchType(), user.getClass());
-            }
-            else if (userMode == ApplicationManager.UserMode.CareGiver)
-            {
+            } else if (userMode == ApplicationManager.UserMode.CareGiver) {
                 CareProvider user;
                 user = new CareProvider("tempid", new ArrayList<String>());
                 mCareProvider = mESM.getObjectFromId(userName, user.getElasticsearchType(), user.getClass());
             }
-        }
-        catch(ElasticsearchManager.ObjectNotFoundException e)
-        {
+        } catch (ElasticsearchManager.ObjectNotFoundException e) {
             Log.e(tag, "User object was not found by ESM");
             e.printStackTrace();
-        }
-        catch(ElasticsearchManager.OperationFailedException e)
-        {
+        } catch (ElasticsearchManager.OperationFailedException e) {
             Log.e(tag, "Get operation in ESM failed");
             e.printStackTrace();
         }
     }
 
-    private void PopulateProblemList()
-    {
+    private void PopulateProblemList() {
         // if user is Patient pull all problems for patient id
-        if (mUserMode == ApplicationManager.UserMode.Patient)
-        {
-            try
-            {
+        if (mUserMode == ApplicationManager.UserMode.Patient) {
+            try {
                 mProblemList.addAll(mESM.getProblemsByPatientId(mPatientUser.getId()));
-            }
-            catch(ElasticsearchManager.OperationFailedException e)
-            {
+            } catch (ElasticsearchManager.OperationFailedException e) {
                 Log.e(tag, "mESM.getProblemsByPatientId for Patient failed");
                 e.printStackTrace();
             }
         }
         // if user is CareProvider pull all problems for all patient ids
-        else if (mUserMode == ApplicationManager.UserMode.CareGiver)
-        {
-            for (String patientId : mCareProvider.getPatientIds())
-            {
-                try
-                {
+        else if (mUserMode == ApplicationManager.UserMode.CareGiver) {
+            for (String patientId : mCareProvider.getPatientIds()) {
+                try {
                     mProblemList.addAll(mESM.getProblemsByPatientId(patientId));
-                }
-                catch(ElasticsearchManager.OperationFailedException e)
-                {
+                } catch (ElasticsearchManager.OperationFailedException e) {
                     Log.e(tag, "mESM.getProblemsByPatientId for CareProvider failed");
                     e.printStackTrace();
                 }
@@ -142,18 +128,13 @@ public class DataRepositorySingleton
         }
     }
 
-    private void PopulateRecordList()
-    {
+    private void PopulateRecordList() {
         // pull all records for all problem ids
-        for (Problem currentProblem : mProblemList)
-        {
-            try
-            {
+        for (Problem currentProblem : mProblemList) {
+            try {
                 mPatientRecordList.addAll(mESM.getPatientRecordByProblemId(currentProblem.getId()));
                 mCareProviderRecordsList.addAll(mESM.getCareProviderRecordByProblemId(currentProblem.getId()));
-            }
-            catch(ElasticsearchManager.OperationFailedException e)
-            {
+            } catch (ElasticsearchManager.OperationFailedException e) {
                 Log.e(tag, "Getting records by ProblemId from ESM failed");
                 e.printStackTrace();
             }
@@ -161,15 +142,13 @@ public class DataRepositorySingleton
 
     }
 
-    private void ClearDataRepository()
-    {
+    private void ClearDataRepository() {
         if (mProblemList != null) mProblemList.clear();
         if (mPatientRecordList != null) mPatientRecordList.clear();
         if (mCareProviderRecordsList != null) mCareProviderRecordsList.clear();
     }
 
-    public void Initialize(ApplicationManager.UserMode userMode, String userName, ElasticsearchManager esm)
-    {
+    public void Initialize(ApplicationManager.UserMode userMode, String userName, ElasticsearchManager esm) {
         mDirty = false;
         mUserMode = userMode;
         mUserName = userName;
@@ -191,77 +170,55 @@ public class DataRepositorySingleton
         DownloadData(userMode, userName);
     }
 
-    private void UploadData()
-    {
+    private void UploadData() {
         // Update the CareProvider
-        if (mUserMode == ApplicationManager.UserMode.CareGiver)
-        {
-            try
-            {
+        if (mUserMode == ApplicationManager.UserMode.CareGiver) {
+            try {
                 mESM.updateObject(mCareProvider.getId(), mCareProvider.getElasticsearchType(), mCareProvider);
-            }
-            catch (ElasticsearchManager.ObjectNotFoundException e)
-            {
+            } catch (ElasticsearchManager.ObjectNotFoundException e) {
                 Log.e(tag, "Editing a CareProvider that doesn't exist");
                 e.printStackTrace();
-            }
-            catch (ElasticsearchManager.OperationFailedException e)
-            {
+            } catch (ElasticsearchManager.OperationFailedException e) {
                 Log.e(tag, "EditCareProvider operation failed");
                 e.printStackTrace();
             }
         }
 
         // Update the Patient
-        if (mUserMode == ApplicationManager.UserMode.Patient)
-        {
-            try
-            {
+        if (mUserMode == ApplicationManager.UserMode.Patient) {
+            try {
                 mESM.updateObject(mPatientUser.getId(), mPatientUser.getElasticsearchType(), mPatientUser);
-            }
-            catch (ElasticsearchManager.ObjectNotFoundException e)
-            {
+            } catch (ElasticsearchManager.ObjectNotFoundException e) {
                 Log.e(tag, "Editing a mPatientUser that doesn't exist");
                 e.printStackTrace();
-            }
-            catch (ElasticsearchManager.OperationFailedException e)
-            {
+            } catch (ElasticsearchManager.OperationFailedException e) {
                 Log.e(tag, "EditPatientUser operation failed");
                 e.printStackTrace();
             }
         }
 
         // Add the new problems
-        while (!mNewProblems.isEmpty())
-        {
-            try { mESM.addObject(mNewProblems.pop()); }
-            catch (ElasticsearchManager.ObjectAlreadyExistsException e)
-            {
+        while (!mNewProblems.isEmpty()) {
+            try {
+                mESM.addObject(mNewProblems.pop());
+            } catch (ElasticsearchManager.ObjectAlreadyExistsException e) {
                 Log.e(tag, "Trying to add a problem that already exists");
                 e.printStackTrace();
-            }
-            catch (ElasticsearchManager.OperationFailedException e)
-            {
+            } catch (ElasticsearchManager.OperationFailedException e) {
                 Log.e(tag, "AddProblem Operation failed");
                 e.printStackTrace();
             }
         }
 
         // Update the edited problems
-        while (!mEditedProblems.isEmpty())
-        {
-            try
-            {
+        while (!mEditedProblems.isEmpty()) {
+            try {
                 Problem currentProblem = mEditedProblems.pop();
                 mESM.updateObject(currentProblem.getId(), currentProblem.getElasticsearchType(), currentProblem);
-            }
-            catch (ElasticsearchManager.ObjectNotFoundException e)
-            {
+            } catch (ElasticsearchManager.ObjectNotFoundException e) {
                 Log.e(tag, "Editing a problem that doesn't exist");
                 e.printStackTrace();
-            }
-            catch (ElasticsearchManager.OperationFailedException e)
-            {
+            } catch (ElasticsearchManager.OperationFailedException e) {
                 Log.e(tag, "EditProblem operation failed");
                 e.printStackTrace();
             }
@@ -269,16 +226,13 @@ public class DataRepositorySingleton
 
         // Delete the problems
         Problem tempProblem = new Problem("tempTitle", "tempDescription", "tempPatientId");
-        while (!mDeletedProblemIds.isEmpty())
-        {
-            try { mESM.deleteObject(mDeletedProblemIds.pop(), tempProblem.getElasticsearchType(), tempProblem.getClass()); }
-            catch (ElasticsearchManager.ObjectNotFoundException e)
-            {
+        while (!mDeletedProblemIds.isEmpty()) {
+            try {
+                mESM.deleteObject(mDeletedProblemIds.pop(), tempProblem.getElasticsearchType(), tempProblem.getClass());
+            } catch (ElasticsearchManager.ObjectNotFoundException e) {
                 Log.e(tag, "Attempting to delete non-existent problem");
                 e.printStackTrace();
-            }
-            catch (ElasticsearchManager.OperationFailedException e)
-            {
+            } catch (ElasticsearchManager.OperationFailedException e) {
                 Log.e(tag, "DeleteProblem operation failed");
                 e.printStackTrace();
             }
@@ -286,32 +240,26 @@ public class DataRepositorySingleton
 
         // Add the new CareProvider Records
         CareProviderRecord tempCPRecord = new CareProviderRecord("TempProblemId", "TempComment", "tempCareProviderId");
-        while (!mNewCareProviderRecords.isEmpty())
-        {
-            try { mESM.addObject(mNewCareProviderRecords.pop()); }
-            catch (ElasticsearchManager.ObjectAlreadyExistsException e)
-            {
+        while (!mNewCareProviderRecords.isEmpty()) {
+            try {
+                mESM.addObject(mNewCareProviderRecords.pop());
+            } catch (ElasticsearchManager.ObjectAlreadyExistsException e) {
                 Log.e(tag, "Trying to add a CareProviderRecord that already exists");
                 e.printStackTrace();
-            }
-            catch (ElasticsearchManager.OperationFailedException e)
-            {
+            } catch (ElasticsearchManager.OperationFailedException e) {
                 Log.e(tag, "AddCareProviderRecord Operation failed");
                 e.printStackTrace();
             }
         }
 
         // Delete the CareProvider Records
-        while (!mDeletedCareProviderRecordIds.isEmpty())
-        {
-            try { mESM.deleteObject(mDeletedCareProviderRecordIds.pop(), tempCPRecord.getElasticsearchType(), tempCPRecord.getClass()); }
-            catch (ElasticsearchManager.ObjectNotFoundException e)
-            {
+        while (!mDeletedCareProviderRecordIds.isEmpty()) {
+            try {
+                mESM.deleteObject(mDeletedCareProviderRecordIds.pop(), tempCPRecord.getElasticsearchType(), tempCPRecord.getClass());
+            } catch (ElasticsearchManager.ObjectNotFoundException e) {
                 Log.e(tag, "Attempting to delete non-existent CareProviderRecord");
                 e.printStackTrace();
-            }
-            catch (ElasticsearchManager.OperationFailedException e)
-            {
+            } catch (ElasticsearchManager.OperationFailedException e) {
                 Log.e(tag, "DeleteCareProvider operation failed");
                 e.printStackTrace();
             }
@@ -319,31 +267,25 @@ public class DataRepositorySingleton
 
         // Add the new Patient Records
         PatientRecord tempPatientRecord = new PatientRecord("tempProblemId");
-        while (!mNewPatientRecords.isEmpty())
-        {
-            try { mESM.addObject(mNewPatientRecords.pop());}
-            catch (ElasticsearchManager.ObjectAlreadyExistsException e)
-            {
+        while (!mNewPatientRecords.isEmpty()) {
+            try {
+                mESM.addObject(mNewPatientRecords.pop());
+            } catch (ElasticsearchManager.ObjectAlreadyExistsException e) {
                 Log.e(tag, "Trying to add a PatientRecord that already exists");
                 e.printStackTrace();
-            }
-            catch (ElasticsearchManager.OperationFailedException e)
-            {
+            } catch (ElasticsearchManager.OperationFailedException e) {
                 Log.e(tag, "AddPatientRecord Operation failed");
                 e.printStackTrace();
             }
         }
 
-        while (!mDeletedPatientRecordIds.isEmpty())
-        {
-            try { mESM.deleteObject(mDeletedPatientRecordIds.pop(), tempPatientRecord.getElasticsearchType(), tempPatientRecord.getClass());}
-            catch (ElasticsearchManager.ObjectNotFoundException e)
-            {
+        while (!mDeletedPatientRecordIds.isEmpty()) {
+            try {
+                mESM.deleteObject(mDeletedPatientRecordIds.pop(), tempPatientRecord.getElasticsearchType(), tempPatientRecord.getClass());
+            } catch (ElasticsearchManager.ObjectNotFoundException e) {
                 Log.e(tag, "Attempting to delete non-existent PatientRecord");
                 e.printStackTrace();
-            }
-            catch (ElasticsearchManager.OperationFailedException e)
-            {
+            } catch (ElasticsearchManager.OperationFailedException e) {
                 Log.e(tag, "DeletePatientRecord operation failed");
                 e.printStackTrace();
             }
@@ -351,17 +293,14 @@ public class DataRepositorySingleton
         SetDirty(false);
     }
 
-    private void DownloadData(ApplicationManager.UserMode userMode, String userName)
-    {
+    private void DownloadData(ApplicationManager.UserMode userMode, String userName) {
         PopulateUser(userMode, userName);
         PopulateProblemList();
         PopulateRecordList();
     }
 
-    public void RefreshDataRepositorySingleton()
-    {
-        if (IsDirty())
-        {
+    public void RefreshDataRepositorySingleton() {
+        if (IsDirty()) {
             UploadData();
             SetDirty(false);
         }
@@ -370,137 +309,138 @@ public class DataRepositorySingleton
     }
 
     // Mutating Methods
-    public void AddProblem(Problem problem)
-    {
+    public void AddProblem(Problem problem) {
         mProblemList.add(problem);
         mNewProblems.add(problem);
         SetDirty(true);
     }
 
-    public void EditProblem(Problem problem)
-    {
+    public void EditProblem(Problem problem) {
         mEditedProblems.add(problem);
         ListIterator<Problem> iter = mProblemList.listIterator();
-        while (iter.hasNext())
-        {
+        while (iter.hasNext()) {
             Problem currentProblem = iter.next();
-            if (currentProblem.getId().equals(problem.getId()))
-            {
+            if (currentProblem.getId().equals(problem.getId())) {
                 iter.set(problem);
             }
         }
         SetDirty(true);
     }
 
-    public void DeleteProblem(String problemId)
-    {
+    public void DeleteProblem(String problemId) {
         mDeletedProblemIds.add(problemId);
-        for (Problem currentProblem : mProblemList)
-        {
-            if (currentProblem.getId().equals(problemId))
-            {
+        for (Problem currentProblem : mProblemList) {
+            if (currentProblem.getId().equals(problemId)) {
                 mProblemList.remove(currentProblem);
             }
         }
         SetDirty(true);
     }
 
-    public void AddCareProviderRecord(CareProviderRecord record)
-    {
+    public void AddCareProviderRecord(CareProviderRecord record) {
         mCareProviderRecordsList.add(record);
         mNewCareProviderRecords.add(record);
         SetDirty(true);
     }
 
-    public void DeleteCareProviderRecord(String recordId)
-    {
+    public void DeleteCareProviderRecord(String recordId) {
         mDeletedCareProviderRecordIds.add(recordId);
-        for (CareProviderRecord currentRecord : mCareProviderRecordsList)
-        {
-            if (currentRecord.getId().equals(recordId))
-            {
+        for (CareProviderRecord currentRecord : mCareProviderRecordsList) {
+            if (currentRecord.getId().equals(recordId)) {
                 mCareProviderRecordsList.remove(currentRecord);
             }
         }
         SetDirty(true);
     }
 
-    public void AddPatientRecord(PatientRecord record)
-    {
+    public void AddPatientRecord(PatientRecord record) {
         mPatientRecordList.add(record);
         mNewPatientRecords.add(record);
         SetDirty(true);
     }
 
-    public void DeletePatientRecord(String recordId)
-    {
+    public void DeletePatientRecord(String recordId) {
         mDeletedPatientRecordIds.add(recordId);
-        for (PatientRecord currentRecord : mPatientRecordList)
-        {
-            if (currentRecord.getId().equals(recordId))
-            {
+        for (PatientRecord currentRecord : mPatientRecordList) {
+            if (currentRecord.getId().equals(recordId)) {
                 mPatientRecordList.remove(currentRecord);
             }
         }
         SetDirty(true);
     }
 
-    public void EditCareProvider(CareProvider user) throws InvalidUserMode
-    {
-        if (mUserMode != ApplicationManager.UserMode.CareGiver) throw new InvalidUserMode("Can't edit CareProvider unless in CareGiver mode");
+    public void EditCareProvider(CareProvider user) throws InvalidUserMode {
+        if (mUserMode != ApplicationManager.UserMode.CareGiver)
+            throw new InvalidUserMode("Can't edit CareProvider unless in CareGiver mode");
         mCareProvider = user;
         SetDirty(true);
     }
 
-    public void EditPatient(Patient user) throws InvalidUserMode
-    {
-        if (mUserMode != ApplicationManager.UserMode.Patient) throw new InvalidUserMode("Can't edit Patient unless in Patient mode");
+    public void EditPatient(Patient user) throws InvalidUserMode {
+        if (mUserMode != ApplicationManager.UserMode.Patient)
+            throw new InvalidUserMode("Can't edit Patient unless in Patient mode");
         mPatientUser = user;
         SetDirty(true);
     }
 
     // Query Methods
 
-    public Patient GetPatient() throws DataRepositorySingletonNotInitialized, InvalidUserMode
-    {
-        if ((mPatientUser == null && mCareProvider == null) || mUserMode == ApplicationManager.UserMode.Invalid) { throw new DataRepositorySingletonNotInitialized(); }
-        else if (mUserMode != ApplicationManager.UserMode.Patient) { throw new InvalidUserMode("Not in patient user mode"); }
-
-        else { return mPatientUser; }
+    public Patient GetPatient() throws DataRepositorySingletonNotInitialized, InvalidUserMode {
+        if ((mPatientUser == null && mCareProvider == null) || mUserMode == ApplicationManager.UserMode.Invalid) {
+            throw new DataRepositorySingletonNotInitialized();
+        } else if (mUserMode != ApplicationManager.UserMode.Patient) {
+            throw new InvalidUserMode("Not in patient user mode");
+        } else {
+            return mPatientUser;
+        }
     }
 
-    public CareProvider GetCareProvider() throws DataRepositorySingletonNotInitialized, InvalidUserMode
-    {
-        if ((mPatientUser == null && mCareProvider == null) || mUserMode == ApplicationManager.UserMode.Invalid) { throw new DataRepositorySingletonNotInitialized(); }
-        else if (mUserMode != ApplicationManager.UserMode.CareGiver) { throw new InvalidUserMode("Not in CareProviderMode"); }
-
-        else { return mCareProvider; }
+    public CareProvider GetCareProvider() throws DataRepositorySingletonNotInitialized, InvalidUserMode {
+        if ((mPatientUser == null && mCareProvider == null) || mUserMode == ApplicationManager.UserMode.Invalid) {
+            throw new DataRepositorySingletonNotInitialized();
+        } else if (mUserMode != ApplicationManager.UserMode.CareGiver) {
+            throw new InvalidUserMode("Not in CareProviderMode");
+        } else {
+            return mCareProvider;
+        }
     }
 
-    public ApplicationManager.UserMode GetUserMode() throws DataRepositorySingletonNotInitialized
-    {
-        if (mUserMode == ApplicationManager.UserMode.Invalid) throw new DataRepositorySingletonNotInitialized();
+    public ApplicationManager.UserMode GetUserMode() throws DataRepositorySingletonNotInitialized {
+        if (mUserMode == ApplicationManager.UserMode.Invalid)
+            throw new DataRepositorySingletonNotInitialized();
 
         return mUserMode;
     }
 
-    public ArrayList<Problem> GetProblemsForPatientId(String patientId)
-    {
+    public ArrayList<Problem> GetProblemsForPatientId(String patientId) {
         ArrayList<Problem> matchingProblems = new ArrayList<>();
-        for (Problem problem : mProblemList)
-        {
+        for (Problem problem : mProblemList) {
             if (problem.getPatientId().equals(patientId)) matchingProblems.add(problem);
         }
         return matchingProblems;
     }
 
-    public Problem GetProblemForId(String problemId) throws ItemNotFound
-    {
-        for (Problem problem : mProblemList)
-        {
+    public Problem GetProblemForId(String problemId) throws ItemNotFound {
+        for (Problem problem : mProblemList) {
             if (problem.getId().equals(problemId)) return problem;
         }
         throw new ItemNotFound("Patient Record with Id: " + problemId + " not found!");
+    }
+
+    //add method: get patient by patient id
+    public Patient GetPatientForId(String patientId) throws ItemNotFound {
+
+        Patient user;
+        ContactInfo tempContact = new ContactInfo("", "");
+        user = new Patient("temp", new ArrayList<String>(), new ArrayList<String>(), tempContact);
+        try {
+            patient = mESM.getObjectFromId(patientId, user.getElasticsearchType(), user.getClass());
+        } catch (ElasticsearchManager.ObjectNotFoundException e) {
+            e.printStackTrace();
+        } catch (ElasticsearchManager.OperationFailedException e) {
+            e.printStackTrace();
+        }
+        return patient;
     }
 
     public ArrayList<CareProviderRecord> GetCareGiverRecordsForProblemId(String problemId)
