@@ -13,6 +13,7 @@ import android.text.InputType;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
@@ -87,7 +88,7 @@ public class ProfileInformationActivity extends AppCompatActivity {
     }
 
     public void addCaretaker(View v) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+        /*AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
         // actually not sure if this is required or not, we can probably skip it
         builder.setTitle("Add Caretaker");
         final EditText input = new EditText(getApplicationContext());
@@ -129,7 +130,7 @@ public class ProfileInformationActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
             }
-        });
+        });*/
     }
     public void profileSave(View v) throws DataRepositorySingleton.DataRepositorySingletonNotInitialized, DataRepositorySingleton.InvalidUserMode {
 
@@ -140,9 +141,36 @@ public class ProfileInformationActivity extends AppCompatActivity {
         ContactInfo contactInfo = new ContactInfo(emailAddress,phoneNumber);
         // update these values data repository
         if(dataRepositorySingleton.GetUserMode() == ApplicationManager.UserMode.Patient){
-            dataRepositorySingleton.GetPatient().setContactInfo(contactInfo);
-            ApplicationManager.UpdateDataRepository();
-        }
-    }
 
-}
+            Button saveButton = findViewById(R.id.profileSaveButton);
+            saveButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = getIntent();
+                    String patientID = intent.getStringExtra("patientID");
+                    try {
+                        patient = dataRepositorySingleton.GetPatientForId(patientID); //works
+                    } catch (ItemNotFound itemNotFound) {
+                        itemNotFound.printStackTrace();
+                    }
+
+                    patient.setContactInfo(contactInfo);
+                    try {
+                        DataRepositorySingleton.GetInstance().EditPatient(patient); //works
+                    } catch (DataRepositorySingleton.InvalidUserMode invalidUserMode) {
+                        invalidUserMode.printStackTrace();
+                    }
+                    DataRepositorySingleton.GetInstance().RefreshDataRepositorySingleton();//not work
+
+                    //Patient patientTest = null;     // test case
+                    //EditText edT = findViewById(R.id.profileUserIDInput);
+                    //try {
+                    //   patientTest = dataRepositorySingleton.GetPatientForId(patientID);
+                    //} catch (ItemNotFound itemNotFound) {
+                    //    itemNotFound.printStackTrace();
+                    //}
+
+                    //edT.setText(patientTest.getContactInfo().getPhoneNumber());
+                }
+            });
+        }
