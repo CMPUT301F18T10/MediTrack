@@ -3,6 +3,7 @@ package com.example.meditrack;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.UserManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
@@ -19,23 +20,10 @@ import java.util.ArrayList;
 
 public class ProfileInformationActivity extends AppCompatActivity {
     private String CaretakerAdd;
-    //public EditText phoneNumberEdit = (EditText) findViewById(R.id.profilePhoneInput);
-    //public EditText emailAddressEdit = (EditText) findViewById(R.id.profileEmailInput);
     private ArrayList<String> cpIds = null;
     private DataRepositorySingleton dataRepositorySingleton = DataRepositorySingleton.GetInstance();
     private ApplicationManager.UserMode mode;
-
-    private  UserManager userManager;
-
-    {
-        try {
-            userManager = new UserManager();
-        } catch (DataRepositorySingleton.InvalidUserMode invalidUserMode) {
-            invalidUserMode.printStackTrace();
-        } catch (DataRepositorySingleton.DataRepositorySingletonNotInitialized dataRepositorySingletonNotInitialized) {
-            dataRepositorySingletonNotInitialized.printStackTrace();
-        }
-    }
+    private Patient patient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,17 +32,24 @@ public class ProfileInformationActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ListView caretakerList = findViewById(R.id.profileCaretakerListListView);
-        EditText phoneNumberEdit = (EditText) findViewById(R.id.profilePhoneInput);
-        EditText emailAddressEdit = (EditText) findViewById(R.id.profileEmailInput);
 
         Intent intent = getIntent();
         String patientID = intent.getStringExtra("patientID");
 
-        /*if(!dataRepositorySingleton.DoesUserExist(patientID,ApplicationManager.UserMode.Patient)){
-            throw new IllegalArgumentException(" user does not exist.");
+        try {
+            patient = dataRepositorySingleton.GetPatientForId(patientID);
+        } catch (ItemNotFound itemNotFound) {
+            itemNotFound.printStackTrace();
         }
 
-        cpIds = userManager.patient.getCareProviderId();
+        EditText phoneNumberEdit = (EditText) findViewById(R.id.profilePhoneInput);
+        EditText emailAddressEdit = (EditText) findViewById(R.id.profileEmailInput);
+        EditText id = (EditText)findViewById(R.id.profileUserIDInput);
+        id.setText(patientID);
+        phoneNumberEdit.setText(patient.getContactInfo().getPhoneNumber());
+        emailAddressEdit.setText(patient.getContactInfo().getEmail());
+
+        cpIds = patient.getCareProviderId();
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,cpIds);
         caretakerList.setAdapter(adapter);
 
@@ -70,7 +65,7 @@ public class ProfileInformationActivity extends AppCompatActivity {
                 adb.setPositiveButton("Ok", new AlertDialog.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         cpIds.remove(pos);
-                        userManager.patient.setCareProviderId(cpIds);
+                        patient.setCareProviderId(cpIds);
                         adapter.notifyDataSetChanged();
                     }});
                 adb.show();
@@ -101,7 +96,16 @@ public class ProfileInformationActivity extends AppCompatActivity {
 
         ListView caretakerList = findViewById(R.id.profileCaretakerListListView);
         ArrayList<String> cpIds;
-        cpIds = userManager.patient.getCareProviderId();
+
+        Intent intent = getIntent();
+        String patientID = intent.getStringExtra("patientID");
+        try {
+            patient = dataRepositorySingleton.GetPatientForId(patientID);
+        } catch (ItemNotFound itemNotFound) {
+            itemNotFound.printStackTrace();
+        }
+        cpIds = patient.getCareProviderId();
+
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,cpIds);
         caretakerList.setAdapter(adapter);
 
@@ -115,7 +119,7 @@ public class ProfileInformationActivity extends AppCompatActivity {
                 ApplicationManager applicationManager = new ApplicationManager(userMode);
                 if(applicationManager.DoesUserExist(CaretakerAdd) == true){
                     cpIds.add(CaretakerAdd);
-                    userManager.patient.setCareProviderId(cpIds);
+                    patient.setCareProviderId(cpIds);
                     adapter.notifyDataSetChanged();
                 };
             }
@@ -127,13 +131,18 @@ public class ProfileInformationActivity extends AppCompatActivity {
             }
         });
     }
-    public void profileSave(View v) {
+    public void profileSave(View v) throws DataRepositorySingleton.DataRepositorySingletonNotInitialized, DataRepositorySingleton.InvalidUserMode {
+
+        EditText phoneNumberEdit = (EditText) findViewById(R.id.profilePhoneInput);
+        EditText emailAddressEdit = (EditText) findViewById(R.id.profileEmailInput);
         String phoneNumber = phoneNumberEdit.getText().toString();
         String emailAddress = emailAddressEdit.getText().toString();
-        // update these values data repository
         ContactInfo contactInfo = new ContactInfo(emailAddress,phoneNumber);
-        userManager.patient.setContactInfo(contactInfo);
-    }*/
-    } //temp
+        // update these values data repository
+        if(dataRepositorySingleton.GetUserMode() == ApplicationManager.UserMode.Patient){
+            dataRepositorySingleton.GetPatient().setContactInfo(contactInfo);
+            ApplicationManager.UpdateDataRepository();
+        }
+    }
 
 }
