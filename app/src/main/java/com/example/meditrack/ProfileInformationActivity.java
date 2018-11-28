@@ -16,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -134,47 +135,36 @@ public class ProfileInformationActivity extends AppCompatActivity {
         });
     }
 
-    public void profileSave(View v) throws DataRepositorySingleton.DataRepositorySingletonNotInitialized, DataRepositorySingleton.InvalidUserMode {
-
+    public void profileSave(View v) throws DataRepositorySingleton.DataRepositorySingletonNotInitialized, DataRepositorySingleton.InvalidUserMode
+    {
         EditText phoneNumberEdit = (EditText) findViewById(R.id.profilePhoneInput);
         EditText emailAddressEdit = (EditText) findViewById(R.id.profileEmailInput);
         String phoneNumber = phoneNumberEdit.getText().toString();
         String emailAddress = emailAddressEdit.getText().toString();
         ContactInfo contactInfo = new ContactInfo(emailAddress, phoneNumber);
         // update these values data repository
-        if (dataRepositorySingleton.GetUserMode() == ApplicationManager.UserMode.Patient) {
+        if (dataRepositorySingleton.GetUserMode() == ApplicationManager.UserMode.Patient)
+        {
 
-            Button saveButton = findViewById(R.id.profileSaveButton);
-            saveButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = getIntent();
-                    String patientID = intent.getStringExtra("patientID");
-                    try {
-                        patient = dataRepositorySingleton.GetPatientForId(patientID); //works
-                    } catch (ItemNotFound itemNotFound) {
-                        itemNotFound.printStackTrace();
-                    }
-
-                    patient.setContactInfo(contactInfo);
-                    try {
-                        DataRepositorySingleton.GetInstance().EditPatient(patient); //works
-                    } catch (DataRepositorySingleton.InvalidUserMode invalidUserMode) {
-                        invalidUserMode.printStackTrace();
-                    }
-                    DataRepositorySingleton.GetInstance().RefreshDataRepositorySingleton();//not work
-
-                    //Patient patientTest = null;     // test case
-                    //EditText edT = findViewById(R.id.profileUserIDInput);
-                    //try {
-                    //   patientTest = dataRepositorySingleton.GetPatientForId(patientID);
-                    //} catch (ItemNotFound itemNotFound) {
-                    //    itemNotFound.printStackTrace();
-                    //}
-
-                    //edT.setText(patientTest.getContactInfo().getPhoneNumber());
-                }
-            });
+            if (dataRepositorySingleton.GetPatient().getId().equals(patient.getId()))
+            {
+                patient.setContactInfo(contactInfo);
+                dataRepositorySingleton.EditPatient(patient);
+                ApplicationManager.UpdateDataRepository();
+            }
+            else { DenyAndRefresh(); }
         }
+        else { DenyAndRefresh(); }
+    }
+
+    private void DenyAndRefresh()
+    {
+        Toast.makeText(this, "You don't have permission to edit profile information for this account",Toast.LENGTH_LONG).show();
+
+        // refresh edit text
+        EditText phoneNumberEdit = (EditText) findViewById(R.id.profilePhoneInput);
+        EditText emailAddressEdit = (EditText) findViewById(R.id.profileEmailInput);
+        phoneNumberEdit.setText(patient.getContactInfo().getPhoneNumber());
+        emailAddressEdit.setText(patient.getContactInfo().getEmail());
     }
 }
