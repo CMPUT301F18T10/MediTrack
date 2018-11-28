@@ -86,12 +86,10 @@ public class ProfileInformationActivity extends AppCompatActivity {
     }
 
     public void addBodyImage(View v) {
-        // same as uploading pictures of record, implement in later part
     }
 
     public void addCaretaker(View v) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
-        // actually not sure if this is required or not, we can probably skip it
         builder.setTitle("Add Caretaker");
         final EditText input = new EditText(getApplicationContext());
         input.setInputType(InputType.TYPE_CLASS_TEXT);

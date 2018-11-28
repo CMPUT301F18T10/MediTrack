@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".createRecordBody"
+    tools:context=".createRecordBodyActivity"
     tools:showIn="@layout/activity_create_record_body">
 
     <ImageView
