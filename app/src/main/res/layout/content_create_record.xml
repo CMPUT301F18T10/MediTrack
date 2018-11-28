@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".createRecord1"
-    tools:showIn="@layout/activity_create_record1">
+    tools:context=".createRecord"
+    tools:showIn="@layout/activity_create_record">
 
     <EditText
         android:id="@+id/createRecordTitle"
@@ -43,6 +43,7 @@
         android:layout_height="48dp"
         android:layout_marginStart="32dp"
         android:layout_marginBottom="20dp"
+        android:onClick="createRecordBrowse"
         android:text="Browse"
         app:layout_constraintBottom_toTopOf="@+id/createRecordPhotoComment"
         app:layout_constraintStart_toStartOf="parent" />
@@ -67,19 +68,21 @@
         android:layout_marginStart="48dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="48dp"
-        android:text="Save Photo and Comment"
+        android:onClick="createRecordAddPhoto"
+        android:text="Add Photo And Comment"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/createRecordPhotoComment" />
 
     <Button
-        android:id="@+id/createRecordSavePhoto2"
+        android:id="@+id/createRecordFinish"
         android:layout_width="224dp"
         android:layout_height="48dp"
         android:layout_marginStart="80dp"
         android:layout_marginEnd="80dp"
         android:layout_marginBottom="8dp"
+        android:onClick="createRecordFinish"
         android:text="Finish and Save Record"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -108,19 +111,19 @@
         android:layout_height="48dp"
         android:layout_marginStart="16dp"
         android:layout_marginBottom="16dp"
+        android:onClick="createRecordAddBody"
         android:text="Add Body Location (Optional)"
         android:textSize="12sp"
-        app:layout_constraintBottom_toTopOf="@+id/createRecordSavePhoto2"
+        app:layout_constraintBottom_toTopOf="@+id/createRecordFinish"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/createRecordAddGPS"
         android:layout_width="160dp"
         android:layout_height="48dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
+        android:onClick="createRecordAddGPS"
         android:text="Add GPS (Optional)"
         android:textSize="12sp"
-        app:layout_constraintBottom_toTopOf="@+id/createRecordSavePhoto2"
-        app:layout_constraintEnd_toEndOf="parent" />
+        tools:layout_editor_absoluteX="208dp"
+        tools:layout_editor_absoluteY="391dp" />
 </android.support.constraint.ConstraintLayout>
