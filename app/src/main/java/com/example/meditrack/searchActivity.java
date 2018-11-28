@@ -9,11 +9,6 @@ import android.view.View;
 import android.widget.RadioButton;
 
 public class searchActivity extends AppCompatActivity {
-    //RadioButton bodyRadio = (RadioButton) findViewById(R.id.searchBodyRadio);
-    //RadioButton GPSRadio = (RadioButton) findViewById(R.id.searchGPSRadio);
-    //RadioButton recordRadio = (RadioButton) findViewById(R.id.searchRecordRadio);
-    //RadioButton problemRadio = (RadioButton) findViewById(R.id.searchProblemRadio);
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
