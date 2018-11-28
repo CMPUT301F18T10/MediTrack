@@ -81,7 +81,16 @@ public class LoginActivity extends AppCompatActivity {
             else
             {
                 mApplicationManager.RegisterUser(mUserEmail);
+
+                // TODO: Implement timeout in case registration fails due to IO exceptions.
+                // TODO: ApplicationManager should provide a boolean output so the app knows about failed registrations
+                // TODO: Alternatively, don't launch login after registration, let user login themselves
+                
+                // Wait until registration finishes before logging in
+                while (!mApplicationManager.DoesUserExist(mUserEmail)) {}
+
                 mApplicationManager.LogIn(mUserEmail, DataRepositorySingleton.GetInstance());
+
                 Intent patientIntent = new Intent(LoginActivity.this, PatientsListActivity.class);
                 patientIntent.putExtra("caretakerID", mUserEmail);
                 startActivity(patientIntent);
@@ -95,7 +104,16 @@ public class LoginActivity extends AppCompatActivity {
             }
             else{
                 mApplicationManager.RegisterUser(mUserEmail);
+
+                // TODO: Implement timeout in case registration fails due to IO exceptions.
+                // TODO: ApplicationManager should provide a boolean output so the app knows about failed registrations
+                // TODO: Alternatively, don't launch login after registration, let user login themselves
+
+                // Wait until registration finishes before logging in
+                while (!mApplicationManager.DoesUserExist(mUserEmail)) {}
+
                 mApplicationManager.LogIn(mUserEmail, DataRepositorySingleton.GetInstance());
+
                 Intent patientIntent = new Intent(LoginActivity.this, ProblemsListActivity.class);
                 patientIntent.putExtra("patientID", mUserEmail);
                 startActivity(patientIntent);
