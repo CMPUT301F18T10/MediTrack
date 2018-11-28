@@ -5,37 +5,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".createRecord"
+    tools:context=".createRecordActivity"
     tools:showIn="@layout/activity_create_record">
 
     <EditText
         android:id="@+id/createRecordTitle"
-        android:layout_width="wrap_content"
+        android:layout_width="256dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="32dp"
         android:ems="10"
         android:inputType="textPersonName"
         android:singleLine="false"
         android:text="Change in Wart"
-        android:textAlignment="center"
+        android:textAlignment="textStart"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/createRecordRecordComment"
-        android:layout_width="320dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="4dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="The wart on the back of my neck grew"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.505"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/createRecordTitle" />
 
     <Button
         android:id="@+id/createRecordBrowsePhotos"
@@ -95,7 +80,7 @@
         android:layout_height="48dp"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
-        android:layout_marginBottom="240dp"
+        android:layout_marginBottom="192dp"
         android:ems="10"
         android:inputType="textPersonName"
         android:text="This comment is about the photo"
@@ -126,4 +111,37 @@
         android:textSize="12sp"
         tools:layout_editor_absoluteX="208dp"
         tools:layout_editor_absoluteY="391dp" />
+
+    <EditText
+        android:id="@+id/createRecordComment"
+        android:layout_width="256dp"
+        android:layout_height="96dp"
+        android:layout_marginEnd="32dp"
+        android:ems="10"
+        android:inputType="textMultiLine"
+        android:text="my wart grew 100 times the size and this is multiline"
+        android:textAlignment="textStart"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:layout_editor_absoluteY="86dp" />
+
+    <TextView
+        android:id="@+id/createRecordTextViewTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:text="Title:"
+        app:layout_constraintEnd_toStartOf="@+id/createRecordTitle"
+        tools:layout_editor_absoluteY="45dp" />
+
+    <TextView
+        android:id="@+id/createRecordTextViewComment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:text="Comment:"
+        app:layout_constraintEnd_toStartOf="@+id/createRecordComment"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="125dp" />
+
 </android.support.constraint.ConstraintLayout>
