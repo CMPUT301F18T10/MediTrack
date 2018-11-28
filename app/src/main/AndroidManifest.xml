@@ -55,7 +55,7 @@
             android:label="@string/title_activity_profile_information"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".createRecord1"
+            android:name=".createRecord"
             android:label="@string/title_activity_create_record1"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
