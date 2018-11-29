@@ -85,73 +85,73 @@
         android:layout_width="160dp"
         android:layout_height="176dp"
         android:layout_marginStart="16dp"
-        android:layout_marginBottom="64dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profileImageListLabel" />
 
     <TextView
         android:id="@+id/profileImageListLabel"
         android:layout_width="128dp"
         android:layout_height="32dp"
         android:layout_marginStart="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginTop="32dp"
         android:text="Body Images:"
         android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/profileImageListListView"
-        app:layout_constraintStart_toEndOf="@+id/profileAddBodyButton" />
+        app:layout_constraintStart_toEndOf="@+id/profileAddBodyButton"
+        app:layout_constraintTop_toBottomOf="@+id/profilePhoneInput" />
 
     <TextView
         android:id="@+id/profileImageListLabel2"
         android:layout_width="128dp"
         android:layout_height="32dp"
+        android:layout_marginTop="32dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
         android:text="Caretakers:"
         android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/profileCaretakerListListView"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profilePhoneInput" />
 
     <Button
         android:id="@+id/profileAddBodyButton"
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:layout_marginStart="16dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginTop="28dp"
         android:onClick="addBodyImage"
         android:text="+"
         android:textSize="10sp"
-        app:layout_constraintBottom_toTopOf="@+id/profileImageListListView"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profilePhoneInput" />
 
     <Button
         android:id="@+id/profileAddBodyButton2"
         android:layout_width="32dp"
         android:layout_height="32dp"
+        android:layout_marginTop="28dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="10dp"
         android:onClick="addCaretaker"
         android:text="+"
         android:textSize="10sp"
-        app:layout_constraintBottom_toTopOf="@+id/profileCaretakerListListView"
-        app:layout_constraintEnd_toStartOf="@+id/profileImageListLabel2" />
+        app:layout_constraintEnd_toStartOf="@+id/profileImageListLabel2"
+        app:layout_constraintTop_toBottomOf="@+id/profilePhoneInput" />
 
     <ListView
         android:id="@+id/profileCaretakerListListView"
         android:layout_width="160dp"
         android:layout_height="176dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="64dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profileImageListLabel2" />
 
     <Button
         android:id="@+id/profileSaveButton"
         android:layout_width="wrap_content"
         android:layout_height="39dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginTop="8dp"
         android:onClick="profileSave"
         android:text="Save"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profileCaretakerListListView" />
 </android.support.constraint.ConstraintLayout>

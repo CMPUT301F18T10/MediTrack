@@ -35,13 +35,13 @@
         android:id="@+id/viewRecordPhoto"
         android:layout_width="431dp"
         android:layout_height="231dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/viewRecordBodyLocactionButton"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/viewRecordTimeStamp"
         app:srcCompat="@drawable/placeholderimage"
         tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
@@ -49,27 +49,27 @@
         android:id="@+id/viewRecordGPSButton"
         android:layout_width="144dp"
         android:layout_height="48dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="128dp"
         android:layout_marginStart="128dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="128dp"
         android:onClick="onViewGPSButtonClick"
         android:text="View GPS"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/viewRecordBodyLocactionButton" />
 
     <Button
         android:id="@+id/viewRecordBodyLocactionButton"
         android:layout_width="144dp"
         android:layout_height="48dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="128dp"
         android:layout_marginStart="128dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="128dp"
         android:onClick="onBodyLocationButtonClick"
         android:text="Body Location"
-        app:layout_constraintBottom_toTopOf="@+id/viewRecordGPSButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/viewRecordPhoto" />
 
     <TextView
         android:id="@+id/viewRecordTimeStamp"
@@ -86,7 +86,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="8dp"
         android:clickable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
