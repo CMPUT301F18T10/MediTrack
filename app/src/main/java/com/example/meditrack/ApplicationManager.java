@@ -1,8 +1,5 @@
 package com.example.meditrack;
 
-
-import android.content.Context;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import java.util.ArrayList;

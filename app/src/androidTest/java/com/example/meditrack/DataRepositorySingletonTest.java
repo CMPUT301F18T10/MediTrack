@@ -234,7 +234,7 @@ public class DataRepositorySingletonTest
         Problem problem = new Problem(ProblemTitle, ProblemDescription, ProblemPatientId);
         ArrayList<String> PatientIds = new ArrayList<>();
         PatientIds.add(ProblemPatientId);
-        mESM.mCareProviders.add(new CareProvider(CareProviderId, PatientIds));
+        mESM.mCareProviders.add(new CareProvider(CareProviderId, PatientIds,new ArrayList<>()));
 
         mESM.mProblems.add(problem);
         mESM.mPatientRecords.add(new PatientRecord(ProblemTitle));

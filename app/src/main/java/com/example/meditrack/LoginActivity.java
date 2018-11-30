@@ -1,40 +1,22 @@
 package com.example.meditrack;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.Settings;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.telephony.TelephonyManager;
 import android.text.InputType;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.PopupWindow;
 import android.widget.RadioButton;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import org.apache.commons.lang3.ObjectUtils;
-
 import java.util.ArrayList;
-import java.util.UUID;
-
-import static com.example.meditrack.ApplicationManager.UserMode.CareGiver;
 
 public class LoginActivity extends AppCompatActivity {
     private Context mContext;
@@ -48,6 +30,7 @@ public class LoginActivity extends AppCompatActivity {
     private String deviceId;
     private boolean isCorrect =false;
     private boolean userType;
+    private boolean isValidLenId = false;
 
 
     @Override
@@ -64,8 +47,8 @@ public class LoginActivity extends AppCompatActivity {
     public void loginClick(View v){
         boolean isContain;
         mUserEmailEdit = (EditText) findViewById(R.id.loginEmail);
-        mUserEmail = mUserEmailEdit.getText().toString();
         mCaretakerRadio = (RadioButton) findViewById(R.id.caretakerRadioButton);
+        mUserEmail = mUserEmailEdit.getText().toString();
         userType = mCaretakerRadio.isChecked();
         String shortCode;
         // TODO: We need exception handling at this stage
@@ -154,22 +137,34 @@ public class LoginActivity extends AppCompatActivity {
             }
         }
         else{
+            int sizeOfId = mUserEmail.length();
+            if (sizeOfId >= 8){
+                isValidLenId=true;
+            }
             mApplicationManager = new ApplicationManager(ApplicationManager.UserMode.Patient);
-            if(mApplicationManager.DoesUserExist(mUserEmail)){
-                Toast.makeText(this, "This User Email Has Registered, Please Login it!",Toast.LENGTH_LONG).show();
+            if (isValidLenId){
+                if(mApplicationManager.DoesUserExist(mUserEmail)){
+                    Toast.makeText(this, "This User Email Has Registered, Please Login it!",Toast.LENGTH_LONG).show();
+                }
+                else{
+                    approvedDeviceIDs.add(deviceId);
+                    mApplicationManager.RegisterUser(mUserEmail,approvedDeviceIDs);
+                    // TODO: Implement timeout in case registration fails due to IO exceptions.
+                    // TODO: ApplicationManager should provide a boolean output so the app knows about failed registrations
+                    // TODO: Alternatively, don't launch login after registration, let user login themselves
+                    // Wait until registration finishes before logging in
+                    while (!mApplicationManager.DoesUserExist(mUserEmail)) {}
+                    mApplicationManager.LogIn(mUserEmail, DataRepositorySingleton.GetInstance());
+                    shortCode = mApplicationManager.getUserShortCode(mUserEmail,DataRepositorySingleton.GetInstance());
+                    BuildDisplayAlertDialog(shortCode);
+                    }
+
             }
             else{
-                approvedDeviceIDs.add(deviceId);
-                mApplicationManager.RegisterUser(mUserEmail,approvedDeviceIDs);
-                // TODO: Implement timeout in case registration fails due to IO exceptions.
-                // TODO: ApplicationManager should provide a boolean output so the app knows about failed registrations
-                // TODO: Alternatively, don't launch login after registration, let user login themselves
-                // Wait until registration finishes before logging in
-                while (!mApplicationManager.DoesUserExist(mUserEmail)) {}
-                mApplicationManager.LogIn(mUserEmail, DataRepositorySingleton.GetInstance());
-                shortCode = mApplicationManager.getUserShortCode(mUserEmail,DataRepositorySingleton.GetInstance());
-                BuildDisplayAlertDialog(shortCode);
-                }
+                Toast.makeText(this, "This User Email must be At least 8 characters, Please Enter Another One it!",Toast.LENGTH_LONG).show();
+            }
+
+
 
         }
 
@@ -261,6 +256,7 @@ public class LoginActivity extends AppCompatActivity {
         View viewInflated = LayoutInflater.from(mContext).inflate(R.layout.item_popio,findViewById(android.R.id.content), false);
         final EditText input = (EditText) viewInflated.findViewById(R.id.input);
         builder.setView(viewInflated);
+        input.setHint("Enter Your Short Code:");
 
         // Set up the buttons
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {

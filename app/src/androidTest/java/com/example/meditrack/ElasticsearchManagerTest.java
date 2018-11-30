@@ -3,7 +3,6 @@ package com.example.meditrack;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.util.Log;
 
 import com.robotium.solo.Solo;
 
@@ -15,7 +14,6 @@ import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Set;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.TestCase.assertTrue;
@@ -33,9 +31,9 @@ public class ElasticsearchManagerTest {
 
     private ContactInfo testContactInfo = new ContactInfo("jack2018@cmput301.com", "780-807-078");
 
-    private Patient testPatient = new Patient("Jack", null, new ArrayList<>(),testContactInfo);
-    private Patient testPatient1 = new Patient("Joe", null, new ArrayList<>(), testContactInfo);
-    private Patient testPatient2 = new Patient("Mary", null, new ArrayList<>(), testContactInfo);
+    private Patient testPatient = new Patient("Jack", null, new ArrayList<>(),testContactInfo,new ArrayList<>());
+    private Patient testPatient1 = new Patient("Joe", null, new ArrayList<>(), testContactInfo,new ArrayList<>());
+    private Patient testPatient2 = new Patient("Mary", null, new ArrayList<>(), testContactInfo,new ArrayList<>());
 
     private CareProvider testCareProvider = new CareProvider("Peter");
 

@@ -6,10 +6,6 @@ import android.util.Log;
 import com.searchly.jestdroid.DroidClientConfig;
 import com.searchly.jestdroid.JestClientFactory;
 import com.searchly.jestdroid.JestDroidClient;
-
-
-import org.w3c.dom.Document;
-
 import java.util.ArrayList;
 import java.util.Collection;
 

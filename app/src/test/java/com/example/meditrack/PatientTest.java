@@ -1,61 +1,52 @@
-/*package com.example.meditrack;
-
-import android.graphics.Bitmap;
-
-import org.junit.Assert;
+package com.example.meditrack;
 import org.junit.Test;
-
 import java.util.ArrayList;
-import java.util.Date;
+import static junit.framework.TestCase.assertTrue;
+
 
 public class PatientTest {
+    private ArrayList<String> bitmapIds = new ArrayList<String>();
+    private ArrayList<String> careProviderIds = new ArrayList<String>();
+    private ArrayList<String> deviceIds = new ArrayList<String>();
+    private ArrayList<String> patientIds = new ArrayList<String>();
+
+    private ArrayList<CareProvider> careProviders = new ArrayList<CareProvider>();
+    private ArrayList<Patient> patients = new ArrayList<Patient>();
+    private ArrayList<Problem> problems = new ArrayList<Problem>();
+
+    String careProviderUserId = "1200012";
+    String careProviderUserId2 = "12300102";
+    String patientId1 = "14425631";
+    String patientId2 = "12345678";
+    String bitmapId1 = "Img146522";
+    String bitmapId2 = "Img146521";
     @Test
     public void testPatient(){
-        String userid = "14425631";
-
-        String bitmapId1 = "Img146522";
-        String bitmapId2 = "Img146521";
-        ArrayList<String> bitmapIds = new ArrayList<String>();
-        bitmapIds.add(bitmapId1);
-        bitmapIds.add(bitmapId2);
-
-        CareProvider careProvider1 = new CareProvider("12300101");
-        CareProvider careProvider2 = new CareProvider("12300102");
-        ArrayList<CareProvider> careProviders = new ArrayList<CareProvider>();
-        careProviders.add(careProvider1);
-        careProviders.add(careProvider2);
-
         String email = "testEmail@ualberta.ca";
         String phoneNumber = "7808001557";
         ContactInfo contactInfo = new ContactInfo(email,phoneNumber);
 
         String title = "test";
-        String description = "It's just a test case";
-        Date date = new Date();
-        Problem problem1 = new Problem(title,description,date);
-        Problem problem2 = new Problem(title,description,date);
-        ArrayList<Problem> problems = new ArrayList<Problem>();
+        String description = "test case";
+
+        Problem problem1 = new Problem(title,description,careProviderUserId);
+        Problem problem2 = new Problem(title,description,careProviderUserId);
         problems.add(problem1);
         problems.add(problem2);
 
+        Patient patient1 = new Patient(patientId1,bitmapIds,careProviderIds,contactInfo,deviceIds);
+        Patient patient2 = new Patient(patientId2,bitmapIds,careProviderIds,contactInfo,deviceIds);
 
-        Patient patient = new Patient(userid,bitmapIds,careProviders,contactInfo,problems);
+        assertTrue(patient1.getApprovedDeviceID() == deviceIds);
+        assertTrue(patient2.getId()== patientId2);
+        assertTrue(patient1.getBodyLocationImages()==bitmapIds);
+        assertTrue(patient1.getCareProviderId() == careProviderIds);
 
-        for(int i = 0; i<bitmapIds.size();i++){
-            Assert.assertTrue("body image id is not equal",bitmapIds.get(i).equals(patient.getBodyLocationImages().get(i)));
-        }
-        for(int i = 0; i<careProviders.size();i++){
-            Assert.assertTrue("care providers are not equal",careProviders.get(i).equals(patient.getCareProviders().get(i)));
-        }
-        Assert.assertTrue("contact email is not equal",email.equals(patient.getContactInfo().getEmail()));
-        Assert.assertTrue("contact phone number is not equal",phoneNumber.equals(patient.getContactInfo().getPhoneNumber()));
-        //Assert.assertTrue("problem is not equal",title.equals(patient.getProblems()));
-        String newEmail = "test@ualberta.ca";
-        String newPhoneNumber = "7808001223";
-        ContactInfo newContactInfo = new ContactInfo(newEmail,newPhoneNumber);
-        patient.setContactInfo(newContactInfo);
-        Assert.assertTrue("contact new email is not equal",newEmail.equals(patient.getContactInfo().getEmail()));
-        Assert.assertTrue("contact new phone number is not equal",newPhoneNumber.equals(patient.getContactInfo().getPhoneNumber()));
+    }
+    public void TestPatientID(){
+        //Since We disallow inputed userid less than 8 characters. Therefore,
+        //if the user input userid which is less than 8 chars, we disallow this id to be register.
+
     }
 }
-*/
+

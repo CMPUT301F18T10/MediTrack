@@ -6,11 +6,11 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class ContactInfoTest {
+    String email = "testEmail@ualberta.ca";
+    String phoneNumber = "7808001557";
+    ContactInfo contactInfo = new ContactInfo(email,phoneNumber);
     @Test
     public void testContactInfo(){
-        String email = "testEmail@ualberta.ca";
-        String phoneNumber = "7808001557";
-        ContactInfo contactInfo = new ContactInfo(email,phoneNumber);
         Assert.assertTrue("Email is not equal", email.equals(contactInfo.getEmail()));
         Assert.assertTrue("Phone number is not equal", phoneNumber.equals(contactInfo.getPhoneNumber()));
         String newEmail = "newEmail@ualberta.ca";
