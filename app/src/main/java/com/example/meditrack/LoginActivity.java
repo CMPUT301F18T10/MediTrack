@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
@@ -44,7 +45,7 @@ public class LoginActivity extends AppCompatActivity {
     private ApplicationManager mApplicationManager;
     private ArrayList<String> approvedDeviceIDs = new ArrayList<String>();
     private ArrayList<String> GivenApprovedDeviceIDs;
-    final String deviceId = UUID.randomUUID().toString();
+    private String deviceId;
     private boolean isCorrect =false;
     private boolean userType;
 
@@ -56,7 +57,7 @@ public class LoginActivity extends AppCompatActivity {
         mContext = LoginActivity.this;
         ImageView imgView = (ImageView) findViewById(R.id.loginImageView);
         imgView.setImageResource(R.drawable.projectlogo);
-
+        deviceId =Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
 
 
     }
