@@ -1,12 +1,15 @@
 package com.example.meditrack;
 
 
+import android.content.Context;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import java.util.ArrayList;
 
 public class ApplicationManager extends ElasticsearchManager
 {
+
     /* This class will hold state information about the app
         It would hold the userMode: {Patient, CareGiver},
         the dirty flag etc
@@ -34,13 +37,19 @@ public class ApplicationManager extends ElasticsearchManager
 
     public boolean DoesUserExist(String userName) {
         boolean doesExist = false;
-        Patient tempPatient = new Patient(userName,new ArrayList<String>(),new ArrayList<String>(), defaultContactInfo);
-        CareProvider tempCareProvider = new CareProvider(userName,new ArrayList<String>());
+        Patient tempPatient = new Patient(userName,new ArrayList<String>(),new ArrayList<String>(), defaultContactInfo,new ArrayList<String>());
+        CareProvider tempCareProvider = new CareProvider(userName,new ArrayList<String>(),new ArrayList<String>());
+        final String tmDevice, tmSerial, androidId;
+
         switch (mUserMode){
             case Patient:
                 try {
                     doesExist = mESM.existObject(userName,tempPatient.getElasticsearchType(),tempPatient.getClass());
-                } catch (OperationFailedException eof) {
+
+                } catch (NullPointerException npe){
+                    npe.printStackTrace();
+                }
+                catch (OperationFailedException eof) {
                     eof.printStackTrace();
                 }
                 break;
@@ -48,7 +57,9 @@ public class ApplicationManager extends ElasticsearchManager
             case CareGiver:
                 try {
                     doesExist = mESM.existObject(userName,tempCareProvider.getElasticsearchType(),tempCareProvider.getClass());
-                }  catch (OperationFailedException eof) {
+                } catch (NullPointerException npe){
+                    npe.printStackTrace();
+                } catch (OperationFailedException eof) {
                     eof.printStackTrace();
                 }
                 break;
@@ -78,12 +89,84 @@ public class ApplicationManager extends ElasticsearchManager
         return login;
     }
 
-    public boolean RegisterUser(String userName)
+    /**
+     * Get an ArrayList of approvedDevicesID by given a userID
+     * @param   userName: The input userID
+     * @param   dataRepositorySingleton: The local Datebase we used to.
+     * @return An ArrayList of objects with the given class, null if operation failed.
+     */
+    public ArrayList<String> getapprovedDevicesID(String userName,DataRepositorySingleton dataRepositorySingleton){
+        ArrayList<String> approvedDevicesID = null;
+        if (DoesUserExist(userName)){
+            dataRepositorySingleton.Initialize(mUserMode, userName, mESM);
+            switch (mUserMode){
+                case CareGiver:
+                    try {
+                        approvedDevicesID = dataRepositorySingleton.GetCareProvider().getApprovedDeviceIDs();
+                    }catch (NullPointerException nep){
+                        nep.printStackTrace();
+                    } catch (DataRepositorySingleton.DataRepositorySingletonNotInitialized dataRepositorySingletonNotInitialized) {
+                        dataRepositorySingletonNotInitialized.printStackTrace();
+                    } catch (DataRepositorySingleton.InvalidUserMode invalidUserMode) {
+                        invalidUserMode.printStackTrace();
+                    }
+                case Patient:
+                    try {
+                        approvedDevicesID = dataRepositorySingleton.GetPatient().getApprovedDeviceID();
+                    } catch (DataRepositorySingleton.DataRepositorySingletonNotInitialized dataRepositorySingletonNotInitialized) {
+                        dataRepositorySingletonNotInitialized.printStackTrace();
+                    } catch (DataRepositorySingleton.InvalidUserMode invalidUserMode) {
+                        invalidUserMode.printStackTrace();
+                    }
+            }
+
+        }
+        return approvedDevicesID;
+    }
+
+    /**
+     *
+     * @param userName:The Input user name
+     * @param DRS: The local database
+     * @return: The short code to authorize the device and share profile.
+     */
+    public String getUserShortCode(String userName,DataRepositorySingleton DRS){
+        String shortCode = null;
+        if (DoesUserExist(userName)){
+            DRS.Initialize(mUserMode, userName, mESM);
+            switch (mUserMode){
+                case CareGiver:
+                    try {
+                        shortCode = DRS.GetCareProvider().getShortCode();
+                    } catch (NullPointerException nep){
+                        nep.printStackTrace();
+
+                    } catch (DataRepositorySingleton.DataRepositorySingletonNotInitialized dataRepositorySingletonNotInitialized) {
+                        dataRepositorySingletonNotInitialized.printStackTrace();
+                    } catch (DataRepositorySingleton.InvalidUserMode invalidUserMode) {
+                        invalidUserMode.printStackTrace();
+                    }
+                case Patient:
+                    try {
+                        shortCode = DRS.GetPatient().getShortCode();
+                    } catch (DataRepositorySingleton.DataRepositorySingletonNotInitialized dataRepositorySingletonNotInitialized) {
+                        dataRepositorySingletonNotInitialized.printStackTrace();
+                    } catch (DataRepositorySingleton.InvalidUserMode invalidUserMode) {
+                        invalidUserMode.printStackTrace();
+                    }
+            }
+
+        }
+        return shortCode;
+    }
+
+
+    public boolean RegisterUser(String userName,ArrayList<String> approvedDevicesID)
     {
         // TODO: ApplicationManager shouldn't be talking to ElasticSearchManager, there should be a wrapper method in DRS
 
-        Patient patient = new Patient(userName,new ArrayList<String>(),new ArrayList<String>(), defaultContactInfo);
-        CareProvider careProvider = new CareProvider(userName,new ArrayList<String>());
+        Patient patient = new Patient(userName,new ArrayList<String>(),new ArrayList<String>(),defaultContactInfo, approvedDevicesID);
+        CareProvider careProvider = new CareProvider(userName,new ArrayList<String>(),approvedDevicesID);
         boolean register = false;
         if (!DoesUserExist(userName)){
             register= true;
@@ -117,6 +200,7 @@ public class ApplicationManager extends ElasticsearchManager
         }
         return register;
     }
+
 
     public static void UpdateDataRepository()
     {

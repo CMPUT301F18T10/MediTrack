@@ -6,15 +6,28 @@ import java.util.Objects;
 public class CareProvider extends AbstractUser implements ElasticsearchStorable{
 
     private ArrayList<String> patientIds;
+    private ArrayList<String> approvedDeviceIDs;
+    private String shortCode;
 
-    public CareProvider(String userId, ArrayList<String> patients) {
+    public CareProvider(String userId, ArrayList<String> patients,ArrayList<String> approvedDeviceIDs) {
         super(userId);
         this.patientIds = patients;
+        this.approvedDeviceIDs = approvedDeviceIDs;
+        this.shortCode = Integer.toString(Math.abs(userId.hashCode() % 10000));
     }
 
     public CareProvider(String userId) {
         super(userId);
         this.patientIds = new ArrayList<String>();
+
+    }
+    public void setApprovedDeviceIDs(ArrayList<String> approvedDeviceIDs){
+        this.approvedDeviceIDs = approvedDeviceIDs;
+    }
+
+
+    public String getShortCode() {
+        return shortCode;
     }
 
     public void AddPatientId(String patientId)
@@ -24,6 +37,10 @@ public class CareProvider extends AbstractUser implements ElasticsearchStorable{
 
     public ArrayList<String> getPatientIds() {
         return patientIds;
+    }
+
+    public ArrayList<String> getApprovedDeviceIDs() {
+        return approvedDeviceIDs;
     }
 
     public void setPatientIds(ArrayList<String> listOfIds){this.patientIds = listOfIds;}

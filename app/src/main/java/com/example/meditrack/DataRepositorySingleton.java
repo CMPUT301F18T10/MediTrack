@@ -60,6 +60,7 @@ public class DataRepositorySingleton {
     private String mUserName;
 
     private Patient patient = null;
+    private CareProvider careProvider = null;
 
     protected DataRepositorySingleton() {
     }
@@ -89,11 +90,11 @@ public class DataRepositorySingleton {
             if (userMode == ApplicationManager.UserMode.Patient) {
                 Patient user;
                 ContactInfo tempContact = new ContactInfo("", "");
-                user = new Patient("temp", new ArrayList<String>(), new ArrayList<String>(), tempContact);
+                user = new Patient("temp", new ArrayList<String>(), new ArrayList<String>(), tempContact,new ArrayList<String>());
                 mPatientUser = mESM.getObjectFromId(userName, user.getElasticsearchType(), user.getClass());
             } else if (userMode == ApplicationManager.UserMode.CareGiver) {
                 CareProvider user;
-                user = new CareProvider("tempid", new ArrayList<String>());
+                user = new CareProvider("tempid", new ArrayList<String>(),new ArrayList<String>());
                 mCareProvider = mESM.getObjectFromId(userName, user.getElasticsearchType(), user.getClass());
             }
         } catch (ElasticsearchManager.ObjectNotFoundException e) {
@@ -359,6 +360,7 @@ public class DataRepositorySingleton {
         SetDirty(true);
     }
 
+
     public void DeletePatientRecord(String recordId) {
         mDeletedPatientRecordIds.add(recordId);
         for (PatientRecord currentRecord : mPatientRecordList) {
@@ -432,7 +434,7 @@ public class DataRepositorySingleton {
 
         Patient user;
         ContactInfo tempContact = new ContactInfo("", "");
-        user = new Patient("temp", new ArrayList<String>(), new ArrayList<String>(), tempContact);
+        user = new Patient("temp", new ArrayList<String>(), new ArrayList<String>(), tempContact,new ArrayList<String>());
         try {
             patient = mESM.getObjectFromId(patientId, user.getElasticsearchType(), user.getClass());
         } catch (ElasticsearchManager.ObjectNotFoundException e) {
@@ -441,6 +443,19 @@ public class DataRepositorySingleton {
             e.printStackTrace();
         }
         return patient;
+    }
+    //add method: get careprovider by patient id.
+    public CareProvider GetCareProviderForId(String careProviderId) throws ItemNotFound {
+        CareProvider user;
+        user = new CareProvider("temp", new ArrayList<String>(),new ArrayList<String>());
+        try {
+             careProvider = mESM.getObjectFromId(careProviderId, user.getElasticsearchType(), user.getClass());
+        } catch (ElasticsearchManager.ObjectNotFoundException e) {
+            e.printStackTrace();
+        } catch (ElasticsearchManager.OperationFailedException e) {
+            e.printStackTrace();
+        }
+        return careProvider;
     }
 
     public ArrayList<CareProviderRecord> GetCareGiverRecordsForProblemId(String problemId)
@@ -482,13 +497,13 @@ public class DataRepositorySingleton {
             {
                 Patient user;
                 ContactInfo tempContact = new ContactInfo("", "");
-                user = new Patient("temp", new ArrayList<String>(),new ArrayList<String>(), tempContact);
+                user = new Patient("temp", new ArrayList<String>(),new ArrayList<String>(), tempContact,new ArrayList<String>());
                 return mESM.existObject(userName, user.getElasticsearchType(), Patient.class);
             }
             else if (userMode == ApplicationManager.UserMode.CareGiver)
             {
                 CareProvider user;
-                user = new CareProvider("tempid", new ArrayList<String>());
+                user = new CareProvider("tempid", new ArrayList<String>(),new ArrayList<String>());
                 return mESM.existObject(userName, user.getElasticsearchType(), CareProvider.class);
             }
         }
