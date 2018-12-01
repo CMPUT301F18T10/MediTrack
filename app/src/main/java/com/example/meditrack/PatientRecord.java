@@ -3,11 +3,12 @@ package com.example.meditrack;
 import android.graphics.Bitmap;
 import android.location.Location;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Objects;
 
-public class PatientRecord extends AbstractRecord implements ElasticsearchStorable{
+public class PatientRecord extends AbstractRecord implements ElasticsearchStorable, Serializable {
 
     private String title;
     private String description;
@@ -33,6 +34,22 @@ public class PatientRecord extends AbstractRecord implements ElasticsearchStorab
 
     public String getTitle() {
         return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setBodyLocation(BodyLocation bodyLocation) {
+        this.bodyLocation = bodyLocation;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
     }
 
     public String getDescription() {
