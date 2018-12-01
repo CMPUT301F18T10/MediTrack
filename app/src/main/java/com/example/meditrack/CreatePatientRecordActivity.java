@@ -1,27 +1,31 @@
 package com.example.meditrack;
 
-import android.app.Application;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.provider.ContactsContract;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+
+import java.util.ArrayList;
 
 public class CreatePatientRecordActivity extends AppCompatActivity {
 
     // Use this key on calling activity to retrieve the PatientRecord
     public final String KEY = "PATIENT_RECORD";
+    static final int REQUEST_IMAGE_CAPTURE = 1;
 
     private PatientRecord patientRecord;
 
     private EditText titleEditText;
     private EditText commentEditText;
 
+    private ElasticsearchManager esm = new ElasticsearchManager();
     private String title = "";
     private String comment = "";
+    private ArrayList<RecordImage> recordImages = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,12 +51,28 @@ public class CreatePatientRecordActivity extends AppCompatActivity {
         commentEditText = this.findViewById(R.id.createRecordComment);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            recordImages.add(new RecordImage((Bitmap) extras.get("data"), patientRecord.getId()));
+        }
+    }
+
     public void createRecordBrowse() {
 
     }
-    public void createRecordAddPhoto(){
+    public void takePhoto(View view) {
+        // TODO: Getting the full-sized image may be worthwhile.
+        // ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CAMERA}, PERMISSION_GRANTED);
+        // Android tutorial found at： https://developer.android.com/training/camera/photobasics#java
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        }
 
     }
+
     public void createRecordAddGPS() {
 
     }
@@ -70,6 +90,15 @@ public class CreatePatientRecordActivity extends AppCompatActivity {
     }
 
     public void returnRecord() {
+
+        // Upload all recordImages
+        // TODO: Maybe use DataRepositorySingleton instead?
+        try {
+            esm.addObjects(recordImages);
+        } catch (Exception e) {
+            // TODO: Add error handling
+        }
+
         // Finalize the return object
         patientRecord.setTitle(title);
         patientRecord.setDescription(comment);

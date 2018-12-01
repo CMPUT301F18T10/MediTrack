@@ -5,15 +5,17 @@ import android.graphics.Bitmap;
 import java.math.BigInteger;
 import java.util.Random;
 
-public class Image implements ElasticsearchStorable {
+public class RecordImage implements ElasticsearchStorable {
 
     public static final String type = "images";
 
     private Bitmap bitmap;
     private String id;
+    private String recordId;
 
-    public Image(Bitmap bitmap) {
+    public RecordImage(Bitmap bitmap, String recordId) {
         this.bitmap = bitmap;
+        this.recordId = recordId;
         this.id = new BigInteger(128, new Random()).toString();
     }
 

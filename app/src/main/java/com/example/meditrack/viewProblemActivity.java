@@ -1,26 +1,16 @@
 package com.example.meditrack;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
-
-import static com.example.meditrack.ElasticsearchManager.*;
 
 public class viewProblemActivity extends AppCompatActivity {
     private String selectedProblemId;
@@ -87,7 +77,7 @@ public class viewProblemActivity extends AppCompatActivity {
             public void onClick(View view) {
                 //SaveChangesOnDRS();
                 //ShowChangesOnEditText();
-                PatientRecord patientRecord = new PatientRecord(selectedProblemId,"Default Title","Default descrip", new ArrayList<String>(),null,null);
+                PatientRecord patientRecord = new PatientRecord(selectedProblemId,"Default Title","Default descrip", null,null);
                 try{ ProblemManagerService.AddPatientRecord(patientRecord);}
                 catch(Exception ObjectAlreadyExists){
                     System.err.println("ObjectAlreadyException Csught"+ObjectAlreadyExists);}
