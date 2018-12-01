@@ -64,6 +64,7 @@ public class LoginActivity extends AppCompatActivity {
                 shortCode = mApplicationManager.getUserShortCode(mUserEmail,DataRepositorySingleton.GetInstance());
                 //The Device is not In ApprovedDevicesIDs ArrayList, We need to user to input security code to access its authority
                 if (!isContain){
+                    Toast.makeText(this, "This Device Is Not Authorized, Please Enter Short Code!",Toast.LENGTH_LONG).show();
                     BuildAlertDialog(shortCode);
 
                 }
@@ -89,6 +90,7 @@ public class LoginActivity extends AppCompatActivity {
                 isContain = GivenApprovedDeviceIDs.contains(deviceId);
                 shortCode = mApplicationManager.getUserShortCode(mUserEmail,DataRepositorySingleton.GetInstance());
                 if (!isContain){
+                    Toast.makeText(this, "This Device Is Not Authorized, Please Enter Short Code!",Toast.LENGTH_LONG).show();
                     BuildAlertDialog(shortCode);
 
                 }
@@ -186,38 +188,14 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
     public void GoToNextActivity(boolean RadioClick){
-        Patient patient = null;
-        CareProvider careProvider = null;
         if (!RadioClick){
-            GivenApprovedDeviceIDs.add(deviceId);
-            try {
-                patient =  DataRepositorySingleton.GetInstance().GetPatientForId(mUserEmail);
-            } catch (ItemNotFound itemNotFound) {
-                itemNotFound.printStackTrace();
-            }
-            patient.setApprovedDeviceID(GivenApprovedDeviceIDs);
-            try {
-                DataRepositorySingleton.GetInstance().EditPatient(patient);
-            } catch (DataRepositorySingleton.InvalidUserMode invalidUserMode) {
-                invalidUserMode.printStackTrace();
-            }
+
             Intent patinetIntent = new Intent(LoginActivity.this,ProblemsListActivity.class);
             patinetIntent.putExtra("patientID", mUserEmail);
             startActivity(patinetIntent);
         }
         else{
-            GivenApprovedDeviceIDs.add(deviceId);
-            try {
-                careProvider = DataRepositorySingleton.GetInstance().GetCareProviderForId(mUserEmail);
-            } catch (ItemNotFound itemNotFound) {
-                itemNotFound.printStackTrace();
-            }
-            careProvider.setApprovedDeviceIDs(GivenApprovedDeviceIDs);
-            try {
-                DataRepositorySingleton.GetInstance().EditCareProvider(careProvider);
-            } catch (DataRepositorySingleton.InvalidUserMode invalidUserMode) {
-                invalidUserMode.printStackTrace();
-            }
+
             Intent caretakerIntent = new Intent(LoginActivity.this,PatientsListActivity.class);
             caretakerIntent.putExtra("caretakerID", mUserEmail);
             startActivity(caretakerIntent);
@@ -269,6 +247,38 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(mContext, "Wrong Security Code, Please Try Again",Toast.LENGTH_LONG).show();
                 }
                 else{
+                    if (!userType){
+                        Patient patient = null;
+                        GivenApprovedDeviceIDs.add(deviceId);
+                        try {
+                            patient =  DataRepositorySingleton.GetInstance().GetPatientForId(mUserEmail);
+                        } catch (ItemNotFound itemNotFound) {
+                            itemNotFound.printStackTrace();
+                        }
+                        patient.setApprovedDeviceID(GivenApprovedDeviceIDs);
+                        try {
+                            DataRepositorySingleton.GetInstance().EditPatient(patient);
+                        } catch (DataRepositorySingleton.InvalidUserMode invalidUserMode) {
+                            invalidUserMode.printStackTrace();
+                        }
+
+                    }
+                    else{
+                        CareProvider careProvider = null;
+                        GivenApprovedDeviceIDs.add(deviceId);
+                        try {
+                            careProvider = DataRepositorySingleton.GetInstance().GetCareProviderForId(mUserEmail);
+                        } catch (ItemNotFound itemNotFound) {
+                            itemNotFound.printStackTrace();
+                        }
+                        careProvider.setApprovedDeviceIDs(GivenApprovedDeviceIDs);
+                        try {
+                            DataRepositorySingleton.GetInstance().EditCareProvider(careProvider);
+                        } catch (DataRepositorySingleton.InvalidUserMode invalidUserMode) {
+                            invalidUserMode.printStackTrace();
+                        }
+
+                    }
                     GoToNextActivity(userType);
                 }
                 dialog.dismiss();
