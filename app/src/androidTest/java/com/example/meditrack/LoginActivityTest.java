@@ -24,16 +24,17 @@ public class LoginActivityTest {
         solo = new Solo(InstrumentationRegistry.getInstrumentation(),activityTestRule.getActivity());
     }
     @Test
-    public void TestLoginUnregisterUserID(){
+    public void TestLoginUnregisterUserID() throws Exception {
         //Test for Unregister user id
         //If this test failure, please change the userId To anotherOne, Since the server may have receive the userID
         solo.assertCurrentActivity("Login Activity",LoginActivity.class);
         solo.enterText((EditText) solo.getView(R.id.loginEmail),"newuserId30");
         solo.clickOnButton("Login");
         assertTrue(solo.waitForText("This User Email Is Not Registered, Please Register it!"));
+        tearDown();
         }
     @Test
-    public void TestLoginregisterUserID(){
+    public void TestLoginregisterUserID() throws Exception {
         //Test for Unregister user id
         solo.assertCurrentActivity("Login Activity",LoginActivity.class);
         solo.clearEditText((EditText) solo.getView(R.id.loginEmail));
@@ -41,11 +42,11 @@ public class LoginActivityTest {
         solo.clickOnButton("Login");
         //assertTrue(solo.waitForText("This Device Is Not Authorized, Please Enter Short Code!"));
         //If you login in new device, you will be asked for a shortcode.
-
+        tearDown();
     }
 
     @Test
-    public void TestregisterNewUserID(){
+    public void TestregisterNewUserID() throws Exception {
         //Test for Unregister user id
         //If this test failure, please change the userId To anotherOne, Since the server may have receive the userID
         solo.assertCurrentActivity("Login Activity",LoginActivity.class);
@@ -53,16 +54,22 @@ public class LoginActivityTest {
         solo.enterText((EditText) solo.getView(R.id.loginEmail),"newuserID3");
         solo.clickOnButton("Register");
         solo.assertCurrentActivity("Waiting for the Short code",LoginActivity.class);
+        tearDown();
     }
 
     @Test
-    public void TestregisterExsitUserID(){
+    public void TestregisterExsitUserID() throws Exception {
         //Test for Unregister user id
         solo.assertCurrentActivity("Login Activity",LoginActivity.class);
         solo.clearEditText((EditText) solo.getView(R.id.loginEmail));
         solo.enterText((EditText) solo.getView(R.id.loginEmail),"testchris8");
         solo.clickOnButton("Register");
         assertTrue(solo.waitForText("This User Email Has Registered, Please Login it!"));
+        tearDown();
+    }
+
+    protected void tearDown() throws Exception{
+        solo.finishOpenedActivities();
     }
 
 
