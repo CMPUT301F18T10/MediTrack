@@ -80,7 +80,7 @@ public class viewProblemActivity extends AppCompatActivity {
                 //ShowChangesOnEditText();
 
                 Intent intent = new Intent(viewProblemActivity.this , CreatePatientRecordActivity.class);
-                intent.putExtra(PROBLEM_ID_EXTRA, selectedProblemId);
+                intent.putExtra("PROBLEM_ID_EXTRA", selectedProblemId);
                 startActivityForResult(intent, CREATE_RECORD_REQUEST);
             }
         });
