@@ -48,7 +48,7 @@ public class CreatePatientRecordActivity extends AppCompatActivity {
 
         // Obtain problemId from Intent
         Intent intent = getIntent();
-        String problemId = intent.getStringExtra(viewProblemActivity.PROBLEM_ID_EXTRA);
+        String problemId = intent.getStringExtra("PROBLEM_ID_EXTRA");
 
         //// TODO: Remove this dummy problemId
         //problemId = "problemId";
@@ -130,3 +130,4 @@ public class CreatePatientRecordActivity extends AppCompatActivity {
         finish();
     }
 }
+
