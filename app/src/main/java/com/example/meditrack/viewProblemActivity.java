@@ -1,26 +1,17 @@
 package com.example.meditrack;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
-
-import static com.example.meditrack.ElasticsearchManager.*;
 
 public class viewProblemActivity extends AppCompatActivity {
     private String selectedProblemId;
@@ -41,6 +32,7 @@ public class viewProblemActivity extends AppCompatActivity {
     public static final String testDesc = "Test Description";
     private static final String TAG = "SampleActivity";
     private static final boolean VERBOSE = true;
+    private static final int CREATE_RECORD_REQUEST = 1;
 
 
 
@@ -60,6 +52,7 @@ public class viewProblemActivity extends AppCompatActivity {
         Intent intent =getIntent();
         selectedProblemId = intent.getStringExtra("problemId");
         //Get problem from DRS;
+        dataRepositorySingleton.RefreshDataRepositorySingleton();
         try {
             currentProblem = dataRepositorySingleton.GetProblemForId(selectedProblemId);
             patientRecordArrayList = dataRepositorySingleton.GetPatientRecordsForProblem(selectedProblemId);
@@ -79,24 +72,16 @@ public class viewProblemActivity extends AppCompatActivity {
         editTextTitle.setText(problemTitle);
         editTextDes.setText(problemDesc);
 
-
-
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.viewProblemAddFAB);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //SaveChangesOnDRS();
                 //ShowChangesOnEditText();
-                PatientRecord patientRecord = new PatientRecord(selectedProblemId,"Default Title","Default descrip", new ArrayList<String>(),null,null);
-                try{ ProblemManagerService.AddPatientRecord(patientRecord);}
-                catch(Exception ObjectAlreadyExists){
-                    System.err.println("ObjectAlreadyException Csught"+ObjectAlreadyExists);}
-                ApplicationManager.UpdateDataRepository();
-                Intent intent = new Intent(viewProblemActivity.this, viewRecordActivity.class);
-                intent.putExtra("recordId",patientRecord.getId());
-                intent.putExtra("problemId",selectedProblemId);
-                startActivity(intent);
 
+                Intent intent = new Intent(viewProblemActivity.this , CreatePatientRecordActivity.class);
+                intent.putExtra("PROBLEM_ID", selectedProblemId);
+                startActivityForResult(intent, CREATE_RECORD_REQUEST);
             }
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -124,8 +109,18 @@ public class viewProblemActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == CREATE_RECORD_REQUEST && resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            PatientRecord patientRecord = (PatientRecord) extras.get(CreatePatientRecordActivity.KEY);
 
-
+            try{ ProblemManagerService.AddPatientRecord(patientRecord);}
+            catch(Exception ObjectAlreadyExists){
+                System.err.println("ObjectAlreadyException Caught"+ObjectAlreadyExists);}
+            ApplicationManager.UpdateDataRepository();
+        }
+    }
 }
 
 

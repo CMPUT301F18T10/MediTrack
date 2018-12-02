@@ -41,9 +41,9 @@ public class ElasticsearchManagerTest {
     private Problem testProblem1 = new Problem("CMPUT301", "testDescription1", testPatient.getId());
     private Problem testProblem2 = new Problem("testProblem2", "CMPUT401 is even harder", testPatient.getId());
 
-    private PatientRecord testPatientRecord = new PatientRecord(testProblem.getId(), "Elasticsearch!", "I love Elasticsearch", null, null, null);
-    private PatientRecord testPatientRecord1 = new PatientRecord(testProblem.getId(), "Hmm", "I think that was a bold statement", null, null, null);
-    private PatientRecord testPatientRecord2 = new PatientRecord(testProblem.getId(), "OK", "I hate Elasticsearch", null, null, null);
+    private PatientRecord testPatientRecord = new PatientRecord(testProblem.getId(), "Elasticsearch!", "I love Elasticsearch", null, null);
+    private PatientRecord testPatientRecord1 = new PatientRecord(testProblem.getId(), "Hmm", "I think that was a bold statement", null, null);
+    private PatientRecord testPatientRecord2 = new PatientRecord(testProblem.getId(), "OK", "I hate Elasticsearch", null, null);
 
     private CareProviderRecord testCareProviderRecord = new CareProviderRecord(testProblem.getId(), "Good to hear!", testCareProvider.getId());
     private CareProviderRecord testCareProviderRecord1 = new CareProviderRecord(testProblem.getId(), "Elasticsearch is good, don't hate it.", testCareProvider.getId());
@@ -137,7 +137,7 @@ public class ElasticsearchManagerTest {
         patientRecords.add(testPatientRecord2);
 
         // getPatientRecordByProblemId should not pick this record up
-        PatientRecord randomPatientRecord =  new PatientRecord("randomProblemId", "randomTitle", "randomDescription", null, null, null);
+        PatientRecord randomPatientRecord =  new PatientRecord("randomProblemId", "randomTitle", "randomDescription", null, null);
         patientRecords.add(randomPatientRecord);
 
         esm.addObjects(patientRecords);

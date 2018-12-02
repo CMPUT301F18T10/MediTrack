@@ -1,10 +1,11 @@
 package com.example.meditrack;
 
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.Date;
 import java.util.Random;
 
-public abstract class AbstractRecord {
+public abstract class AbstractRecord implements Serializable {
 
     protected Date timestamp;
     protected String problemId;

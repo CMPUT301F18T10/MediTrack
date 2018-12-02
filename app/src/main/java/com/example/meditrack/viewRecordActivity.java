@@ -13,6 +13,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 public class viewRecordActivity extends AppCompatActivity {
 
     private String mRecordId;
@@ -23,6 +25,7 @@ public class viewRecordActivity extends AppCompatActivity {
     private Toast mImageToast;
     private Toast mBodyLocationToast;
     private Toast mGPSToast;
+    private ArrayList<RecordImage> recordImages;
 
     private void ReturnToViewProblemActivity()
     {
@@ -69,6 +72,14 @@ public class viewRecordActivity extends AppCompatActivity {
         mGPSToast = Toast.makeText(context, viewGPSToastText, duration);
 
         ImageView image = (ImageView) findViewById(R.id.viewRecordPhoto);
+        try {
+            recordImages = mDRS.GetRecordImagesForRecordId(mRecordId);
+        } catch (ElasticsearchManager.OperationFailedException e) {
+            recordImages = new ArrayList<>();
+        }
+        if (recordImages.size() > 0) {
+            image.setImageBitmap(recordImages.get(0).getBitmap());
+        }
         image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

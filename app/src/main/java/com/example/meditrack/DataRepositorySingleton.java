@@ -1,5 +1,6 @@
 package com.example.meditrack;
 
+import android.graphics.Bitmap;
 import android.util.Log;
 
 import java.util.ArrayDeque;
@@ -487,6 +488,11 @@ public class DataRepositorySingleton {
             if (record.getId().equals(recordId)) return record;
         }
         throw new ItemNotFound("Patient Record with Id: " + recordId + " not found!");
+    }
+
+    public ArrayList<RecordImage> GetRecordImagesForRecordId(String recordId) throws ElasticsearchManager.OperationFailedException
+    {
+        return mESM.getRecordImageByRecordId(recordId);
     }
 
     public boolean DoesUserExist(String userName, ApplicationManager.UserMode userMode)
