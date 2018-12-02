@@ -118,6 +118,7 @@ public class ProblemsListActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(ProblemsListActivity.this, viewProblemActivity.class);
                 intent.putExtra("problemId", mProblemList.get(position).getId());
+                intent.putExtra("patientID", mPatientId);
                 startActivity(intent);
             }
         });

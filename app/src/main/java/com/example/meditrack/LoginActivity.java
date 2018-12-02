@@ -193,13 +193,14 @@ public class LoginActivity extends AppCompatActivity {
             Intent patinetIntent = new Intent(LoginActivity.this,ProblemsListActivity.class);
             patinetIntent.putExtra("patientID", mUserEmail);
             startActivity(patinetIntent);
+            finish();
         }
         else{
 
             Intent caretakerIntent = new Intent(LoginActivity.this,PatientsListActivity.class);
             caretakerIntent.putExtra("caretakerID", mUserEmail);
             startActivity(caretakerIntent);
-
+            finish();
         }
     }
     public void BuildDisplayAlertDialog(String shortCode){
