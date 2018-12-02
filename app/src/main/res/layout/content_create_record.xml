@@ -24,94 +24,41 @@
 
     <Button
         android:id="@+id/createRecordBrowsePhotos"
-        android:layout_width="96dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="8dp"
-        android:onClick="createRecordBrowse"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:onClick="selectImage"
         android:text="Browse"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/createRecordComment" />
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="192dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="32dp"
-        android:text="newimage.jpg"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/createRecordBrowsePhotos"
-        app:layout_constraintTop_toBottomOf="@+id/createRecordComment" />
+        app:layout_constraintBottom_toTopOf="@+id/createRecordFinish"
+        app:layout_constraintEnd_toStartOf="@+id/createRecordSavePhoto"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/createRecordSavePhoto"
-        android:layout_width="288dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="48dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="48dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="68dp"
+        android:layout_marginBottom="8dp"
         android:onClick="takePhoto"
-        android:text="TAKE A PHOTO NOW!"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/createRecordPhotoComment" />
+        android:text="CAMERA"
+        app:layout_constraintBottom_toTopOf="@+id/createRecordFinish"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <Button
         android:id="@+id/createRecordFinish"
         android:layout_width="224dp"
         android:layout_height="48dp"
         android:layout_marginStart="80dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="80dp"
+        android:layout_marginBottom="8dp"
         android:onClick="createRecordFinish"
         android:text="Finish and Save Record"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/createRecordAddBodyLocation" />
-
-    <EditText
-        android:id="@+id/createRecordPhotoComment"
-        android:layout_width="320dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="32dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="This comment is about the photo"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
-
-    <Button
-        android:id="@+id/createRecordAddBodyLocation"
-        android:layout_width="160dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
-        android:onClick="createRecordAddBody"
-        android:text="Add Body Location (Optional)"
-        android:textSize="12sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/createRecordSavePhoto" />
-
-    <Button
-        android:id="@+id/createRecordAddGPS"
-        android:layout_width="160dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="24dp"
-        android:onClick="createRecordAddGPS"
-        android:text="Add GPS (Optional)"
-        android:textSize="12sp"
-        app:layout_constraintTop_toBottomOf="@+id/createRecordSavePhoto"
-        tools:layout_editor_absoluteX="208dp" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
         android:id="@+id/createRecordComment"
@@ -147,5 +94,19 @@
         app:layout_constraintEnd_toStartOf="@+id/createRecordComment"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/createRecordTextViewTitle" />
+
+    <ListView
+        android:id="@+id/test_list_view"
+        android:layout_width="368dp"
+        android:layout_height="201dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/createRecordBrowsePhotos"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/createRecordComment"
+        app:layout_constraintVertical_bias="0.6" />
 
 </android.support.constraint.ConstraintLayout>

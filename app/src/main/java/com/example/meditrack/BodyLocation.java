@@ -3,7 +3,9 @@ package com.example.meditrack;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 
-public class BodyLocation {
+import java.io.Serializable;
+
+public class BodyLocation implements Serializable {
 
     private Bitmap bodyLocationImage;
     private Point point;

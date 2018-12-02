@@ -1,5 +1,6 @@
 package com.example.meditrack;
 
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -326,6 +327,23 @@ public class ElasticsearchManager {
             throw new OperationFailedException();
         }
         return careProviderRecords;
+    }
+
+    public ArrayList<RecordImage> getRecordImageByRecordId(String recordId) throws OperationFailedException {
+        ArrayList<RecordImage> recordImages;
+        String query =
+                "{\n" +
+                        "\"query\": {\n" +
+                        "\"term\" : {" + "\"" + "recordId" + "\"" + ":" + "\"" + recordId.toLowerCase() + "\"" + "}\n" +
+                        "}\n" +
+                        "}";
+        QueryTask<RecordImage> task = new QueryTask<>();
+        try {
+            recordImages = task.execute(query, RecordImage.type, RecordImage.class).get();
+        } catch (Exception e) {
+            throw new OperationFailedException();
+        }
+        return recordImages;
     }
 
     /**
