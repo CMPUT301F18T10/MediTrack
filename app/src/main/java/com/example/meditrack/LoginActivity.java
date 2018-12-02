@@ -70,6 +70,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 else{
                     caretakerIntent.putExtra("caretakerID", mUserEmail);
+                    DataRepositorySingleton.GetInstance().AddIntent(PatientsListActivity.class, mUserEmail);
                     startActivity(caretakerIntent);
                     }
             }
@@ -97,6 +98,7 @@ public class LoginActivity extends AppCompatActivity {
                 else{
                     Log.e("DeviceCode","This is authorized device");
                     patientIntent.putExtra("patientID", mUserEmail);
+                    DataRepositorySingleton.GetInstance().AddIntent(PatientsListActivity.class, mUserEmail);
                     startActivity(patientIntent);
                 }
 
@@ -132,6 +134,7 @@ public class LoginActivity extends AppCompatActivity {
                 
                 // Wait until registration finishes before logging in
                 while (!mApplicationManager.DoesUserExist(mUserEmail)) {}
+                mApplicationManager.InitializeDataRepositorySingleton(DataRepositorySingleton.GetInstance(), mUserEmail);
                 mApplicationManager.LogIn(mUserEmail, DataRepositorySingleton.GetInstance());
                 shortCode = mApplicationManager.getUserShortCode(mUserEmail,DataRepositorySingleton.GetInstance());
                 BuildDisplayAlertDialog(shortCode);
@@ -156,6 +159,7 @@ public class LoginActivity extends AppCompatActivity {
                     // TODO: Alternatively, don't launch login after registration, let user login themselves
                     // Wait until registration finishes before logging in
                     while (!mApplicationManager.DoesUserExist(mUserEmail)) {}
+                    mApplicationManager.InitializeDataRepositorySingleton(DataRepositorySingleton.GetInstance(), mUserEmail);
                     mApplicationManager.LogIn(mUserEmail, DataRepositorySingleton.GetInstance());
                     shortCode = mApplicationManager.getUserShortCode(mUserEmail,DataRepositorySingleton.GetInstance());
                     BuildDisplayAlertDialog(shortCode);
@@ -192,6 +196,7 @@ public class LoginActivity extends AppCompatActivity {
 
             Intent patinetIntent = new Intent(LoginActivity.this,ProblemsListActivity.class);
             patinetIntent.putExtra("patientID", mUserEmail);
+            DataRepositorySingleton.GetInstance().AddIntent(PatientsListActivity.class, mUserEmail);
             startActivity(patinetIntent);
             finish();
         }
@@ -199,6 +204,7 @@ public class LoginActivity extends AppCompatActivity {
 
             Intent caretakerIntent = new Intent(LoginActivity.this,PatientsListActivity.class);
             caretakerIntent.putExtra("caretakerID", mUserEmail);
+            DataRepositorySingleton.GetInstance().AddIntent(PatientsListActivity.class, mUserEmail);
             startActivity(caretakerIntent);
             finish();
         }

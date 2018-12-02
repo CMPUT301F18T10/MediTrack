@@ -112,14 +112,7 @@ public class viewProblemActivity extends AppCompatActivity {
                 recordsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        currentProblem.setTitle(editTextTitle.getText().toString());
-                        currentProblem.setDescription(editTextDes.getText().toString());
-                        try {
-                            ProblemManagerService.EditProblem(currentProblem);
-                        } catch (ProblemManagerService.ObjectNotFound objectNotFound) {
-                            objectNotFound.printStackTrace();
-                        }
-                        ApplicationManager.UpdateDataRepository();
+                        UpdateProblem();
                         Intent intent = new Intent(viewProblemActivity.this, viewRecordActivity.class);
                         intent.putExtra("recordId",patientRecordArrayList.get(position).getId());
                         intent.putExtra("problemId",selectedProblemId);
@@ -173,14 +166,7 @@ public class viewProblemActivity extends AppCompatActivity {
                 recordsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        currentProblem.setTitle(editTextTitle.getText().toString());
-                        currentProblem.setDescription(editTextDes.getText().toString());
-                        try {
-                            ProblemManagerService.EditProblem(currentProblem);
-                        } catch (ProblemManagerService.ObjectNotFound objectNotFound) {
-                            objectNotFound.printStackTrace();
-                        }
-                        ApplicationManager.UpdateDataRepository();
+                        UpdateProblem();
                         Intent intent = new Intent(viewProblemActivity.this, viewRecordActivity.class);
                         intent.putExtra("recordId",patientRecordArrayList.get(position).getId());
                         intent.putExtra("problemId",selectedProblemId);
@@ -253,6 +239,26 @@ public class viewProblemActivity extends AppCompatActivity {
                 break;
         }
     }
+
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+        UpdateProblem();
+    }
+
+    public void UpdateProblem()
+    {
+        currentProblem.setTitle(editTextTitle.getText().toString());
+        currentProblem.setDescription(editTextDes.getText().toString());
+        try {
+            ProblemManagerService.EditProblem(currentProblem);
+        } catch (ProblemManagerService.ObjectNotFound objectNotFound) {
+            objectNotFound.printStackTrace();
+        }
+        ApplicationManager.UpdateDataRepository();
+    }
+
     @Override
     protected void onStart() {
         super.onStart();

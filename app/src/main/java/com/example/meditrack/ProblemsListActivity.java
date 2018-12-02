@@ -71,15 +71,40 @@ public class ProblemsListActivity extends AppCompatActivity {
         deleteButtonView.setVisibility(View.INVISIBLE);
 
         setSupportActionBar(toolbar);
-
-        Intent intent = getIntent();
-        mPatientId = intent.getStringExtra("patientID");
         mDRS = DataRepositorySingleton.GetInstance();
+
+
+
         try { mUserMode = mDRS.GetUserMode(); }
         catch (DataRepositorySingleton.DataRepositorySingletonNotInitialized e)
         {
             Log.e(tag, "DataRepositorySingleton not yet initialized. It is expected to be at this point");
         }
+
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+
+        Intent intent = getIntent();
+        mPatientId = intent.getStringExtra("patientID");
+
+        if (mPatientId == null)
+        {
+            try { mDRS.GetStoredIntent(ProblemsListActivity.class); }
+            catch (DataRepositorySingleton.IntentMissingException e)
+            {
+                Log.e(tag, "No active or store intent found");
+                e.printStackTrace();
+            }
+        }
+        else
+        {
+            mDRS.AddIntent(ProblemsListActivity.class, mPatientId);
+        }
+        ApplicationManager.UpdateDataRepository();
         mProblemList = mDRS.GetProblemsForPatientId(mPatientId);
 
         TextView ProblemListActivityTitle = (TextView) findViewById(R.id.problemListTitle);
