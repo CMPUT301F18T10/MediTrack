@@ -15,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioButton;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -36,10 +37,10 @@ public class searchActivity extends AppCompatActivity {
         RadioButton problemRadio = (RadioButton) findViewById(R.id.searchProblemRadio);
 
         if(bodyRadio.isChecked()){
-            //searchmanager bodysearch record
+            Toast.makeText(getApplicationContext(), "Searching for Body Location will be available in a future release", Toast.LENGTH_SHORT).show();
         }
         else if(GPSRadio.isChecked()){
-            //searchmanager GPSsearch record
+            Toast.makeText(getApplicationContext(), "Searching for Geological Location will be available in a future release", Toast.LENGTH_SHORT).show();
         }
 
 
@@ -121,14 +122,12 @@ public class searchActivity extends AppCompatActivity {
             //searchmanager problemsearch by keyword
             ArrayList<String> problemSearchList = new ArrayList<>();
 
-            String RecordTitle = new String();
-            String RecordDescription = new String();
+            String ProblemTitle = new String();
             String tempProblemId = new String();
-            String tempRecordId = new String();
             String PatientId = new String();
+            String ProblemDescription = new String();
             Intent intent = getIntent();
             ArrayList ProblemIds = new ArrayList<String>();
-            ArrayList RecordIds = new ArrayList<String>();
 
             ArrayAdapter<String> ProblemSearchadapter;
             ArrayList Problems = new ArrayList<Problem>();
@@ -163,14 +162,13 @@ public class searchActivity extends AppCompatActivity {
             Problems = mDRS.GetProblemsForPatientId(PatientId);
 
             for(int i = 0; i<Problems.size();i++){
-                RecordTitle = mDRS.GetPatientRecordsForProblem(PatientId).get(i).getTitle();
-                RecordDescription =  mDRS.GetPatientRecordsForProblem(PatientId).get(i).getDescription();
-                tempRecordId = mDRS.GetPatientRecordsForProblem(PatientId).get(i).getId();
+                ProblemTitle = mDRS.GetProblemsForPatientId(PatientId).get(i).getTitle();
+                ProblemDescription =  mDRS.GetProblemsForPatientId(PatientId).get(i).getDescription();
+                tempProblemId = mDRS.GetProblemsForPatientId(PatientId).get(i).getId();
 
-                if(RecordTitle.toLowerCase().contains(problemKeyword.toLowerCase()) || RecordDescription.toLowerCase().contains(problemKeyword.toLowerCase())){
+                if(ProblemTitle.toLowerCase().contains(problemKeyword.toLowerCase()) || ProblemDescription.toLowerCase().contains(problemKeyword.toLowerCase())){
                     ProblemIds.add(tempProblemId);
-                    RecordIds.add(tempRecordId);
-                    problemSearchList.add(RecordTitle);
+                    problemSearchList.add(ProblemTitle);
                 }
 
             }
