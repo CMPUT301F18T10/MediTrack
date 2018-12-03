@@ -50,6 +50,7 @@ public class searchActivity extends AppCompatActivity {
             ArrayList<String> problemSearchList = new ArrayList<>();
 
             String ProblemTitle = new String();
+            String ProblemDescription = new String();
             String tempProblemId = new String();
             String PatientId = new String();
             Intent intent = getIntent();
@@ -89,9 +90,10 @@ public class searchActivity extends AppCompatActivity {
 
             for(int i = 0; i<Problems.size();i++){
                 ProblemTitle = mDRS.GetProblemsForPatientId(PatientId).get(i).getTitle();
+                ProblemDescription =  mDRS.GetProblemsForPatientId(PatientId).get(i).getDescription();
                 tempProblemId = mDRS.GetProblemsForPatientId(PatientId).get(i).getId();
 
-                if(ProblemTitle.toLowerCase().contains(problemKeyword.toLowerCase())){
+                if(ProblemTitle.toLowerCase().contains(problemKeyword.toLowerCase()) || ProblemDescription.toLowerCase().contains(problemKeyword.toLowerCase())){
                     ProblemIds.add(tempProblemId);
                     problemSearchList.add(ProblemTitle);
                 }
