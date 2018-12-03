@@ -103,9 +103,6 @@ public class viewProblemActivity extends AppCompatActivity {
                         Intent intent = new Intent(viewProblemActivity.this , CreatePatientRecordActivity.class);
                         intent.putExtra("PROBLEM_ID_EXTRA", selectedProblemId);
                         startActivityForResult(intent, CREATE_RECORD_REQUEST);
-                        finish();
-
-
                     }
                 });
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
