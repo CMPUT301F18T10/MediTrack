@@ -157,6 +157,7 @@ public class ProblemsListActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent searchIntent = new Intent(ProblemsListActivity.this, searchActivity.class);
+                searchIntent.putExtra("patientID", mPatientId);
                 startActivity(searchIntent);
             }
         });
