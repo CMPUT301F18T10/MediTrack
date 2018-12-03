@@ -26,6 +26,8 @@ public class viewRecordActivity extends AppCompatActivity {
     private Toast mBodyLocationToast;
     private Toast mGPSToast;
     private ArrayList<RecordImage> recordImages;
+    private ImageView image;
+    private int currentImageIndex = 0;
 
     private void ReturnToViewProblemActivity()
     {
@@ -63,7 +65,7 @@ public class viewRecordActivity extends AppCompatActivity {
 
         // Creating toasts for unimplemented functionality
         Context context = getApplicationContext();
-        CharSequence imageToastText = "Images will be available in a future version";
+        CharSequence imageToastText = "No more images to show!";
         CharSequence bodyLocationToastText = "Body Location functionality will be provided in a future version";
         CharSequence viewGPSToastText = "GPS functionality will be provided in a future version";
         int duration = Toast.LENGTH_SHORT;
@@ -71,14 +73,15 @@ public class viewRecordActivity extends AppCompatActivity {
         mBodyLocationToast = Toast.makeText(context, bodyLocationToastText, duration);
         mGPSToast = Toast.makeText(context, viewGPSToastText, duration);
 
-        ImageView image = (ImageView) findViewById(R.id.viewRecordPhoto);
+        image = (ImageView) findViewById(R.id.viewRecordPhoto);
         try {
             recordImages = mDRS.GetRecordImagesForRecordId(mRecordId);
         } catch (ElasticsearchManager.OperationFailedException e) {
             recordImages = new ArrayList<>();
         }
         if (recordImages.size() > 0) {
-            image.setImageBitmap(recordImages.get(0).getBitmap());
+            image.setImageBitmap(recordImages.get(currentImageIndex).getBitmap());
+            currentImageIndex = (currentImageIndex + 1) % recordImages.size();
         }
         image.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,7 +107,12 @@ public class viewRecordActivity extends AppCompatActivity {
 
     public void onImageClick(View v)
     {
-        mImageToast.show();
+        if ( recordImages != null && recordImages.size() > 1) {
+            image.setImageBitmap(recordImages.get(currentImageIndex).getBitmap());
+            currentImageIndex = (currentImageIndex + 1) % recordImages.size();
+        } else {
+            mImageToast.show();
+        }
     }
 
     public void onBodyLocationButtonClick(View v)
