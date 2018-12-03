@@ -132,6 +132,7 @@ public class LoginActivity extends AppCompatActivity {
                 
                 // Wait until registration finishes before logging in
                 while (!mApplicationManager.DoesUserExist(mUserEmail)) {}
+                mApplicationManager.InitializeDataRepositorySingleton(DataRepositorySingleton.GetInstance(), mUserEmail);
                 mApplicationManager.LogIn(mUserEmail, DataRepositorySingleton.GetInstance());
                 shortCode = mApplicationManager.getUserShortCode(mUserEmail,DataRepositorySingleton.GetInstance());
                 BuildDisplayAlertDialog(shortCode);
@@ -156,6 +157,7 @@ public class LoginActivity extends AppCompatActivity {
                     // TODO: Alternatively, don't launch login after registration, let user login themselves
                     // Wait until registration finishes before logging in
                     while (!mApplicationManager.DoesUserExist(mUserEmail)) {}
+                    mApplicationManager.InitializeDataRepositorySingleton(DataRepositorySingleton.GetInstance(), mUserEmail);
                     mApplicationManager.LogIn(mUserEmail, DataRepositorySingleton.GetInstance());
                     shortCode = mApplicationManager.getUserShortCode(mUserEmail,DataRepositorySingleton.GetInstance());
                     BuildDisplayAlertDialog(shortCode);

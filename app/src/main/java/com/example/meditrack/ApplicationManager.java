@@ -86,6 +86,11 @@ public class ApplicationManager extends ElasticsearchManager
         return login;
     }
 
+    public void InitializeDataRepositorySingleton(DataRepositorySingleton drs, String userName)
+    {
+        drs.Initialize(mUserMode, userName, mESM);
+    }
+
     /**
      * Get an ArrayList of approvedDevicesID by given a userID
      * @param   userName: The input userID

@@ -17,7 +17,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.io.Console;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.logging.Logger;
 
 public class ProblemsListActivity extends AppCompatActivity {
@@ -52,7 +55,8 @@ public class ProblemsListActivity extends AppCompatActivity {
 
             problemTitle.setText(problem.getTitle());
             problemDescription.setText(problem.getDescription());
-            problemTimeStamp.setText(problem.getDate().toString());
+            Date problemDate = problem.getDate();
+            problemTimeStamp.setText(DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(problemDate));
             return rowView;
         }
     }
@@ -71,15 +75,40 @@ public class ProblemsListActivity extends AppCompatActivity {
         deleteButtonView.setVisibility(View.INVISIBLE);
 
         setSupportActionBar(toolbar);
-
-        Intent intent = getIntent();
-        mPatientId = intent.getStringExtra("patientID");
         mDRS = DataRepositorySingleton.GetInstance();
+
+
+
         try { mUserMode = mDRS.GetUserMode(); }
         catch (DataRepositorySingleton.DataRepositorySingletonNotInitialized e)
         {
             Log.e(tag, "DataRepositorySingleton not yet initialized. It is expected to be at this point");
         }
+
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+
+        Intent intent = getIntent();
+        mPatientId = intent.getStringExtra("patientID");
+
+        if (mPatientId == null)
+        {
+            try { mPatientId = mDRS.GetStoredIntent(ProblemsListActivity.class); }
+            catch (DataRepositorySingleton.IntentMissingException e)
+            {
+                Log.e(tag, "No active or store intent found");
+                e.printStackTrace();
+            }
+        }
+        else
+        {
+            mDRS.AddIntent(ProblemsListActivity.class, mPatientId);
+        }
+        ApplicationManager.UpdateDataRepository();
         mProblemList = mDRS.GetProblemsForPatientId(mPatientId);
 
         TextView ProblemListActivityTitle = (TextView) findViewById(R.id.problemListTitle);

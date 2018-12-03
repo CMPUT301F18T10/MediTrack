@@ -31,7 +31,7 @@ public class PatientsListActivity extends AppCompatActivity {
     ArrayList<String> patientList = new ArrayList<>();
     ArrayAdapter<String> Patientadapter;
     private DataRepositorySingleton mDRS = DataRepositorySingleton.GetInstance();
-
+    private static final String tag = "PatientsListActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +40,18 @@ public class PatientsListActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         Intent intent = getIntent();
-        careTakerId = intent.getStringExtra("caretakerID");
         mDRS = DataRepositorySingleton.GetInstance();
+        careTakerId = intent.getStringExtra("caretakerID");
+
+        if (careTakerId == null)
+        {
+            try{ careTakerId = mDRS.GetStoredIntent(PatientsListActivity.class); }
+            catch (DataRepositorySingleton.IntentMissingException e) { Log.e(tag, "No active or stored intent found"); }
+        }
+        else
+        {
+            mDRS.AddIntent(PatientsListActivity.class, careTakerId);
+        }
 
         try{
 

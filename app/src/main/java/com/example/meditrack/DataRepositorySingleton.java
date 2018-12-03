@@ -6,6 +6,7 @@ import android.util.Log;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
+import java.util.HashMap;
 import java.util.ListIterator;
 
 public class DataRepositorySingleton {
@@ -62,6 +63,8 @@ public class DataRepositorySingleton {
 
     private Patient patient = null;
     private CareProvider careProvider = null;
+
+    private HashMap<Class, String> mIntentMap; // we will store the intents passed in case they die
 
     protected DataRepositorySingleton() {
     }
@@ -155,6 +158,7 @@ public class DataRepositorySingleton {
         mUserMode = userMode;
         mUserName = userName;
         mESM = esm;
+        mIntentMap = new HashMap<>();
 
         mProblemList = new ArrayList<>();
         mNewProblems = new ArrayDeque<>();
@@ -311,6 +315,11 @@ public class DataRepositorySingleton {
     }
 
     // Mutating Methods
+    public void AddIntent(Class recipientClass, String intentMessage)
+    {
+        mIntentMap.put(recipientClass, intentMessage);
+    }
+
     public void AddProblem(Problem problem) {
         mProblemList.add(problem);
         mNewProblems.add(problem);
@@ -387,6 +396,15 @@ public class DataRepositorySingleton {
     }
 
     // Query Methods
+
+    public String GetStoredIntent(Class recipientActivity) throws IntentMissingException
+    {
+        if (!mIntentMap.containsKey(recipientActivity))
+        {
+            throw new IntentMissingException("Intent for " + recipientActivity.toString() + " is missing");
+        }
+        else return mIntentMap.get(recipientActivity);
+    }
 
     public Patient GetPatient() throws DataRepositorySingletonNotInitialized, InvalidUserMode {
         if ((mPatientUser == null && mCareProvider == null) || mUserMode == ApplicationManager.UserMode.Invalid) {
@@ -556,5 +574,10 @@ public class DataRepositorySingleton {
     public class InvalidUserMode extends Exception
     {
         public InvalidUserMode(String message) { super(message); }
+    }
+
+    public class IntentMissingException extends Exception
+    {
+        public IntentMissingException(String message) { super(message); }
     }
 }
