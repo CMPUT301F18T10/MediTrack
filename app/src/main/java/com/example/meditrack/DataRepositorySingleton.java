@@ -158,6 +158,7 @@ public class DataRepositorySingleton {
         mUserMode = userMode;
         mUserName = userName;
         mESM = esm;
+        mIntentMap = new HashMap<>();
 
         mProblemList = new ArrayList<>();
         mNewProblems = new ArrayDeque<>();

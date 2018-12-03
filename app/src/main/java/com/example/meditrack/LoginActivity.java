@@ -70,7 +70,6 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 else{
                     caretakerIntent.putExtra("caretakerID", mUserEmail);
-                    DataRepositorySingleton.GetInstance().AddIntent(PatientsListActivity.class, mUserEmail);
                     startActivity(caretakerIntent);
                     }
             }
@@ -98,7 +97,6 @@ public class LoginActivity extends AppCompatActivity {
                 else{
                     Log.e("DeviceCode","This is authorized device");
                     patientIntent.putExtra("patientID", mUserEmail);
-                    DataRepositorySingleton.GetInstance().AddIntent(PatientsListActivity.class, mUserEmail);
                     startActivity(patientIntent);
                 }
 
@@ -196,7 +194,6 @@ public class LoginActivity extends AppCompatActivity {
 
             Intent patinetIntent = new Intent(LoginActivity.this,ProblemsListActivity.class);
             patinetIntent.putExtra("patientID", mUserEmail);
-            DataRepositorySingleton.GetInstance().AddIntent(PatientsListActivity.class, mUserEmail);
             startActivity(patinetIntent);
             finish();
         }
@@ -204,7 +201,6 @@ public class LoginActivity extends AppCompatActivity {
 
             Intent caretakerIntent = new Intent(LoginActivity.this,PatientsListActivity.class);
             caretakerIntent.putExtra("caretakerID", mUserEmail);
-            DataRepositorySingleton.GetInstance().AddIntent(PatientsListActivity.class, mUserEmail);
             startActivity(caretakerIntent);
             finish();
         }
