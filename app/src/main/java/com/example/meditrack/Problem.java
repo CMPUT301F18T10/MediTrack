@@ -16,6 +16,7 @@ public class Problem implements ElasticsearchStorable{
     private String patientId;
     private String id;
 
+
     public String getTitle() { return title; }
     public String getDescription() { return description; }
     public Date getDate() { return date; }

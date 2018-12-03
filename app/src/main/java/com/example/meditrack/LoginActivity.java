@@ -122,8 +122,7 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(this, "This User Email Has Registered, Please Login it!",Toast.LENGTH_LONG).show();
             }
             else
-            {
-                approvedDeviceIDs.add(deviceId);
+            {   approvedDeviceIDs.add(deviceId);
                 mApplicationManager.RegisterUser(mUserEmail,approvedDeviceIDs);
 
                 // TODO: Implement timeout in case registration fails due to IO exceptions.
@@ -198,7 +197,6 @@ public class LoginActivity extends AppCompatActivity {
             finish();
         }
         else{
-
             Intent caretakerIntent = new Intent(LoginActivity.this,PatientsListActivity.class);
             caretakerIntent.putExtra("caretakerID", mUserEmail);
             startActivity(caretakerIntent);

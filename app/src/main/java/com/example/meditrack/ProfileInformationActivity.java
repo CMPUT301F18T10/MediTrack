@@ -33,7 +33,7 @@ public class ProfileInformationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile_information);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        ListView caretakerList = findViewById(R.id.profileCaretakerListListView);
+        //ListView caretakerList = findViewById(R.id.profileCaretakerListListView);
 
         Intent intent = getIntent();
         String patientID = intent.getStringExtra("patientID");
